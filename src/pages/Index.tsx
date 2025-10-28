@@ -533,12 +533,12 @@ const Index = () => {
                     <div className="grid grid-cols-2 gap-4 pt-3 border-t">
                       <div className="space-y-1">
                         <div className="text-xs text-muted-foreground">Площадь плитки</div>
-                        <div className="text-lg font-bold text-primary">{(length * width).toFixed(2)} м²</div>
+                        <div className="text-lg font-bold text-primary">{Number((length * width).toFixed(2))} м²</div>
                       </div>
                       <div className="space-y-1">
                         <div className="text-xs text-muted-foreground">Площадь отмостки</div>
                         <div className="text-lg font-bold text-accent">
-                          {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²
+                          {Number(((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2))} м²
                         </div>
                       </div>
                     </div>
