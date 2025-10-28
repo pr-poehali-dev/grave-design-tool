@@ -461,28 +461,64 @@ const Index = () => {
                     )}
 
                     {includeOmostka && (
-                      <rect
-                        x={60 - omostkaWidth * 120}
-                        y={60 - omostkaWidth * 120}
-                        width={(480 * length / Math.max(length, width)) + omostkaWidth * 240}
-                        height={(480 * width / Math.max(length, width)) + omostkaWidth * 240}
-                        fill="url(#omostkaPattern)"
-                        stroke="none"
-                        rx="6"
-                      />
+                      <>
+                        <rect
+                          x={60 - omostkaWidth * 120}
+                          y={60 - omostkaWidth * 120}
+                          width={(480 * length / Math.max(length, width)) + omostkaWidth * 240}
+                          height={(480 * width / Math.max(length, width)) + omostkaWidth * 240}
+                          fill="url(#omostkaPattern)"
+                          stroke="none"
+                          rx="6"
+                        />
+                        <line 
+                          x1={60 - omostkaWidth * 120} 
+                          y1={60 - omostkaWidth * 120 - 10} 
+                          x2="60" 
+                          y2={60 - omostkaWidth * 120 - 10} 
+                          stroke="#9333ea" 
+                          strokeWidth="2"
+                        />
+                        <text 
+                          x={60 - omostkaWidth * 60} 
+                          y={60 - omostkaWidth * 120 - 15} 
+                          textAnchor="middle" 
+                          className="text-sm fill-purple-700 font-semibold"
+                        >
+                          {omostkaWidth} м
+                        </text>
+                      </>
                     )}
 
                     {includeBorder && (
-                      <rect
-                        x={60 + borderWidth * 120}
-                        y={60 + borderWidth * 120}
-                        width={(480 * length / Math.max(length, width)) - borderWidth * 240}
-                        height={(480 * width / Math.max(length, width)) - borderWidth * 240}
-                        fill="none"
-                        stroke="#8B5CF6"
-                        strokeWidth="12"
-                        rx="4"
-                      />
+                      <>
+                        <rect
+                          x={60 + borderWidth * 120}
+                          y={60 + borderWidth * 120}
+                          width={(480 * length / Math.max(length, width)) - borderWidth * 240}
+                          height={(480 * width / Math.max(length, width)) - borderWidth * 240}
+                          fill="none"
+                          stroke="#8B5CF6"
+                          strokeWidth="12"
+                          rx="4"
+                        />
+                        <line 
+                          x1="60" 
+                          y1={60 + 10} 
+                          x2={60 + borderWidth * 120} 
+                          y2={60 + 10} 
+                          stroke="#7c3aed" 
+                          strokeWidth="2"
+                        />
+                        <text 
+                          x={60 + borderWidth * 60} 
+                          y={60 + 8} 
+                          textAnchor="middle" 
+                          className="text-sm fill-purple-700 font-semibold"
+                        >
+                          {borderWidth} м
+                        </text>
+                      </>
                     )}
                     
                     <rect
