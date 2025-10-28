@@ -432,10 +432,10 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-12 flex items-center justify-center min-h-[500px] relative">
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-4 flex items-center justify-center min-h-[600px] relative">
                   <svg
-                    viewBox="0 0 600 500"
-                    className="w-full"
+                    viewBox="0 0 600 600"
+                    className="w-full h-full"
                   >
                     <defs>
                       <pattern id="tilePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -448,63 +448,63 @@ const Index = () => {
 
                     {includeFence && (
                       <rect
-                        x={150 - (includeOmostka ? omostkaWidth * 60 : 0) - 12}
-                        y={100 - (includeOmostka ? omostkaWidth * 60 : 0) - 12}
-                        width={(250 * length / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0) + 24}
-                        height={(250 * width / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0) + 24}
+                        x={60 - (includeOmostka ? omostkaWidth * 120 : 0) - 15}
+                        y={60 - (includeOmostka ? omostkaWidth * 120 : 0) - 15}
+                        width={(480 * length / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 240 : 0) + 30}
+                        height={(480 * width / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 240 : 0) + 30}
                         fill="none"
                         stroke="#1e293b"
-                        strokeWidth="5"
-                        strokeDasharray="12,6"
+                        strokeWidth="6"
+                        strokeDasharray="15,8"
                         rx="8"
-                      />
-                    )}
-
-                    {includeBorder && (
-                      <rect
-                        x={150 - (includeOmostka ? omostkaWidth * 60 : 0)}
-                        y={100 - (includeOmostka ? omostkaWidth * 60 : 0)}
-                        width={(250 * length / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0)}
-                        height={(250 * width / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0)}
-                        fill="none"
-                        stroke="#8B5CF6"
-                        strokeWidth="8"
-                        rx="6"
                       />
                     )}
 
                     {includeOmostka && (
                       <rect
-                        x={150 - omostkaWidth * 60}
-                        y={100 - omostkaWidth * 60}
-                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
-                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
+                        x={60 - omostkaWidth * 120}
+                        y={60 - omostkaWidth * 120}
+                        width={(480 * length / Math.max(length, width)) + omostkaWidth * 240}
+                        height={(480 * width / Math.max(length, width)) + omostkaWidth * 240}
                         fill="url(#omostkaPattern)"
                         stroke="none"
                         rx="6"
                       />
                     )}
+
+                    {includeBorder && (
+                      <rect
+                        x={60 + borderWidth * 120}
+                        y={60 + borderWidth * 120}
+                        width={(480 * length / Math.max(length, width)) - borderWidth * 240}
+                        height={(480 * width / Math.max(length, width)) - borderWidth * 240}
+                        fill="none"
+                        stroke="#8B5CF6"
+                        strokeWidth="12"
+                        rx="4"
+                      />
+                    )}
                     
                     <rect
-                      x="150"
-                      y="100"
-                      width={250 * length / Math.max(length, width)}
-                      height={250 * width / Math.max(length, width)}
+                      x="60"
+                      y="60"
+                      width={480 * length / Math.max(length, width)}
+                      height={480 * width / Math.max(length, width)}
                       fill="url(#tilePattern)"
                       stroke="#6366f1"
-                      strokeWidth="3"
+                      strokeWidth="4"
                       rx="4"
                     />
 
-                    <text x={150 + (125 * length / Math.max(length, width))} y="75" textAnchor="middle" className="text-base fill-gray-800 font-bold">
+                    <text x={60 + (240 * length / Math.max(length, width))} y="40" textAnchor="middle" className="text-lg fill-gray-800 font-bold">
                       {length} м
                     </text>
-                    <line x1="150" y1="85" x2={150 + (250 * length / Math.max(length, width))} y2="85" stroke="#374151" strokeWidth="3"/>
+                    <line x1="60" y1="50" x2={60 + (480 * length / Math.max(length, width))} y2="50" stroke="#374151" strokeWidth="3" markerEnd="url(#arrowhead)"/>
                     
-                    <text x="130" y={100 + (125 * width / Math.max(length, width))} textAnchor="middle" className="text-base fill-gray-800 font-bold" transform={`rotate(-90 130 ${100 + (125 * width / Math.max(length, width))})`}>
+                    <text x="40" y={60 + (240 * width / Math.max(length, width))} textAnchor="middle" className="text-lg fill-gray-800 font-bold" transform={`rotate(-90 40 ${60 + (240 * width / Math.max(length, width))})`}>
                       {width} м
                     </text>
-                    <line x1="140" y1="100" x2="140" y2={100 + (250 * width / Math.max(length, width))} stroke="#374151" strokeWidth="3"/>
+                    <line x1="50" y1="60" x2="50" y2={60 + (480 * width / Math.max(length, width))} stroke="#374151" strokeWidth="3"/>
                   </svg>
                 </div>
                 
