@@ -48,8 +48,8 @@ interface CalculationItem {
 
 const Index = () => {
   const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
-  const [length, setLength] = useState<number>(2);
-  const [width, setWidth] = useState<number>(1.8);
+  const [length, setLength] = useState<number>(2.5);
+  const [width, setWidth] = useState<number>(2);
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [borderWidth, setBorderWidth] = useState<number>(0.15);
   const [selectedTile, setSelectedTile] = useState<string>('granite');
@@ -647,7 +647,7 @@ const Index = () => {
                       const monuments = [];
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + 20);
-                        const y = 60 + tileHeight * 0.3 - monumentHeight / 2;
+                        const y = 60 + tileHeight - monumentHeight - 20;
                         
                         monuments.push(
                           <g key={i}>
