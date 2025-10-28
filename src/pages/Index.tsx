@@ -50,6 +50,9 @@ const Index = () => {
   const [selectedFence, setSelectedFence] = useState<string>('metal');
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
+  const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
+  const [crumbKgPerM2, setCrumbKgPerM2] = useState<number>(50);
+  const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
   
   const [calculation, setCalculation] = useState<CalculationItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -63,7 +66,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeBorder, includeFence, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeBorder, includeFence, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -116,6 +119,18 @@ const Index = () => {
         unit: fenceMaterial.unit,
         price: fenceMaterial.pricePerUnit,
         total: parseFloat((omostkaPerimeter * fenceMaterial.pricePerUnit).toFixed(2)),
+      });
+    }
+
+    if (includeCrumb) {
+      const totalArea = outerArea;
+      const crumbQuantityKg = totalArea * crumbKgPerM2;
+      items.push({
+        name: 'Крошка гранитная',
+        quantity: parseFloat(crumbQuantityKg.toFixed(2)),
+        unit: 'кг',
+        price: crumbPricePerKg,
+        total: parseFloat((crumbQuantityKg * crumbPricePerKg).toFixed(2)),
       });
     }
 
@@ -301,6 +316,66 @@ const Index = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="crumb" className="flex items-center gap-2">
+                    <Icon name="Sparkles" size={16} />
+                    Крошка гранитная
+                  </Label>
+                  <Button
+                    variant={includeCrumb ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setIncludeCrumb(!includeCrumb)}
+                  >
+                    {includeCrumb ? 'Включена' : 'Выключена'}
+                  </Button>
+                </div>
+                {includeCrumb && (
+                  <div className="grid grid-cols-2 gap-3 mt-2">
+                    <div className="space-y-1">
+                      <Label htmlFor="crumbKg" className="text-xs text-muted-foreground">
+                        Расход (кг/м²)
+                      </Label>
+                      <Input
+                        id="crumbKg"
+                        type="number"
+                        step="1"
+                        min="1"
+                        value={crumbKgPerM2}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '' || val === '-') {
+                            setCrumbKgPerM2(0);
+                          } else {
+                            setCrumbKgPerM2(parseFloat(val));
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="crumbPrice" className="text-xs text-muted-foreground">
+                        Цена за кг (₽)
+                      </Label>
+                      <Input
+                        id="crumbPrice"
+                        type="number"
+                        step="1"
+                        min="1"
+                        value={crumbPricePerKg}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '' || val === '-') {
+                            setCrumbPricePerKg(0);
+                          } else {
+                            setCrumbPricePerKg(parseFloat(val));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
             </CardContent>
