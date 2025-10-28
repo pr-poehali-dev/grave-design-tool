@@ -48,6 +48,7 @@ const Index = () => {
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
+  const [includeOmostka, setIncludeOmostka] = useState<boolean>(false);
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
   const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
@@ -66,7 +67,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeBorder, includeFence, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeOmostka, includeBorder, includeFence, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -83,12 +84,13 @@ const Index = () => {
       total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
     });
 
-    const outerLength = length + 2 * omostkaWidth;
-    const outerWidth = width + 2 * omostkaWidth;
+    const effectiveOmostkaWidth = includeOmostka ? omostkaWidth : 0;
+    const outerLength = length + 2 * effectiveOmostkaWidth;
+    const outerWidth = width + 2 * effectiveOmostkaWidth;
     const outerArea = outerLength * outerWidth;
     const omostkaArea = outerArea - tileArea;
     
-    if (omostkaArea > 0) {
+    if (includeOmostka && omostkaArea > 0) {
       items.push({
         name: 'Отмостка',
         quantity: parseFloat(omostkaArea.toFixed(2)),
@@ -98,16 +100,18 @@ const Index = () => {
       });
     }
 
-    const omostkaPerimeter = 2 * (outerLength + outerWidth);
+    const perimeterLength = includeOmostka ? outerLength : length;
+    const perimeterWidth = includeOmostka ? outerWidth : width;
+    const perimeter = 2 * (perimeterLength + perimeterWidth);
 
     if (includeBorder && materialsData.border.find(m => m.id === selectedBorder)) {
       const borderMaterial = materialsData.border.find(m => m.id === selectedBorder)!;
       items.push({
         name: borderMaterial.name,
-        quantity: parseFloat(omostkaPerimeter.toFixed(2)),
+        quantity: parseFloat(perimeter.toFixed(2)),
         unit: borderMaterial.unit,
         price: borderMaterial.pricePerUnit,
-        total: parseFloat((omostkaPerimeter * borderMaterial.pricePerUnit).toFixed(2)),
+        total: parseFloat((perimeter * borderMaterial.pricePerUnit).toFixed(2)),
       });
     }
 
@@ -115,16 +119,16 @@ const Index = () => {
       const fenceMaterial = materialsData.fence.find(m => m.id === selectedFence)!;
       items.push({
         name: fenceMaterial.name,
-        quantity: parseFloat(omostkaPerimeter.toFixed(2)),
+        quantity: parseFloat(perimeter.toFixed(2)),
         unit: fenceMaterial.unit,
         price: fenceMaterial.pricePerUnit,
-        total: parseFloat((omostkaPerimeter * fenceMaterial.pricePerUnit).toFixed(2)),
+        total: parseFloat((perimeter * fenceMaterial.pricePerUnit).toFixed(2)),
       });
     }
 
     if (includeCrumb) {
-      const totalArea = outerArea;
-      const crumbQuantityKg = totalArea * crumbKgPerM2;
+      const crumbArea = includeOmostka ? outerArea : tileArea;
+      const crumbQuantityKg = crumbArea * crumbKgPerM2;
       items.push({
         name: 'Крошка гранитная',
         quantity: parseFloat(crumbQuantityKg.toFixed(2)),
@@ -391,10 +395,10 @@ const Index = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-primary">
-                      {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth)).toFixed(2)} м²
+                      {(length * width).toFixed(2)} м²
                     </div>
                     <div className="text-xs text-muted-foreground font-normal">
-                      Общая площадь
+                      Площадь участка
                     </div>
                   </div>
                 </CardTitle>
@@ -419,10 +423,10 @@ const Index = () => {
 
                     {includeFence && (
                       <rect
-                        x={150 - omostkaWidth * 60 - 12}
-                        y={100 - omostkaWidth * 60 - 12}
-                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120 + 24}
-                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120 + 24}
+                        x={150 - (includeOmostka ? omostkaWidth * 60 : 0) - 12}
+                        y={100 - (includeOmostka ? omostkaWidth * 60 : 0) - 12}
+                        width={(250 * length / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0) + 24}
+                        height={(250 * width / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0) + 24}
                         fill="none"
                         stroke="#1e293b"
                         strokeWidth="5"
@@ -433,10 +437,10 @@ const Index = () => {
 
                     {includeBorder && (
                       <rect
-                        x={150 - omostkaWidth * 60}
-                        y={100 - omostkaWidth * 60}
-                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
-                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
+                        x={150 - (includeOmostka ? omostkaWidth * 60 : 0)}
+                        y={100 - (includeOmostka ? omostkaWidth * 60 : 0)}
+                        width={(250 * length / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0)}
+                        height={(250 * width / Math.max(length, width)) + (includeOmostka ? omostkaWidth * 120 : 0)}
                         fill="none"
                         stroke="#8B5CF6"
                         strokeWidth="8"
@@ -444,15 +448,17 @@ const Index = () => {
                       />
                     )}
 
-                    <rect
-                      x={150 - omostkaWidth * 60}
-                      y={100 - omostkaWidth * 60}
-                      width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
-                      height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
-                      fill="url(#omostkaPattern)"
-                      stroke="none"
-                      rx="6"
-                    />
+                    {includeOmostka && (
+                      <rect
+                        x={150 - omostkaWidth * 60}
+                        y={100 - omostkaWidth * 60}
+                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
+                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
+                        fill="url(#omostkaPattern)"
+                        stroke="none"
+                        rx="6"
+                      />
+                    )}
                     
                     <rect
                       x="150"
@@ -503,6 +509,16 @@ const Index = () => {
                     </Button>
                     
                     <Button
+                      variant={includeOmostka ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeOmostka(!includeOmostka)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded"></div>
+                      Отмостка
+                    </Button>
+                    
+                    <Button
                       variant={includeCrumb ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setIncludeCrumb(!includeCrumb)}
@@ -511,25 +527,22 @@ const Index = () => {
                       <Icon name="Sparkles" size={16} />
                       Крошка
                     </Button>
-                    
-                    <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border">
-                      <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded"></div>
-                      <span className="text-gray-700 text-sm font-medium">Отмостка</span>
-                    </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 pt-3 border-t">
-                    <div className="space-y-1">
-                      <div className="text-xs text-muted-foreground">Площадь плитки</div>
-                      <div className="text-lg font-bold text-primary">{(length * width).toFixed(2)} м²</div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-xs text-muted-foreground">Площадь отмостки</div>
-                      <div className="text-lg font-bold text-accent">
-                        {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²
+                  {includeOmostka && (
+                    <div className="grid grid-cols-2 gap-4 pt-3 border-t">
+                      <div className="space-y-1">
+                        <div className="text-xs text-muted-foreground">Площадь плитки</div>
+                        <div className="text-lg font-bold text-primary">{(length * width).toFixed(2)} м²</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="text-xs text-muted-foreground">Площадь отмостки</div>
+                        <div className="text-lg font-bold text-accent">
+                          {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
