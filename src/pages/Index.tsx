@@ -45,6 +45,7 @@ const Index = () => {
   const [length, setLength] = useState<number>(2);
   const [width, setWidth] = useState<number>(1.8);
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
+  const [borderWidth, setBorderWidth] = useState<number>(0.15);
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
@@ -219,27 +220,51 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="omostka" className="flex items-center gap-2">
-                  <Icon name="Layers" size={16} />
-                  Ширина отмостки (м)
-                </Label>
-                <Input
-                  id="omostka"
-                  type="number"
-                  step="0.1"
-                  min="0.1"
-                  value={omostkaWidth}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '' || val === '-') {
-                      setOmostkaWidth(0);
-                    } else {
-                      setOmostkaWidth(parseFloat(val));
-                    }
-                  }}
-                  className="text-lg"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="omostka" className="flex items-center gap-2">
+                    <Icon name="Layers" size={16} />
+                    Ширина отмостки (м)
+                  </Label>
+                  <Input
+                    id="omostka"
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    value={omostkaWidth || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || val === '-') {
+                        setOmostkaWidth(0);
+                      } else {
+                        setOmostkaWidth(parseFloat(val));
+                      }
+                    }}
+                    className="text-lg"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="border-width" className="flex items-center gap-2">
+                    <Icon name="Square" size={16} />
+                    Ширина поребрика (м)
+                  </Label>
+                  <Input
+                    id="border-width"
+                    type="number"
+                    step="0.01"
+                    min="0.05"
+                    value={borderWidth || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || val === '-') {
+                        setBorderWidth(0);
+                      } else {
+                        setBorderWidth(parseFloat(val));
+                      }
+                    }}
+                    className="text-lg"
+                  />
+                </div>
               </div>
 
               <Separator />
