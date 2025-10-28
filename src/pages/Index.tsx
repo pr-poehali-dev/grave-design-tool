@@ -57,6 +57,7 @@ const Index = () => {
   const [selectedFence, setSelectedFence] = useState<string>('metal');
   const [selectedMonument, setSelectedMonument] = useState<string>('monument-40x80');
   const [monumentCount, setMonumentCount] = useState<number>(1);
+  const [monumentPosition, setMonumentPosition] = useState<string>('center');
   const [includeOmostka, setIncludeOmostka] = useState<boolean>(false);
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
@@ -396,21 +397,39 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <div className="space-y-2">
-                      <Label htmlFor="monument-count" className="flex items-center gap-2">
-                        <Icon name="Hash" size={16} />
-                        Количество памятников
-                      </Label>
-                      <Select value={monumentCount.toString()} onValueChange={(val) => setMonumentCount(parseInt(val))}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">1 памятник</SelectItem>
-                          <SelectItem value="2">2 памятника</SelectItem>
-                          <SelectItem value="3">3 памятника</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="monument-count" className="flex items-center gap-2">
+                          <Icon name="Hash" size={16} />
+                          Количество
+                        </Label>
+                        <Select value={monumentCount.toString()} onValueChange={(val) => setMonumentCount(parseInt(val))}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 памятник</SelectItem>
+                            <SelectItem value="2">2 памятника</SelectItem>
+                            <SelectItem value="3">3 памятника</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="monument-position" className="flex items-center gap-2">
+                          <Icon name="AlignCenter" size={16} />
+                          Положение
+                        </Label>
+                        <Select value={monumentPosition} onValueChange={setMonumentPosition}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="left">Слева</SelectItem>
+                            <SelectItem value="center">По центру</SelectItem>
+                            <SelectItem value="right">Справа</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </>
                 )}
@@ -614,10 +633,20 @@ const Index = () => {
                       const tileWidth = 480 * length / Math.max(length, width);
                       const tileHeight = 480 * width / Math.max(length, width);
                       
+                      const totalMonumentsWidth = monumentWidth * monumentCount + (monumentCount - 1) * 20;
+                      let startX = 60;
+                      
+                      if (monumentPosition === 'center') {
+                        startX = 60 + (tileWidth - totalMonumentsWidth) / 2;
+                      } else if (monumentPosition === 'left') {
+                        startX = 60 + 20;
+                      } else if (monumentPosition === 'right') {
+                        startX = 60 + tileWidth - totalMonumentsWidth - 20;
+                      }
+                      
                       const monuments = [];
                       for (let i = 0; i < monumentCount; i++) {
-                        const spacing = tileWidth / (monumentCount + 1);
-                        const x = 60 + spacing * (i + 1) - monumentWidth / 2;
+                        const x = startX + i * (monumentWidth + 20);
                         const y = 60 + tileHeight * 0.3 - monumentHeight / 2;
                         
                         monuments.push(
