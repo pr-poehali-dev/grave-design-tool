@@ -401,24 +401,16 @@ const Index = () => {
                         <Icon name="Hash" size={16} />
                         Количество памятников
                       </Label>
-                      <Input
-                        id="monument-count"
-                        type="number"
-                        step="1"
-                        min="1"
-                        max="3"
-                        value={monumentCount || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === '' || val === '-') {
-                            setMonumentCount(1);
-                          } else {
-                            const num = parseInt(val);
-                            setMonumentCount(Math.min(3, Math.max(1, num)));
-                          }
-                        }}
-                        className="text-lg"
-                      />
+                      <Select value={monumentCount.toString()} onValueChange={(val) => setMonumentCount(parseInt(val))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1 памятник</SelectItem>
+                          <SelectItem value="2">2 памятника</SelectItem>
+                          <SelectItem value="3">3 памятника</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </>
                 )}
@@ -616,8 +608,9 @@ const Index = () => {
                         'monument-120x60': { w: 1.2, h: 0.6 },
                       };
                       const size = monumentSizes[selectedMonument] || { w: 0.4, h: 0.8 };
-                      const monumentWidth = size.w * 120;
-                      const monumentHeight = size.h * 120;
+                      const scale = 480 / Math.max(length, width);
+                      const monumentWidth = size.w * scale;
+                      const monumentHeight = size.h * scale;
                       const tileWidth = 480 * length / Math.max(length, width);
                       const tileHeight = 480 * width / Math.max(length, width);
                       
