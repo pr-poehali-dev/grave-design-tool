@@ -68,6 +68,8 @@ const Index = () => {
   const calculateCost = () => {
     const items: CalculationItem[] = [];
     
+    if (!materialsData.tile.find(m => m.id === selectedTile)) return;
+    
     const tileArea = length * width;
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     items.push({
@@ -78,17 +80,24 @@ const Index = () => {
       total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
     });
 
-    const omostkaPerimeter = 2 * (length + width);
-    const omostkaArea = omostkaPerimeter * omostkaWidth;
-    items.push({
-      name: 'Отмостка',
-      quantity: parseFloat(omostkaArea.toFixed(2)),
-      unit: tileMaterial.unit,
-      price: tileMaterial.pricePerUnit,
-      total: parseFloat((omostkaArea * tileMaterial.pricePerUnit).toFixed(2)),
-    });
+    const outerLength = length + 2 * omostkaWidth;
+    const outerWidth = width + 2 * omostkaWidth;
+    const outerArea = outerLength * outerWidth;
+    const omostkaArea = outerArea - tileArea;
+    
+    if (omostkaArea > 0) {
+      items.push({
+        name: 'Отмостка',
+        quantity: parseFloat(omostkaArea.toFixed(2)),
+        unit: tileMaterial.unit,
+        price: tileMaterial.pricePerUnit,
+        total: parseFloat((omostkaArea * tileMaterial.pricePerUnit).toFixed(2)),
+      });
+    }
 
-    if (includeBorder) {
+    const omostkaPerimeter = 2 * (outerLength + outerWidth);
+
+    if (includeBorder && materialsData.border.find(m => m.id === selectedBorder)) {
       const borderMaterial = materialsData.border.find(m => m.id === selectedBorder)!;
       items.push({
         name: borderMaterial.name,
@@ -99,7 +108,7 @@ const Index = () => {
       });
     }
 
-    if (includeFence) {
+    if (includeFence && materialsData.fence.find(m => m.id === selectedFence)) {
       const fenceMaterial = materialsData.fence.find(m => m.id === selectedFence)!;
       items.push({
         name: fenceMaterial.name,
@@ -288,62 +297,86 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-8 flex items-center justify-center min-h-[300px]">
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-8 flex items-center justify-center min-h-[400px]">
                   <svg
-                    viewBox="0 0 300 300"
-                    className="w-full max-w-md"
-                    style={{ aspectRatio: `${length}/${width}` }}
+                    viewBox="0 0 400 400"
+                    className="w-full max-w-lg"
                   >
+                    <defs>
+                      <pattern id="tilePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <rect width="19" height="19" fill="#e0e7ff" stroke="#c7d2fe" strokeWidth="1"/>
+                      </pattern>
+                      <pattern id="omostkaPattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
+                        <rect width="14" height="14" fill="#f3e8ff" stroke="#e9d5ff" strokeWidth="1"/>
+                      </pattern>
+                    </defs>
+
                     <rect
-                      x={50 - omostkaWidth * 20}
-                      y={50 - omostkaWidth * 20}
-                      width={200 + omostkaWidth * 40}
-                      height={(200 * width / length) + omostkaWidth * 40}
-                      fill="#9b87f5"
-                      opacity="0.3"
+                      x={100 - omostkaWidth * 30}
+                      y={100 - omostkaWidth * 30}
+                      width={(200 * length / 2) + omostkaWidth * 60}
+                      height={(200 * width / 2) + omostkaWidth * 60}
+                      fill="url(#omostkaPattern)"
                       stroke="#8B5CF6"
-                      strokeWidth="2"
+                      strokeWidth="3"
+                      rx="4"
                     />
                     
                     <rect
-                      x="50"
-                      y="50"
-                      width="200"
-                      height={200 * width / length}
-                      fill="#0EA5E9"
-                      opacity="0.4"
-                      stroke="#0284C7"
+                      x="100"
+                      y="100"
+                      width={200 * length / 2}
+                      height={200 * width / 2}
+                      fill="url(#tilePattern)"
+                      stroke="#6366f1"
                       strokeWidth="2"
+                      rx="2"
                     />
 
-                    <text x="150" y="30" textAnchor="middle" className="text-xs fill-gray-700 font-medium">
+                    {includeFence && (
+                      <rect
+                        x={100 - omostkaWidth * 30 - 5}
+                        y={100 - omostkaWidth * 30 - 5}
+                        width={(200 * length / 2) + omostkaWidth * 60 + 10}
+                        height={(200 * width / 2) + omostkaWidth * 60 + 10}
+                        fill="none"
+                        stroke="#1e293b"
+                        strokeWidth="4"
+                        strokeDasharray="8,4"
+                        rx="6"
+                      />
+                    )}
+
+                    <text x={100 + (100 * length / 2)} y="85" textAnchor="middle" className="text-sm fill-gray-800 font-semibold">
                       {length} м
                     </text>
-                    <text x="25" y={50 + (100 * width / length)} textAnchor="middle" className="text-xs fill-gray-700 font-medium">
+                    <line x1="100" y1="90" x2={100 + (200 * length / 2)} y2="90" stroke="#374151" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                    
+                    <text x="85" y={100 + (100 * width / 2)} textAnchor="middle" className="text-sm fill-gray-800 font-semibold" transform={`rotate(-90 85 ${100 + (100 * width / 2)})`}>
                       {width} м
                     </text>
-
-                    <text x="150" y={75 + (100 * width / length)} textAnchor="middle" className="text-sm fill-gray-800 font-semibold">
-                      Участок
-                    </text>
-                    <text x="150" y={30 - omostkaWidth * 15} textAnchor="middle" className="text-xs fill-purple-700 font-medium">
-                      Отмостка {omostkaWidth} м
-                    </text>
+                    <line x1="90" y1="100" x2="90" y2={100 + (200 * width / 2)} stroke="#374151" strokeWidth="2"/>
                   </svg>
                 </div>
-                <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-blue-500 opacity-40 rounded"></div>
-                    <span className="text-gray-700">Плитка</span>
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                  <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
+                    <div className="w-6 h-6 border-2 border-indigo-300" style={{background: 'url(#tilePattern)'}}></div>
+                    <span className="text-gray-700 font-medium">Плитка</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-purple-500 opacity-30 rounded"></div>
-                    <span className="text-gray-700">Отмостка</span>
+                  <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
+                    <div className="w-6 h-6 bg-purple-200 border border-purple-300 rounded"></div>
+                    <span className="text-gray-700 font-medium">Отмостка</span>
                   </div>
                   {includeBorder && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                      <span className="text-gray-700">Поребрик</span>
+                    <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
+                      <div className="w-6 h-6 border-3 border-purple-600 rounded"></div>
+                      <span className="text-gray-700 font-medium">Поребрик</span>
+                    </div>
+                  )}
+                  {includeFence && (
+                    <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
+                      <div className="w-6 h-6 border-2 border-dashed border-gray-800 rounded"></div>
+                      <span className="text-gray-700 font-medium">Ограда</span>
                     </div>
                   )}
                 </div>

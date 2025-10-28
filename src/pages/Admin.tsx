@@ -76,6 +76,15 @@ const Admin = () => {
   };
 
   const handleDeleteMaterial = (category: string, id: string) => {
+    if (materials[category].length <= 1) {
+      toast({
+        title: 'Невозможно удалить',
+        description: 'Должен остаться хотя бы один материал в категории',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setMaterials(prev => ({
       ...prev,
       [category]: prev[category].filter(item => item.id !== id),
@@ -259,7 +268,18 @@ const Admin = () => {
             <Separator className="my-6" />
 
             <div className="flex justify-end gap-3">
-              <Button variant="outline" size="lg">
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => {
+                  setMaterials(initialMaterials);
+                  localStorage.removeItem('materials');
+                  toast({
+                    title: 'Изменения сброшены',
+                    description: 'Все данные восстановлены к исходным значениям',
+                  });
+                }}
+              >
                 Сбросить изменения
               </Button>
               <Button onClick={handleSave} size="lg" className="gap-2">
