@@ -30,6 +30,12 @@ const materials: Record<string, Material[]> = {
     { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.' },
     { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.' },
   ],
+  monument: [
+    { id: 'monument-40x80', name: 'Памятник 40×80 см', pricePerUnit: 8000, unit: 'шт' },
+    { id: 'monument-45x90', name: 'Памятник 45×90 см', pricePerUnit: 9000, unit: 'шт' },
+    { id: 'monument-100x50', name: 'Памятник 100×50 см', pricePerUnit: 10000, unit: 'шт' },
+    { id: 'monument-120x60', name: 'Памятник 120×60 см', pricePerUnit: 12000, unit: 'шт' },
+  ],
 };
 
 interface CalculationItem {
@@ -49,9 +55,12 @@ const Index = () => {
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
+  const [selectedMonument, setSelectedMonument] = useState<string>('monument-40x80');
+  const [monumentCount, setMonumentCount] = useState<number>(1);
   const [includeOmostka, setIncludeOmostka] = useState<boolean>(false);
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
+  const [includeMonument, setIncludeMonument] = useState<boolean>(false);
   const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
   const [crumbKgPerM2, setCrumbKgPerM2] = useState<number>(50);
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
@@ -68,7 +77,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeOmostka, includeBorder, includeFence, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -124,6 +133,17 @@ const Index = () => {
         unit: fenceMaterial.unit,
         price: fenceMaterial.pricePerUnit,
         total: parseFloat((perimeter * fenceMaterial.pricePerUnit).toFixed(2)),
+      });
+    }
+
+    if (includeMonument && materialsData.monument && materialsData.monument.find(m => m.id === selectedMonument)) {
+      const monumentMaterial = materialsData.monument.find(m => m.id === selectedMonument)!;
+      items.push({
+        name: monumentMaterial.name,
+        quantity: monumentCount,
+        unit: monumentMaterial.unit,
+        price: monumentMaterial.pricePerUnit,
+        total: parseFloat((monumentCount * monumentMaterial.pricePerUnit).toFixed(2)),
       });
     }
 
@@ -350,6 +370,62 @@ const Index = () => {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
+                  <Label htmlFor="monument" className="flex items-center gap-2">
+                    <Icon name="BookMarked" size={16} />
+                    Памятник
+                  </Label>
+                  <Button
+                    variant={includeMonument ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setIncludeMonument(!includeMonument)}
+                  >
+                    {includeMonument ? 'Включен' : 'Выключен'}
+                  </Button>
+                </div>
+                {includeMonument && (
+                  <>
+                    <Select value={selectedMonument} onValueChange={setSelectedMonument}>
+                      <SelectTrigger id="monument">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {materialsData.monument?.map((mat) => (
+                          <SelectItem key={mat.id} value={mat.id}>
+                            {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <div className="space-y-2">
+                      <Label htmlFor="monument-count" className="flex items-center gap-2">
+                        <Icon name="Hash" size={16} />
+                        Количество памятников
+                      </Label>
+                      <Input
+                        id="monument-count"
+                        type="number"
+                        step="1"
+                        min="1"
+                        max="3"
+                        value={monumentCount || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '' || val === '-') {
+                            setMonumentCount(1);
+                          } else {
+                            const num = parseInt(val);
+                            setMonumentCount(Math.min(3, Math.max(1, num)));
+                          }
+                        }}
+                        className="text-lg"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
                   <Label htmlFor="crumb" className="flex items-center gap-2">
                     <Icon name="Sparkles" size={16} />
                     Крошка гранитная
@@ -532,6 +608,52 @@ const Index = () => {
                       rx="4"
                     />
 
+                    {includeMonument && (() => {
+                      const monumentSizes: Record<string, { w: number; h: number }> = {
+                        'monument-40x80': { w: 0.4, h: 0.8 },
+                        'monument-45x90': { w: 0.45, h: 0.9 },
+                        'monument-100x50': { w: 1.0, h: 0.5 },
+                        'monument-120x60': { w: 1.2, h: 0.6 },
+                      };
+                      const size = monumentSizes[selectedMonument] || { w: 0.4, h: 0.8 };
+                      const monumentWidth = size.w * 120;
+                      const monumentHeight = size.h * 120;
+                      const tileWidth = 480 * length / Math.max(length, width);
+                      const tileHeight = 480 * width / Math.max(length, width);
+                      
+                      const monuments = [];
+                      for (let i = 0; i < monumentCount; i++) {
+                        const spacing = tileWidth / (monumentCount + 1);
+                        const x = 60 + spacing * (i + 1) - monumentWidth / 2;
+                        const y = 60 + tileHeight * 0.3 - monumentHeight / 2;
+                        
+                        monuments.push(
+                          <g key={i}>
+                            <rect
+                              x={x}
+                              y={y}
+                              width={monumentWidth}
+                              height={monumentHeight}
+                              fill="#1f2937"
+                              stroke="#111827"
+                              strokeWidth="2"
+                              rx="2"
+                            />
+                            <text
+                              x={x + monumentWidth / 2}
+                              y={y + monumentHeight / 2}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              className="text-xs fill-white font-bold"
+                            >
+                              {i + 1}
+                            </text>
+                          </g>
+                        );
+                      }
+                      return monuments;
+                    })()}
+
                     <text x={60 + (240 * length / Math.max(length, width))} y="40" textAnchor="middle" className="text-lg fill-gray-800 font-bold">
                       {length} м
                     </text>
@@ -577,6 +699,16 @@ const Index = () => {
                     >
                       <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded"></div>
                       Отмостка
+                    </Button>
+                    
+                    <Button
+                      variant={includeMonument ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeMonument(!includeMonument)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 bg-gray-800 rounded"></div>
+                      Памятник
                     </Button>
                     
                     <Button
