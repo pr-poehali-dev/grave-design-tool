@@ -384,18 +384,28 @@ const Index = () => {
           <div className="space-y-6">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Eye" size={24} className="text-accent" />
-                  Визуализация
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Icon name="Eye" size={24} className="text-accent" />
+                    Визуализация
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-primary">
+                      {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth)).toFixed(2)} м²
+                    </div>
+                    <div className="text-xs text-muted-foreground font-normal">
+                      Общая площадь
+                    </div>
+                  </div>
                 </CardTitle>
                 <CardDescription>
                   Вид участка сверху
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-8 flex items-center justify-center min-h-[400px] relative">
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-12 flex items-center justify-center min-h-[500px] relative">
                   <svg
-                    viewBox="0 0 500 400"
+                    viewBox="0 0 600 500"
                     className="w-full"
                   >
                     <defs>
@@ -409,96 +419,117 @@ const Index = () => {
 
                     {includeFence && (
                       <rect
-                        x={100 - omostkaWidth * 40 - 8}
-                        y={100 - omostkaWidth * 40 - 8}
-                        width={(150 * length / Math.max(length, width)) + omostkaWidth * 80 + 16}
-                        height={(150 * width / Math.max(length, width)) + omostkaWidth * 80 + 16}
+                        x={150 - omostkaWidth * 60 - 12}
+                        y={100 - omostkaWidth * 60 - 12}
+                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120 + 24}
+                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120 + 24}
                         fill="none"
                         stroke="#1e293b"
-                        strokeWidth="4"
-                        strokeDasharray="8,4"
-                        rx="6"
+                        strokeWidth="5"
+                        strokeDasharray="12,6"
+                        rx="8"
                       />
                     )}
 
                     {includeBorder && (
                       <rect
-                        x={100 - omostkaWidth * 40}
-                        y={100 - omostkaWidth * 40}
-                        width={(150 * length / Math.max(length, width)) + omostkaWidth * 80}
-                        height={(150 * width / Math.max(length, width)) + omostkaWidth * 80}
+                        x={150 - omostkaWidth * 60}
+                        y={100 - omostkaWidth * 60}
+                        width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
+                        height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
                         fill="none"
                         stroke="#8B5CF6"
-                        strokeWidth="6"
-                        rx="4"
+                        strokeWidth="8"
+                        rx="6"
                       />
                     )}
 
                     <rect
-                      x={100 - omostkaWidth * 40}
-                      y={100 - omostkaWidth * 40}
-                      width={(150 * length / Math.max(length, width)) + omostkaWidth * 80}
-                      height={(150 * width / Math.max(length, width)) + omostkaWidth * 80}
+                      x={150 - omostkaWidth * 60}
+                      y={100 - omostkaWidth * 60}
+                      width={(250 * length / Math.max(length, width)) + omostkaWidth * 120}
+                      height={(250 * width / Math.max(length, width)) + omostkaWidth * 120}
                       fill="url(#omostkaPattern)"
                       stroke="none"
-                      rx="4"
+                      rx="6"
                     />
                     
                     <rect
-                      x="100"
+                      x="150"
                       y="100"
-                      width={150 * length / Math.max(length, width)}
-                      height={150 * width / Math.max(length, width)}
+                      width={250 * length / Math.max(length, width)}
+                      height={250 * width / Math.max(length, width)}
                       fill="url(#tilePattern)"
                       stroke="#6366f1"
-                      strokeWidth="2"
-                      rx="2"
+                      strokeWidth="3"
+                      rx="4"
                     />
 
-                    <text x={100 + (75 * length / Math.max(length, width))} y="85" textAnchor="middle" className="text-sm fill-gray-800 font-semibold">
+                    <text x={150 + (125 * length / Math.max(length, width))} y="75" textAnchor="middle" className="text-base fill-gray-800 font-bold">
                       {length} м
                     </text>
-                    <line x1="100" y1="90" x2={100 + (150 * length / Math.max(length, width))} y2="90" stroke="#374151" strokeWidth="2"/>
+                    <line x1="150" y1="85" x2={150 + (250 * length / Math.max(length, width))} y2="85" stroke="#374151" strokeWidth="3"/>
                     
-                    <text x="85" y={100 + (75 * width / Math.max(length, width))} textAnchor="middle" className="text-sm fill-gray-800 font-semibold" transform={`rotate(-90 85 ${100 + (75 * width / Math.max(length, width))})`}>
+                    <text x="130" y={100 + (125 * width / Math.max(length, width))} textAnchor="middle" className="text-base fill-gray-800 font-bold" transform={`rotate(-90 130 ${100 + (125 * width / Math.max(length, width))})`}>
                       {width} м
                     </text>
-                    <line x1="90" y1="100" x2="90" y2={100 + (150 * width / Math.max(length, width))} stroke="#374151" strokeWidth="2"/>
-
-                    <text 
-                      x={420} 
-                      y={200} 
-                      className="text-xs fill-gray-700 font-medium"
-                      textAnchor="start"
-                    >
-                      <tspan x="420" dy="0" className="font-semibold fill-gray-900">Площади:</tspan>
-                      <tspan x="420" dy="20">Плитка: {(length * width).toFixed(2)} м²</tspan>
-                      <tspan x="420" dy="18">Отмостка: {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²</tspan>
-                      <tspan x="420" dy="18" className="font-semibold fill-primary">Общая: {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth)).toFixed(2)} м²</tspan>
-                    </text>
+                    <line x1="140" y1="100" x2="140" y2={100 + (250 * width / Math.max(length, width))} stroke="#374151" strokeWidth="3"/>
                   </svg>
                 </div>
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                  <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
-                    <div className="w-6 h-6 border-2 border-indigo-300" style={{background: 'url(#tilePattern)'}}></div>
-                    <span className="text-gray-700 font-medium">Плитка</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
-                    <div className="w-6 h-6 bg-purple-200 border border-purple-300 rounded"></div>
-                    <span className="text-gray-700 font-medium">Отмостка</span>
-                  </div>
-                  {includeBorder && (
-                    <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 border-3 border-purple-600 rounded"></div>
-                      <span className="text-gray-700 font-medium">Поребрик</span>
+                
+                <Separator className="my-6" />
+                
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm text-gray-900">Отображение элементов:</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant={includeBorder ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeBorder(!includeBorder)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
+                      Поребрик
+                    </Button>
+                    
+                    <Button
+                      variant={includeFence ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeFence(!includeFence)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
+                      Ограда
+                    </Button>
+                    
+                    <Button
+                      variant={includeCrumb ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeCrumb(!includeCrumb)}
+                      className="justify-start gap-2"
+                    >
+                      <Icon name="Sparkles" size={16} />
+                      Крошка
+                    </Button>
+                    
+                    <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border">
+                      <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded"></div>
+                      <span className="text-gray-700 text-sm font-medium">Отмостка</span>
                     </div>
-                  )}
-                  {includeFence && (
-                    <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 border-2 border-dashed border-gray-800 rounded"></div>
-                      <span className="text-gray-700 font-medium">Ограда</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 pt-3 border-t">
+                    <div className="space-y-1">
+                      <div className="text-xs text-muted-foreground">Площадь плитки</div>
+                      <div className="text-lg font-bold text-primary">{(length * width).toFixed(2)} м²</div>
                     </div>
-                  )}
+                    <div className="space-y-1">
+                      <div className="text-xs text-muted-foreground">Площадь отмостки</div>
+                      <div className="text-lg font-bold text-accent">
+                        {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
