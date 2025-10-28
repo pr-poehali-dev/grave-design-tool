@@ -183,7 +183,7 @@ const Index = () => {
                     type="number"
                     step="0.1"
                     min="0.5"
-                    value={length}
+                    value={length || ''}
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val === '' || val === '-') {
@@ -205,7 +205,7 @@ const Index = () => {
                     type="number"
                     step="0.1"
                     min="0.5"
-                    value={width}
+                    value={width || ''}
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val === '' || val === '-') {
