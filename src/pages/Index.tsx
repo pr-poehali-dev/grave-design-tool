@@ -220,51 +220,27 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="omostka" className="flex items-center gap-2">
-                    <Icon name="Layers" size={16} />
-                    Ширина отмостки (м)
-                  </Label>
-                  <Input
-                    id="omostka"
-                    type="number"
-                    step="0.1"
-                    min="0.1"
-                    value={omostkaWidth || ''}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === '' || val === '-') {
-                        setOmostkaWidth(0);
-                      } else {
-                        setOmostkaWidth(parseFloat(val));
-                      }
-                    }}
-                    className="text-lg"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="border-width" className="flex items-center gap-2">
-                    <Icon name="Square" size={16} />
-                    Ширина поребрика (м)
-                  </Label>
-                  <Input
-                    id="border-width"
-                    type="number"
-                    step="0.01"
-                    min="0.05"
-                    value={borderWidth || ''}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === '' || val === '-') {
-                        setBorderWidth(0);
-                      } else {
-                        setBorderWidth(parseFloat(val));
-                      }
-                    }}
-                    className="text-lg"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="omostka" className="flex items-center gap-2">
+                  <Icon name="Layers" size={16} />
+                  Ширина отмостки (м)
+                </Label>
+                <Input
+                  id="omostka"
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  value={omostkaWidth || ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || val === '-') {
+                      setOmostkaWidth(0);
+                    } else {
+                      setOmostkaWidth(parseFloat(val));
+                    }
+                  }}
+                  className="text-lg"
+                />
               </div>
 
               <Separator />
@@ -303,18 +279,42 @@ const Index = () => {
                   </Button>
                 </div>
                 {includeBorder && (
-                  <Select value={selectedBorder} onValueChange={setSelectedBorder}>
-                    <SelectTrigger id="border">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {materialsData.border.map((mat) => (
-                        <SelectItem key={mat.id} value={mat.id}>
-                          {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <>
+                    <Select value={selectedBorder} onValueChange={setSelectedBorder}>
+                      <SelectTrigger id="border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {materialsData.border.map((mat) => (
+                          <SelectItem key={mat.id} value={mat.id}>
+                            {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <div className="space-y-2">
+                      <Label htmlFor="border-width" className="flex items-center gap-2">
+                        <Icon name="Ruler" size={16} />
+                        Ширина поребрика (м)
+                      </Label>
+                      <Input
+                        id="border-width"
+                        type="number"
+                        step="0.01"
+                        min="0.05"
+                        value={borderWidth || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '' || val === '-') {
+                            setBorderWidth(0);
+                          } else {
+                            setBorderWidth(parseFloat(val));
+                          }
+                        }}
+                        className="text-lg"
+                      />
+                    </div>
+                  </>
                 )}
               </div>
 
