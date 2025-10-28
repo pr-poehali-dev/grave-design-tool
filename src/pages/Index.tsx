@@ -165,7 +165,14 @@ const Index = () => {
                     step="0.1"
                     min="0.5"
                     value={length}
-                    onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || val === '-') {
+                        setLength(0);
+                      } else {
+                        setLength(parseFloat(val));
+                      }
+                    }}
                     className="text-lg"
                   />
                 </div>
@@ -180,7 +187,14 @@ const Index = () => {
                     step="0.1"
                     min="0.5"
                     value={width}
-                    onChange={(e) => setWidth(parseFloat(e.target.value) || 0)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || val === '-') {
+                        setWidth(0);
+                      } else {
+                        setWidth(parseFloat(val));
+                      }
+                    }}
                     className="text-lg"
                   />
                 </div>
@@ -197,7 +211,14 @@ const Index = () => {
                   step="0.1"
                   min="0.1"
                   value={omostkaWidth}
-                  onChange={(e) => setOmostkaWidth(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || val === '-') {
+                      setOmostkaWidth(0);
+                    } else {
+                      setOmostkaWidth(parseFloat(val));
+                    }
+                  }}
                   className="text-lg"
                 />
               </div>
@@ -297,10 +318,10 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-8 flex items-center justify-center min-h-[400px]">
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-8 flex items-center justify-center min-h-[400px] relative">
                   <svg
-                    viewBox="0 0 400 400"
-                    className="w-full max-w-lg"
+                    viewBox="0 0 500 400"
+                    className="w-full"
                   >
                     <defs>
                       <pattern id="tilePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -311,34 +332,12 @@ const Index = () => {
                       </pattern>
                     </defs>
 
-                    <rect
-                      x={100 - omostkaWidth * 30}
-                      y={100 - omostkaWidth * 30}
-                      width={(200 * length / 2) + omostkaWidth * 60}
-                      height={(200 * width / 2) + omostkaWidth * 60}
-                      fill="url(#omostkaPattern)"
-                      stroke="#8B5CF6"
-                      strokeWidth="3"
-                      rx="4"
-                    />
-                    
-                    <rect
-                      x="100"
-                      y="100"
-                      width={200 * length / 2}
-                      height={200 * width / 2}
-                      fill="url(#tilePattern)"
-                      stroke="#6366f1"
-                      strokeWidth="2"
-                      rx="2"
-                    />
-
                     {includeFence && (
                       <rect
-                        x={100 - omostkaWidth * 30 - 5}
-                        y={100 - omostkaWidth * 30 - 5}
-                        width={(200 * length / 2) + omostkaWidth * 60 + 10}
-                        height={(200 * width / 2) + omostkaWidth * 60 + 10}
+                        x={100 - omostkaWidth * 40 - 8}
+                        y={100 - omostkaWidth * 40 - 8}
+                        width={(150 * length / Math.max(length, width)) + omostkaWidth * 80 + 16}
+                        height={(150 * width / Math.max(length, width)) + omostkaWidth * 80 + 16}
                         fill="none"
                         stroke="#1e293b"
                         strokeWidth="4"
@@ -347,15 +346,61 @@ const Index = () => {
                       />
                     )}
 
-                    <text x={100 + (100 * length / 2)} y="85" textAnchor="middle" className="text-sm fill-gray-800 font-semibold">
+                    {includeBorder && (
+                      <rect
+                        x={100 - omostkaWidth * 40}
+                        y={100 - omostkaWidth * 40}
+                        width={(150 * length / Math.max(length, width)) + omostkaWidth * 80}
+                        height={(150 * width / Math.max(length, width)) + omostkaWidth * 80}
+                        fill="none"
+                        stroke="#8B5CF6"
+                        strokeWidth="6"
+                        rx="4"
+                      />
+                    )}
+
+                    <rect
+                      x={100 - omostkaWidth * 40}
+                      y={100 - omostkaWidth * 40}
+                      width={(150 * length / Math.max(length, width)) + omostkaWidth * 80}
+                      height={(150 * width / Math.max(length, width)) + omostkaWidth * 80}
+                      fill="url(#omostkaPattern)"
+                      stroke="none"
+                      rx="4"
+                    />
+                    
+                    <rect
+                      x="100"
+                      y="100"
+                      width={150 * length / Math.max(length, width)}
+                      height={150 * width / Math.max(length, width)}
+                      fill="url(#tilePattern)"
+                      stroke="#6366f1"
+                      strokeWidth="2"
+                      rx="2"
+                    />
+
+                    <text x={100 + (75 * length / Math.max(length, width))} y="85" textAnchor="middle" className="text-sm fill-gray-800 font-semibold">
                       {length} м
                     </text>
-                    <line x1="100" y1="90" x2={100 + (200 * length / 2)} y2="90" stroke="#374151" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                    <line x1="100" y1="90" x2={100 + (150 * length / Math.max(length, width))} y2="90" stroke="#374151" strokeWidth="2"/>
                     
-                    <text x="85" y={100 + (100 * width / 2)} textAnchor="middle" className="text-sm fill-gray-800 font-semibold" transform={`rotate(-90 85 ${100 + (100 * width / 2)})`}>
+                    <text x="85" y={100 + (75 * width / Math.max(length, width))} textAnchor="middle" className="text-sm fill-gray-800 font-semibold" transform={`rotate(-90 85 ${100 + (75 * width / Math.max(length, width))})`}>
                       {width} м
                     </text>
-                    <line x1="90" y1="100" x2="90" y2={100 + (200 * width / 2)} stroke="#374151" strokeWidth="2"/>
+                    <line x1="90" y1="100" x2="90" y2={100 + (150 * width / Math.max(length, width))} stroke="#374151" strokeWidth="2"/>
+
+                    <text 
+                      x={420} 
+                      y={200} 
+                      className="text-xs fill-gray-700 font-medium"
+                      textAnchor="start"
+                    >
+                      <tspan x="420" dy="0" className="font-semibold fill-gray-900">Площади:</tspan>
+                      <tspan x="420" dy="20">Плитка: {(length * width).toFixed(2)} м²</tspan>
+                      <tspan x="420" dy="18">Отмостка: {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth) - length * width).toFixed(2)} м²</tspan>
+                      <tspan x="420" dy="18" className="font-semibold fill-primary">Общая: {((length + 2 * omostkaWidth) * (width + 2 * omostkaWidth)).toFixed(2)} м²</tspan>
+                    </text>
                   </svg>
                 </div>
                 <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
