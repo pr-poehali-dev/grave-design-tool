@@ -645,9 +645,12 @@ const Index = () => {
                       }
                       
                       const monuments = [];
+                      const borderOffset = includeBorder ? borderWidth * scale : 0;
+                      const monumentMargin = 0.3 * scale;
+                      
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + 20);
-                        const y = 60 + tileHeight - monumentHeight - 20;
+                        const y = 60 + borderOffset + monumentMargin;
                         
                         monuments.push(
                           <g key={i}>
@@ -693,15 +696,40 @@ const Index = () => {
                 <div className="space-y-3">
                   <h3 className="font-semibold text-sm text-gray-900">Отображение элементов:</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant={includeBorder ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setIncludeBorder(!includeBorder)}
-                      className="justify-start gap-2"
-                    >
-                      <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                      Поребрик
-                    </Button>
+                    <div className="col-span-2 space-y-2">
+                      <Button
+                        variant={includeBorder ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setIncludeBorder(!includeBorder)}
+                        className="w-full justify-start gap-2"
+                      >
+                        <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
+                        Поребрик
+                      </Button>
+                      {includeBorder && (
+                        <div className="pl-6 space-y-2">
+                          <Label htmlFor="border-width-visual" className="text-xs text-muted-foreground">
+                            Ширина поребрика (м)
+                          </Label>
+                          <Input
+                            id="border-width-visual"
+                            type="number"
+                            step="0.01"
+                            min="0.05"
+                            value={borderWidth || ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (val === '' || val === '-') {
+                                setBorderWidth(0);
+                              } else {
+                                setBorderWidth(parseFloat(val));
+                              }
+                            }}
+                            className="h-8"
+                          />
+                        </div>
+                      )}
+                    </div>
                     
                     <Button
                       variant={includeFence ? 'default' : 'outline'}
