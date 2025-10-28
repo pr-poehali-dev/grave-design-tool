@@ -41,6 +41,7 @@ interface CalculationItem {
 }
 
 const Index = () => {
+  const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
   const [length, setLength] = useState<number>(2);
   const [width, setWidth] = useState<number>(1.8);
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
@@ -54,14 +55,21 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
+    const savedMaterials = localStorage.getItem('materials');
+    if (savedMaterials) {
+      setMaterialsData(JSON.parse(savedMaterials));
+    }
+  }, []);
+
+  useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeBorder, includeFence]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, includeBorder, includeFence, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
     
     const tileArea = length * width;
-    const tileMaterial = materials.tile.find(m => m.id === selectedTile)!;
+    const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     items.push({
       name: tileMaterial.name,
       quantity: parseFloat(tileArea.toFixed(2)),
@@ -81,7 +89,7 @@ const Index = () => {
     });
 
     if (includeBorder) {
-      const borderMaterial = materials.border.find(m => m.id === selectedBorder)!;
+      const borderMaterial = materialsData.border.find(m => m.id === selectedBorder)!;
       items.push({
         name: borderMaterial.name,
         quantity: parseFloat(omostkaPerimeter.toFixed(2)),
@@ -92,7 +100,7 @@ const Index = () => {
     }
 
     if (includeFence) {
-      const fenceMaterial = materials.fence.find(m => m.id === selectedFence)!;
+      const fenceMaterial = materialsData.fence.find(m => m.id === selectedFence)!;
       items.push({
         name: fenceMaterial.name,
         quantity: parseFloat(omostkaPerimeter.toFixed(2)),
@@ -110,6 +118,12 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="text-center mb-12 animate-fade-in">
+          <div className="flex justify-end mb-4">
+            <Button onClick={() => window.location.href = '/admin'} variant="outline" className="gap-2">
+              <Icon name="Settings" size={18} />
+              Админ-панель
+            </Button>
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
             Калькулятор благоустройства
           </h1>
@@ -191,7 +205,7 @@ const Index = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {materials.tile.map((mat) => (
+                    {materialsData.tile.map((mat) => (
                       <SelectItem key={mat.id} value={mat.id}>
                         {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
                       </SelectItem>
@@ -220,7 +234,7 @@ const Index = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {materials.border.map((mat) => (
+                      {materialsData.border.map((mat) => (
                         <SelectItem key={mat.id} value={mat.id}>
                           {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
                         </SelectItem>
@@ -250,7 +264,7 @@ const Index = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {materials.fence.map((mat) => (
+                      {materialsData.fence.map((mat) => (
                         <SelectItem key={mat.id} value={mat.id}>
                           {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
                         </SelectItem>
