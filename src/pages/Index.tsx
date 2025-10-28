@@ -51,7 +51,7 @@ const Index = () => {
   const [length, setLength] = useState<number>(2.5);
   const [width, setWidth] = useState<number>(2);
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
-  const [borderWidth, setBorderWidth] = useState<number>(0.15);
+  const [borderWidth, setBorderWidth] = useState<number>(0.2);
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
@@ -577,36 +577,65 @@ const Index = () => {
                       </>
                     )}
 
-                    {includeBorder && (
-                      <>
-                        <rect
-                          x={60 + borderWidth * 120}
-                          y={60 + borderWidth * 120}
-                          width={(480 * length / Math.max(length, width)) - borderWidth * 240}
-                          height={(480 * width / Math.max(length, width)) - borderWidth * 240}
-                          fill="none"
-                          stroke="#8B5CF6"
-                          strokeWidth="12"
-                          rx="4"
-                        />
-                        <line 
-                          x1="60" 
-                          y1={60 + 10} 
-                          x2={60 + borderWidth * 120} 
-                          y2={60 + 10} 
-                          stroke="#7c3aed" 
-                          strokeWidth="2"
-                        />
-                        <text 
-                          x={60 + borderWidth * 60} 
-                          y={60 + 8} 
-                          textAnchor="middle" 
-                          className="text-sm fill-purple-700 font-semibold"
-                        >
-                          {borderWidth} м
-                        </text>
-                      </>
-                    )}
+                    {includeBorder && (() => {
+                      const scale = 480 / Math.max(length, width);
+                      const borderPixels = borderWidth * scale;
+                      const tileWidth = 480 * length / Math.max(length, width);
+                      const tileHeight = 480 * width / Math.max(length, width);
+                      
+                      return (
+                        <>
+                          <rect
+                            x={60}
+                            y={60}
+                            width={borderPixels}
+                            height={tileHeight}
+                            fill="#78716c"
+                            stroke="none"
+                          />
+                          <rect
+                            x={60 + tileWidth - borderPixels}
+                            y={60}
+                            width={borderPixels}
+                            height={tileHeight}
+                            fill="#78716c"
+                            stroke="none"
+                          />
+                          <rect
+                            x={60 + borderPixels}
+                            y={60}
+                            width={tileWidth - borderPixels * 2}
+                            height={borderPixels}
+                            fill="#78716c"
+                            stroke="none"
+                          />
+                          <rect
+                            x={60 + borderPixels}
+                            y={60 + tileHeight - borderPixels}
+                            width={tileWidth - borderPixels * 2}
+                            height={borderPixels}
+                            fill="#78716c"
+                            stroke="none"
+                          />
+                          <line 
+                            x1="60" 
+                            y1={60 + 10} 
+                            x2={60 + borderPixels} 
+                            y2={60 + 10} 
+                            stroke="#292524" 
+                            strokeWidth="2"
+                          />
+                          <text 
+                            x={60 + borderPixels / 2} 
+                            y={60 + 8} 
+                            textAnchor="middle" 
+                            className="text-xs fill-stone-900 font-semibold"
+                          >
+                            {borderWidth} м
+                          </text>
+                        </>
+                      );
+                    })()}
                     
                     <rect
                       x="60"
@@ -713,16 +742,18 @@ const Index = () => {
                           </Label>
                           <Input
                             id="border-width-visual"
-                            type="number"
-                            step="0.01"
-                            min="0.05"
-                            value={borderWidth || ''}
+                            type="text"
+                            inputMode="decimal"
+                            value={borderWidth}
                             onChange={(e) => {
                               const val = e.target.value;
-                              if (val === '' || val === '-') {
-                                setBorderWidth(0);
+                              if (val === '' || val === '-' || val === '0') {
+                                setBorderWidth(0.05);
                               } else {
-                                setBorderWidth(parseFloat(val));
+                                const num = parseFloat(val);
+                                if (!isNaN(num) && num >= 0.05) {
+                                  setBorderWidth(num);
+                                }
                               }
                             }}
                             className="h-8"
