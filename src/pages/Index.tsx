@@ -297,18 +297,19 @@ const Index = () => {
                       </Label>
                       <Input
                         id="border-width"
-                        type="number"
-                        step="0.01"
-                        min="0.05"
+                        type="text"
+                        inputMode="decimal"
                         value={borderWidth}
                         onChange={(e) => {
                           const val = e.target.value;
-                          if (val === '' || val === '0') {
+                          if (val === '' || val === '-') {
                             setBorderWidth(0);
-                          } else {
+                          } else if (/^\d*\.?\d*$/.test(val)) {
                             const num = parseFloat(val);
                             if (!isNaN(num)) {
                               setBorderWidth(num);
+                            } else if (val === '0' || val === '0.') {
+                              setBorderWidth(0);
                             }
                           }
                         }}
@@ -757,18 +758,19 @@ const Index = () => {
                           </Label>
                           <Input
                             id="border-width-visual"
-                            type="number"
-                            step="0.01"
-                            min="0.05"
+                            type="text"
+                            inputMode="decimal"
                             value={borderWidth}
                             onChange={(e) => {
                               const val = e.target.value;
-                              if (val === '' || val === '0') {
+                              if (val === '' || val === '-') {
                                 setBorderWidth(0);
-                              } else {
+                              } else if (/^\d*\.?\d*$/.test(val)) {
                                 const num = parseFloat(val);
                                 if (!isNaN(num)) {
                                   setBorderWidth(num);
+                                } else if (val === '0' || val === '0.') {
+                                  setBorderWidth(0);
                                 }
                               }
                             }}
