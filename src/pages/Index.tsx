@@ -228,7 +228,7 @@ const Index = () => {
           </p>
         </header>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -239,8 +239,8 @@ const Index = () => {
                 Введите размеры и выберите материалы
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent className="space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="length" className="flex items-center gap-2">
                     <Icon name="ArrowLeftRight" size={16} />
@@ -295,7 +295,7 @@ const Index = () => {
                 </div>
               </div>
 
-              <Separator />
+              <Separator className="my-2" />
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
