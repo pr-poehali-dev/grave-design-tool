@@ -97,7 +97,7 @@ const Index = () => {
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     
     if (includeTile) {
-      const tileCount = Math.ceil(tileArea / 0.09);
+      const tileCount = Math.ceil(tileArea / 0.16);
       items.push({
         name: tileMaterial.name,
         quantity: parseFloat(tileArea.toFixed(2)),
@@ -106,7 +106,7 @@ const Index = () => {
         total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
       });
       items.push({
-        name: '└─ Количество плиток 30×30 см',
+        name: '└─ Количество плиток 40×40 см',
         quantity: tileCount,
         unit: 'шт',
         price: 0,
