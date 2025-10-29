@@ -50,7 +50,7 @@ const tileTypes: TileType[] = [
     category: 'concrete',
     pricePerUnit: 1300, 
     unit: 'м²',
-    image: 'https://cdn.poehali.dev/files/3116db9a-4c1d-451d-94fd-42c6e92e62ab.png',
+    image: 'https://cdn.poehali.dev/files/24dae1ac-594b-4d3c-9426-bfd31588f002.png',
     sizes: [0.3, 0.4, 0.5]
   },
   { 
