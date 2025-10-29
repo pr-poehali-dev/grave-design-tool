@@ -406,33 +406,6 @@ const Index = () => {
                     {includeOmostka ? 'Включена' : 'Выключена'}
                   </Button>
                 </div>
-                {includeOmostka && (
-                  <div className="space-y-2">
-                    <Label htmlFor="omostka-width" className="text-sm text-muted-foreground">
-                      Ширина отмостки (м)
-                    </Label>
-                    <Input
-                      id="omostka-width"
-                      type="number"
-                      step="0.1"
-                      min="0.1"
-                      value={omostkaWidthInput}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setOmostkaWidthInput(val);
-                        if (val === '' || val === '-') {
-                          setOmostkaWidth(0);
-                          return;
-                        }
-                        const num = parseFloat(val);
-                        if (!isNaN(num)) {
-                          setOmostkaWidth(num);
-                        }
-                      }}
-                      className="text-lg"
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="space-y-2">
