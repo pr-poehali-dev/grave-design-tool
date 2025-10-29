@@ -740,29 +740,77 @@ const Index = () => {
                             Поребрик: {borderArea.toFixed(2)} м²
                           </text>
                           
-                          <text 
-                            x={60 + tileWidth / 2} 
-                            y={60 + tileHeight / 2} 
-                            textAnchor="middle" 
-                            className={`text-lg font-bold ${includeTile ? 'fill-indigo-700' : 'fill-amber-600'}`}
-                            style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
-                          >
-                            {includeTile ? `Плитка: ${tileAreaInner.toFixed(2)} м²` : `Песок: ${tileAreaInner.toFixed(2)} м²`}
-                          </text>
+                          {includeTile ? (
+                            <>
+                              <text 
+                                x={60 + tileWidth / 2} 
+                                y={60 + tileHeight / 2 - 10} 
+                                textAnchor="middle" 
+                                className="text-lg fill-indigo-700 font-bold"
+                                style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                              >
+                                Плитка: {tileAreaInner.toFixed(2)} м²
+                              </text>
+                              <text 
+                                x={60 + tileWidth / 2} 
+                                y={60 + tileHeight / 2 + 10} 
+                                textAnchor="middle" 
+                                className="text-sm fill-indigo-600 font-semibold"
+                                style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                              >
+                                {Math.ceil(tileAreaInner / 0.09)} шт (30×30 см)
+                              </text>
+                            </>
+                          ) : (
+                            <text 
+                              x={60 + tileWidth / 2} 
+                              y={60 + tileHeight / 2} 
+                              textAnchor="middle" 
+                              className="text-lg fill-amber-600 font-bold"
+                              style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                            >
+                              Песок: {tileAreaInner.toFixed(2)} м²
+                            </text>
+                          )}
                         </>
                       );
                     })()}
                     
                     {!includeBorder && (
-                      <text 
-                        x={60 + (480 * length / Math.max(length, width)) / 2} 
-                        y={60 + (480 * width / Math.max(length, width)) / 2} 
-                        textAnchor="middle" 
-                        className={`text-lg font-bold ${includeTile ? 'fill-indigo-700' : 'fill-amber-600'}`}
-                        style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
-                      >
-                        {includeTile ? `Плитка: ${(length * width).toFixed(2)} м²` : `Песок: ${(length * width).toFixed(2)} м²`}
-                      </text>
+                      <>
+                        {includeTile ? (
+                          <>
+                            <text 
+                              x={60 + (480 * length / Math.max(length, width)) / 2} 
+                              y={60 + (480 * width / Math.max(length, width)) / 2 - 10} 
+                              textAnchor="middle" 
+                              className="text-lg fill-indigo-700 font-bold"
+                              style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                            >
+                              Плитка: {(length * width).toFixed(2)} м²
+                            </text>
+                            <text 
+                              x={60 + (480 * length / Math.max(length, width)) / 2} 
+                              y={60 + (480 * width / Math.max(length, width)) / 2 + 10} 
+                              textAnchor="middle" 
+                              className="text-sm fill-indigo-600 font-semibold"
+                              style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                            >
+                              {Math.ceil((length * width) / 0.09)} шт (30×30 см)
+                            </text>
+                          </>
+                        ) : (
+                          <text 
+                            x={60 + (480 * length / Math.max(length, width)) / 2} 
+                            y={60 + (480 * width / Math.max(length, width)) / 2} 
+                            textAnchor="middle" 
+                            className="text-lg fill-amber-600 font-bold"
+                            style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                          >
+                            Песок: {(length * width).toFixed(2)} м²
+                          </text>
+                        )}
+                      </>
                     )}
 
                     {includeMonument && (() => {
