@@ -1049,6 +1049,16 @@ const Index = () => {
                 <div className="space-y-3">
                   <h3 className="font-semibold text-sm text-gray-900">Отображение элементов:</h3>
                   <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant={includeTile ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeTile(!includeTile)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 bg-indigo-600 rounded"></div>
+                      Плитка
+                    </Button>
+                    
                     <div className="col-span-2 space-y-2">
                       <Button
                         variant={includeBorder ? 'default' : 'outline'}
