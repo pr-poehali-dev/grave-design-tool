@@ -1033,12 +1033,12 @@ const Index = () => {
                     })()}
 
                     <text x={60 + (240 * length / Math.max(length, width))} y="40" textAnchor="middle" className="text-lg fill-gray-800 font-bold">
-                      {length} м
+                      {width} м
                     </text>
                     <line x1="60" y1="50" x2={60 + (480 * length / Math.max(length, width))} y2="50" stroke="#374151" strokeWidth="3" markerEnd="url(#arrowhead)"/>
                     
                     <text x="40" y={60 + (240 * width / Math.max(length, width))} textAnchor="middle" className="text-lg fill-gray-800 font-bold" transform={`rotate(-90 40 ${60 + (240 * width / Math.max(length, width))})`}>
-                      {width} м
+                      {length} м
                     </text>
                     <line x1="50" y1="60" x2="50" y2={60 + (480 * width / Math.max(length, width))} stroke="#374151" strokeWidth="3"/>
                   </svg>
