@@ -74,7 +74,7 @@ const Index = () => {
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
   const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
   const [tileSize, setTileSize] = useState<number>(0.4);
-  const [tileType, setTileType] = useState<string>('standard');
+  const [tilePattern, setTilePattern] = useState<string>('standard');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
   const [installationPrice, setInstallationPrice] = useState<number>(3000);
   const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
@@ -334,69 +334,6 @@ const Index = () => {
                       </SelectContent>
                     </Select>
                     <div className="space-y-2">
-                      <Label className="text-sm text-muted-foreground">
-                        Тип укладки плитки
-                      </Label>
-                      <div className="grid grid-cols-3 gap-3">
-                        <button
-                          onClick={() => setTileType('brick')}
-                          className={`p-3 border-2 rounded-lg transition-all ${
-                            tileType === 'brick' 
-                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2">
-                            <svg viewBox="0 0 100 100" className="w-full h-full">
-                              <rect x="2" y="2" width="28" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                              <rect x="32" y="2" width="28" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                              <rect x="62" y="2" width="36" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                              <rect x="2" y="49" width="60" height="49" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                              <rect x="64" y="49" width="34" height="24" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                              <rect x="64" y="75" width="34" height="23" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
-                            </svg>
-                          </div>
-                          <p className="text-xs font-medium text-center">Кирпич</p>
-                        </button>
-                        
-                        <button
-                          onClick={() => setTileType('standard')}
-                          className={`p-3 border-2 rounded-lg transition-all ${
-                            tileType === 'standard' 
-                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2">
-                            <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-1">
-                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
-                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
-                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
-                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
-                            </div>
-                          </div>
-                          <p className="text-xs font-medium text-center">Стандарт</p>
-                        </button>
-                        
-                        <button
-                          onClick={() => setTileType('diagonal')}
-                          className={`p-3 border-2 rounded-lg transition-all ${
-                            tileType === 'diagonal' 
-                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2 relative overflow-hidden">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-[60%] h-[60%] bg-indigo-300 border-2 border-indigo-500 transform rotate-45"></div>
-                            </div>
-                          </div>
-                          <p className="text-xs font-medium text-center">Диагональ</p>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
                       <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
                         Размер плитки
                       </Label>
@@ -453,6 +390,65 @@ const Index = () => {
                         }}
                         className="text-sm"
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm text-muted-foreground">
+                        Вариант укладки
+                      </Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          onClick={() => setTilePattern('standard')}
+                          className={`p-2 border-2 rounded-lg transition-all ${
+                            tilePattern === 'standard' 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-gray-100 rounded grid grid-cols-2 grid-rows-2 gap-[2px] p-1">
+                            <div className="bg-indigo-400 rounded-sm"></div>
+                            <div className="bg-indigo-400 rounded-sm"></div>
+                            <div className="bg-indigo-400 rounded-sm"></div>
+                            <div className="bg-indigo-400 rounded-sm"></div>
+                          </div>
+                          <p className="text-xs mt-1 text-center">Стандарт</p>
+                        </button>
+                        <button
+                          onClick={() => setTilePattern('brick')}
+                          className={`p-2 border-2 rounded-lg transition-all ${
+                            tilePattern === 'brick' 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-gray-100 rounded flex flex-col gap-[2px] p-1">
+                            <div className="flex gap-[2px] flex-1">
+                              <div className="bg-indigo-400 rounded-sm flex-1"></div>
+                              <div className="bg-indigo-400 rounded-sm flex-1"></div>
+                            </div>
+                            <div className="bg-indigo-400 rounded-sm flex-1"></div>
+                            <div className="flex gap-[2px] flex-1">
+                              <div className="bg-indigo-400 rounded-sm flex-1"></div>
+                              <div className="bg-indigo-400 rounded-sm flex-1"></div>
+                            </div>
+                          </div>
+                          <p className="text-xs mt-1 text-center">Кирпич</p>
+                        </button>
+                        <button
+                          onClick={() => setTilePattern('diagonal')}
+                          className={`p-2 border-2 rounded-lg transition-all ${
+                            tilePattern === 'diagonal' 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-gray-100 rounded relative overflow-hidden p-1">
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-[70%] h-[70%] bg-indigo-400 rounded-sm transform rotate-45"></div>
+                            </div>
+                          </div>
+                          <p className="text-xs mt-1 text-center">Диагональ</p>
+                        </button>
+                      </div>
                     </div>
                   </>
                 )}
@@ -783,24 +779,61 @@ const Index = () => {
                         const patternWidth = (tileSize / innerLength) * innerPixelsWidth;
                         const patternHeight = (tileSize / innerWidth) * innerPixelsHeight;
                         
-                        return (
-                          <pattern 
-                            id="tilePattern" 
-                            patternUnits="userSpaceOnUse" 
-                            width={patternWidth} 
-                            height={patternHeight}
-                            x={60 + borderPixels}
-                            y={60 + borderPixels}
-                          >
-                            <rect 
-                              width={patternWidth - 1} 
-                              height={patternHeight - 1} 
-                              fill="#e0e7ff" 
-                              stroke="#a5b4fc" 
-                              strokeWidth="1"
-                            />
-                          </pattern>
-                        );
+                        if (tilePattern === 'brick') {
+                          return (
+                            <pattern 
+                              id="tilePattern" 
+                              patternUnits="userSpaceOnUse" 
+                              width={patternWidth * 2} 
+                              height={patternHeight * 2}
+                              x={60 + borderPixels}
+                              y={60 + borderPixels}
+                            >
+                              <rect x="0" y="0" width={patternWidth - 1} height={patternHeight - 1} fill="#e0e7ff" stroke="#a5b4fc" strokeWidth="1"/>
+                              <rect x={patternWidth} y="0" width={patternWidth - 1} height={patternHeight - 1} fill="#e0e7ff" stroke="#a5b4fc" strokeWidth="1"/>
+                              <rect x={patternWidth / 2} y={patternHeight} width={patternWidth - 1} height={patternHeight - 1} fill="#e0e7ff" stroke="#a5b4fc" strokeWidth="1"/>
+                            </pattern>
+                          );
+                        } else if (tilePattern === 'diagonal') {
+                          return (
+                            <pattern 
+                              id="tilePattern" 
+                              patternUnits="userSpaceOnUse" 
+                              width={patternWidth * 1.414} 
+                              height={patternHeight * 1.414}
+                              x={60 + borderPixels}
+                              y={60 + borderPixels}
+                              patternTransform="rotate(45)"
+                            >
+                              <rect 
+                                width={patternWidth - 1} 
+                                height={patternHeight - 1} 
+                                fill="#e0e7ff" 
+                                stroke="#a5b4fc" 
+                                strokeWidth="1"
+                              />
+                            </pattern>
+                          );
+                        } else {
+                          return (
+                            <pattern 
+                              id="tilePattern" 
+                              patternUnits="userSpaceOnUse" 
+                              width={patternWidth} 
+                              height={patternHeight}
+                              x={60 + borderPixels}
+                              y={60 + borderPixels}
+                            >
+                              <rect 
+                                width={patternWidth - 1} 
+                                height={patternHeight - 1} 
+                                fill="#e0e7ff" 
+                                stroke="#a5b4fc" 
+                                strokeWidth="1"
+                              />
+                            </pattern>
+                          );
+                        }
                       })()}
                       <pattern id="sandPattern" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
                         <rect width="6" height="6" fill="#fbbf24"/>
