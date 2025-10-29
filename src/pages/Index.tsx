@@ -48,10 +48,10 @@ interface CalculationItem {
 
 const Index = () => {
   const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
-  const [length, setLength] = useState<number>(2);
-  const [lengthInput, setLengthInput] = useState<string>('2');
-  const [width, setWidth] = useState<number>(2.5);
-  const [widthInput, setWidthInput] = useState<string>('2.5');
+  const [length, setLength] = useState<number>(2.5);
+  const [lengthInput, setLengthInput] = useState<string>('2.5');
+  const [width, setWidth] = useState<number>(2);
+  const [widthInput, setWidthInput] = useState<string>('2');
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
   const borderWidth = 0.2;
@@ -242,32 +242,6 @@ const Index = () => {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="width" className="flex items-center gap-2">
-                    <Icon name="Move" size={16} className="rotate-90" />
-                    Ширина (м)
-                  </Label>
-                  <Input
-                    id="width"
-                    type="number"
-                    step="0.1"
-                    min="0.5"
-                    value={widthInput}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setWidthInput(val);
-                      if (val === '' || val === '-') {
-                        setWidth(0);
-                        return;
-                      }
-                      const num = parseFloat(val);
-                      if (!isNaN(num)) {
-                        setWidth(num);
-                      }
-                    }}
-                    className="text-lg"
-                  />
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="length" className="flex items-center gap-2">
                     <Icon name="Move" size={16} />
                     Длина (м)
@@ -288,6 +262,32 @@ const Index = () => {
                       const num = parseFloat(val);
                       if (!isNaN(num)) {
                         setLength(num);
+                      }
+                    }}
+                    className="text-lg"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="width" className="flex items-center gap-2">
+                    <Icon name="Move" size={16} className="rotate-90" />
+                    Ширина (м)
+                  </Label>
+                  <Input
+                    id="width"
+                    type="number"
+                    step="0.1"
+                    min="0.5"
+                    value={widthInput}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setWidthInput(val);
+                      if (val === '' || val === '-') {
+                        setWidth(0);
+                        return;
+                      }
+                      const num = parseFloat(val);
+                      if (!isNaN(num)) {
+                        setWidth(num);
                       }
                     }}
                     className="text-lg"
