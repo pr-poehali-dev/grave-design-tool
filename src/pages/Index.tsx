@@ -45,6 +45,15 @@ const tileTypes: TileType[] = [
     sizes: [0.3, 0.4, 0.5]
   },
   { 
+    id: 'concrete-california', 
+    name: 'Калифорния', 
+    category: 'concrete',
+    pricePerUnit: 1300, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/4a796517-c0f9-42bc-a70e-0d5b7a269553.png',
+    sizes: [0.3, 0.4, 0.5]
+  },
+  { 
     id: 'granite-brick', 
     name: 'Кирпич', 
     category: 'granite',
