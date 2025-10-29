@@ -709,15 +709,35 @@ const Index = () => {
                     className="w-full h-full"
                   >
                     <defs>
-                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(tileSize / length) * (480 * length / Math.max(length, width))} height={(tileSize / width) * (480 * width / Math.max(length, width))}>
-                        <rect 
-                          width={(tileSize / length) * (480 * length / Math.max(length, width)) - 1} 
-                          height={(tileSize / width) * (480 * width / Math.max(length, width)) - 1} 
-                          fill="#e0e7ff" 
-                          stroke="#a5b4fc" 
-                          strokeWidth="1"
-                        />
-                      </pattern>
+                      {(() => {
+                        const scale = 480 / Math.max(length, width);
+                        const borderPixels = includeBorder ? borderWidth * scale : 0;
+                        const innerLength = includeBorder ? length - 2 * borderWidth : length;
+                        const innerWidth = includeBorder ? width - 2 * borderWidth : width;
+                        const innerPixelsWidth = innerLength * scale;
+                        const innerPixelsHeight = innerWidth * scale;
+                        const patternWidth = (tileSize / innerLength) * innerPixelsWidth;
+                        const patternHeight = (tileSize / innerWidth) * innerPixelsHeight;
+                        
+                        return (
+                          <pattern 
+                            id="tilePattern" 
+                            patternUnits="userSpaceOnUse" 
+                            width={patternWidth} 
+                            height={patternHeight}
+                            x={60 + borderPixels}
+                            y={60 + borderPixels}
+                          >
+                            <rect 
+                              width={patternWidth - 1} 
+                              height={patternHeight - 1} 
+                              fill="#e0e7ff" 
+                              stroke="#a5b4fc" 
+                              strokeWidth="1"
+                            />
+                          </pattern>
+                        );
+                      })()}
                       <pattern id="sandPattern" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
                         <rect width="6" height="6" fill="#fbbf24"/>
                         <circle cx="1" cy="1" r="0.4" fill="#f59e0b" opacity="0.6"/>
