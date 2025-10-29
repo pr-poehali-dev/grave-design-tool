@@ -282,7 +282,10 @@ const Index = () => {
                   <Button
                     variant={includeTile ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => setIncludeTile(!includeTile)}
+                    onClick={() => {
+                      setIncludeTile(!includeTile);
+                      if (!includeTile) setIncludeCrumb(false);
+                    }}
                   >
                     {includeTile ? 'Включена' : 'Выключена'}
                   </Button>
@@ -525,7 +528,10 @@ const Index = () => {
                   <Button
                     variant={includeCrumb ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => setIncludeCrumb(!includeCrumb)}
+                    onClick={() => {
+                      setIncludeCrumb(!includeCrumb);
+                      if (!includeCrumb) setIncludeTile(false);
+                    }}
                   >
                     {includeCrumb ? 'Включена' : 'Выключена'}
                   </Button>
