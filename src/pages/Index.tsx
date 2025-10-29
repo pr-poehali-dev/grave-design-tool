@@ -105,7 +105,7 @@ const Index = () => {
   const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
   const [borderWidth, setBorderWidth] = useState<number>(0.2);
   const [borderWidthInput, setBorderWidthInput] = useState<string>('0.2');
-  const [selectedTile, setSelectedTile] = useState<string>('concrete');
+  const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
   const [selectedMonument, setSelectedMonument] = useState<string>('monument-40x80');
