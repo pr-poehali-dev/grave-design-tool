@@ -243,7 +243,7 @@ const Index = () => {
                 Введите размеры и выберите материалы
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-8">
+            <CardContent className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="length" className="flex items-center gap-2">
@@ -299,12 +299,12 @@ const Index = () => {
                 </div>
               </div>
 
-              <Separator className="my-2" />
+              <Separator />
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-indigo-100 bg-indigo-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="tile" className="flex items-center gap-2">
-                    <Icon name="Grid3x3" size={16} />
+                  <Label htmlFor="tile" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="Grid3x3" size={20} />
                     Плитка {Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см
                   </Label>
                   <Button
@@ -394,10 +394,10 @@ const Index = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-purple-100 bg-purple-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="border" className="flex items-center gap-2">
-                    <Icon name="Square" size={16} />
+                  <Label htmlFor="border" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="Square" size={20} />
                     Поребрик
                   </Label>
                   <Button
@@ -452,10 +452,10 @@ const Index = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-purple-100 bg-purple-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="omostka" className="flex items-center gap-2">
-                    <Icon name="Layers" size={16} />
+                  <Label htmlFor="omostka" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="Layers" size={20} />
                     Отмостка
                   </Label>
                   <Button
@@ -468,10 +468,10 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-gray-200 bg-gray-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="fence" className="flex items-center gap-2">
-                    <Icon name="FenceIcon" size={16} fallback="Box" />
+                  <Label htmlFor="fence" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="FenceIcon" size={20} fallback="Box" />
                     Ограда
                   </Label>
                   <Button
@@ -498,10 +498,10 @@ const Index = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-slate-200 bg-slate-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="monument" className="flex items-center gap-2">
-                    <Icon name="BookMarked" size={16} />
+                  <Label htmlFor="monument" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="BookMarked" size={20} />
                     Памятник
                   </Label>
                   <Button
@@ -605,10 +605,10 @@ const Index = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-4 p-4 rounded-lg border-2 border-amber-100 bg-amber-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="crumb" className="flex items-center gap-2">
-                    <Icon name="Sparkles" size={16} />
+                  <Label htmlFor="crumb" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="Sparkles" size={20} />
                     Крошка гранитная
                   </Label>
                   <Button
