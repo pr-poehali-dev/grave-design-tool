@@ -534,6 +534,14 @@ const Index = () => {
                       <pattern id="omostkaPattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
                         <rect width="14" height="14" fill="#f3e8ff" stroke="#e9d5ff" strokeWidth="1"/>
                       </pattern>
+                      <pattern id="concreteTexture" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                        <rect width="8" height="8" fill="#9ca3af"/>
+                        <circle cx="2" cy="2" r="0.5" fill="#6b7280" opacity="0.4"/>
+                        <circle cx="5" cy="4" r="0.5" fill="#6b7280" opacity="0.3"/>
+                        <circle cx="6" cy="6" r="0.5" fill="#4b5563" opacity="0.5"/>
+                        <circle cx="3" cy="7" r="0.5" fill="#6b7280" opacity="0.3"/>
+                        <circle cx="7" cy="1" r="0.5" fill="#4b5563" opacity="0.4"/>
+                      </pattern>
                     </defs>
 
                     {includeFence && (
@@ -593,50 +601,50 @@ const Index = () => {
                             y={60}
                             width={borderPixels}
                             height={tileHeight}
-                            fill="#44403c"
-                            stroke="#292524"
-                            strokeWidth="2"
+                            fill="url(#concreteTexture)"
+                            stroke="#6b7280"
+                            strokeWidth="1.5"
                           />
                           <rect
                             x={60 + tileWidth - borderPixels}
                             y={60}
                             width={borderPixels}
                             height={tileHeight}
-                            fill="#44403c"
-                            stroke="#292524"
-                            strokeWidth="2"
+                            fill="url(#concreteTexture)"
+                            stroke="#6b7280"
+                            strokeWidth="1.5"
                           />
                           <rect
                             x={60}
                             y={60}
                             width={tileWidth}
                             height={borderPixels}
-                            fill="#44403c"
-                            stroke="#292524"
-                            strokeWidth="2"
+                            fill="url(#concreteTexture)"
+                            stroke="#6b7280"
+                            strokeWidth="1.5"
                           />
                           <rect
                             x={60}
                             y={60 + tileHeight - borderPixels}
                             width={tileWidth}
                             height={borderPixels}
-                            fill="#44403c"
-                            stroke="#292524"
-                            strokeWidth="2"
+                            fill="url(#concreteTexture)"
+                            stroke="#6b7280"
+                            strokeWidth="1.5"
                           />
                           <line 
                             x1="60" 
                             y1={60 + borderPixels + 5} 
                             x2={60 + borderPixels} 
                             y2={60 + borderPixels + 5} 
-                            stroke="#e7e5e4" 
+                            stroke="#374151" 
                             strokeWidth="2"
                           />
                           <text 
                             x={60 + borderPixels / 2} 
                             y={60 + borderPixels + 3} 
                             textAnchor="middle" 
-                            className="text-xs fill-stone-200 font-semibold"
+                            className="text-xs fill-gray-800 font-semibold"
                           >
                             {borderWidth} м
                           </text>
