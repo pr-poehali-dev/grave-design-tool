@@ -388,31 +388,6 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <div className="space-y-2">
-                      <Label htmlFor="border-width" className="flex items-center gap-2">
-                        <Icon name="Ruler" size={16} />
-                        Ширина поребрика (м)
-                      </Label>
-                      <Input
-                        id="border-width"
-                        type="number"
-                        step="0.01"
-                        value={borderWidthInput}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setBorderWidthInput(val);
-                          if (val === '' || val === '-') {
-                            setBorderWidth(0);
-                            return;
-                          }
-                          const num = parseFloat(val);
-                          if (!isNaN(num)) {
-                            setBorderWidth(num);
-                          }
-                        }}
-                        className="text-lg"
-                      />
-                    </div>
                   </>
                 )}
               </div>
