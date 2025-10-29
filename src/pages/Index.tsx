@@ -52,6 +52,7 @@ const Index = () => {
   const [width, setWidth] = useState<number>(2);
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [borderWidth, setBorderWidth] = useState<number>(0.2);
+  const [borderWidthInput, setBorderWidthInput] = useState<string>('0.2');
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
@@ -299,9 +300,10 @@ const Index = () => {
                         id="border-width"
                         type="number"
                         step="0.01"
-                        value={borderWidth}
+                        value={borderWidthInput}
                         onChange={(e) => {
                           const val = e.target.value;
+                          setBorderWidthInput(val);
                           if (val === '' || val === '-') {
                             setBorderWidth(0);
                             return;
@@ -758,9 +760,10 @@ const Index = () => {
                             id="border-width-visual"
                             type="number"
                             step="0.01"
-                            value={borderWidth}
+                            value={borderWidthInput}
                             onChange={(e) => {
                               const val = e.target.value;
+                              setBorderWidthInput(val);
                               if (val === '' || val === '-') {
                                 setBorderWidth(0);
                                 return;
