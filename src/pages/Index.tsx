@@ -578,10 +578,10 @@ const Index = () => {
                     className="w-full h-full"
                   >
                     <defs>
-                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(0.3 / length) * (480 * length / Math.max(length, width))} height={(0.3 / width) * (480 * width / Math.max(length, width))}>
+                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(0.4 / length) * (480 * length / Math.max(length, width))} height={(0.4 / width) * (480 * width / Math.max(length, width))}>
                         <rect 
-                          width={(0.3 / length) * (480 * length / Math.max(length, width)) - 1} 
-                          height={(0.3 / width) * (480 * width / Math.max(length, width)) - 1} 
+                          width={(0.4 / length) * (480 * length / Math.max(length, width)) - 1} 
+                          height={(0.4 / width) * (480 * width / Math.max(length, width)) - 1} 
                           fill="#e0e7ff" 
                           stroke="#a5b4fc" 
                           strokeWidth="1"
@@ -766,7 +766,7 @@ const Index = () => {
                                 className="text-sm fill-indigo-600 font-semibold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                               >
-                                ≈{Math.ceil(tileAreaInner / 0.09)} шт (30×30 см)
+                                ≈{Math.ceil(tileAreaInner / 0.16)} шт (40×40 см)
                               </text>
                             </>
                           ) : (
