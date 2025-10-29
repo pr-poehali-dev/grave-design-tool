@@ -975,24 +975,27 @@ const Index = () => {
                       const tileWidth = 480 * length / Math.max(length, width);
                       const tileHeight = 480 * width / Math.max(length, width);
                       
+                      const borderPixels = includeBorder ? borderWidth * scale : 0;
+                      const innerTileWidth = tileWidth - 2 * borderPixels;
+                      const innerTileHeight = tileHeight - 2 * borderPixels;
+                      
                       const totalMonumentsWidth = monumentWidth * monumentCount + (monumentCount - 1) * 20;
-                      let startX = 60;
+                      let startX = 60 + borderPixels;
                       
                       if (monumentPosition === 'center') {
-                        startX = 60 + (tileWidth - totalMonumentsWidth) / 2;
+                        startX = 60 + borderPixels + (innerTileWidth - totalMonumentsWidth) / 2;
                       } else if (monumentPosition === 'left') {
-                        startX = 60 + 20;
+                        startX = 60 + borderPixels + 20;
                       } else if (monumentPosition === 'right') {
-                        startX = 60 + tileWidth - totalMonumentsWidth - 20;
+                        startX = 60 + borderPixels + innerTileWidth - totalMonumentsWidth - 20;
                       }
                       
                       const monuments = [];
-                      const borderOffset = includeBorder ? borderWidth * scale : 0;
-                      const monumentMargin = (includeBorder ? 0.15 : 0) * scale;
+                      const monumentMargin = 20;
                       
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + 20);
-                        const y = 60 + borderOffset + monumentMargin;
+                        const y = 60 + borderPixels + monumentMargin;
                         
                         const monumentWidthCm = size.w * 100;
                         const monumentHeightCm = size.h * 100;
