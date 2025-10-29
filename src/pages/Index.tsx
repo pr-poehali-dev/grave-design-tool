@@ -666,7 +666,7 @@ const Index = () => {
                     <div className="text-xs text-muted-foreground font-normal">
                       Площадь участка
                     </div>
-                    <div className="text-xs text-muted-foreground font-normal mt-1">
+                    <div className="text-sm text-muted-foreground font-semibold mt-1">
                       {length.toFixed(2)} × {width.toFixed(2)} м
                     </div>
                   </div>
