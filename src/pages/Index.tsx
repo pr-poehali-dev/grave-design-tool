@@ -22,7 +22,7 @@ interface TileType {
   pricePerUnit: number;
   unit: string;
   image: string;
-  sizes: number[];
+  sizes: number[]; // доступные размеры в метрах
 }
 
 const tileTypes: TileType[] = [
