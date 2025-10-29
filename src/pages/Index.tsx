@@ -615,6 +615,17 @@ const Index = () => {
                       </>
                     )}
 
+                    <rect
+                      x="60"
+                      y="60"
+                      width={480 * length / Math.max(length, width)}
+                      height={480 * width / Math.max(length, width)}
+                      fill="url(#tilePattern)"
+                      stroke="#6366f1"
+                      strokeWidth="4"
+                      rx="4"
+                    />
+
                     {includeBorder && (() => {
                       const scale = 480 / Math.max(length, width);
                       const borderPixels = borderWidth * scale;
@@ -626,29 +637,11 @@ const Index = () => {
                           <rect
                             x={60}
                             y={60}
-                            width={borderPixels}
-                            height={tileHeight}
-                            fill="url(#concreteTexture)"
-                            stroke="#6b7280"
-                            strokeWidth="1.5"
-                          />
-                          <rect
-                            x={60 + tileWidth - borderPixels}
-                            y={60}
-                            width={borderPixels}
-                            height={tileHeight}
-                            fill="url(#concreteTexture)"
-                            stroke="#6b7280"
-                            strokeWidth="1.5"
-                          />
-                          <rect
-                            x={60}
-                            y={60}
                             width={tileWidth}
                             height={borderPixels}
                             fill="url(#concreteTexture)"
-                            stroke="#6b7280"
-                            strokeWidth="1.5"
+                            stroke="#4b5563"
+                            strokeWidth="2"
                           />
                           <rect
                             x={60}
@@ -656,39 +649,56 @@ const Index = () => {
                             width={tileWidth}
                             height={borderPixels}
                             fill="url(#concreteTexture)"
-                            stroke="#6b7280"
-                            strokeWidth="1.5"
+                            stroke="#4b5563"
+                            strokeWidth="2"
                           />
+                          <rect
+                            x={60}
+                            y={60 + borderPixels}
+                            width={borderPixels}
+                            height={tileHeight - borderPixels * 2}
+                            fill="url(#concreteTexture)"
+                            stroke="#4b5563"
+                            strokeWidth="2"
+                          />
+                          <rect
+                            x={60 + tileWidth - borderPixels}
+                            y={60 + borderPixels}
+                            width={borderPixels}
+                            height={tileHeight - borderPixels * 2}
+                            fill="url(#concreteTexture)"
+                            stroke="#4b5563"
+                            strokeWidth="2"
+                          />
+                          
+                          <rect
+                            x={60 + borderPixels}
+                            y={60 + borderPixels}
+                            width={tileWidth - borderPixels * 2}
+                            height={tileHeight - borderPixels * 2}
+                            fill="url(#tilePattern)"
+                            stroke="none"
+                          />
+                          
                           <line 
                             x1="60" 
-                            y1={60 + borderPixels + 5} 
+                            y1={60 + borderPixels / 2} 
                             x2={60 + borderPixels} 
-                            y2={60 + borderPixels + 5} 
-                            stroke="#374151" 
-                            strokeWidth="2"
+                            y2={60 + borderPixels / 2} 
+                            stroke="#f59e0b" 
+                            strokeWidth="2.5"
                           />
                           <text 
                             x={60 + borderPixels / 2} 
-                            y={60 + borderPixels + 3} 
+                            y={60 + borderPixels / 2 - 3} 
                             textAnchor="middle" 
-                            className="text-xs fill-gray-800 font-semibold"
+                            className="text-xs fill-amber-600 font-bold"
                           >
-                            {borderWidth} м
+                            {borderWidth}м
                           </text>
                         </>
                       );
                     })()}
-                    
-                    <rect
-                      x="60"
-                      y="60"
-                      width={480 * length / Math.max(length, width)}
-                      height={480 * width / Math.max(length, width)}
-                      fill="url(#tilePattern)"
-                      stroke="#6366f1"
-                      strokeWidth="4"
-                      rx="4"
-                    />
 
                     {includeMonument && (() => {
                       const monumentSizes: Record<string, { w: number; h: number }> = {
