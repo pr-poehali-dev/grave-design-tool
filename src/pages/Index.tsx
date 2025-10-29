@@ -988,72 +988,18 @@ const Index = () => {
                         const x = startX + i * (monumentWidth + 20);
                         const y = 60 + borderOffset + monumentMargin;
                         
-                        const standWidth = monumentWidth + 0.15 * scale * 2;
-                        const standHeight = 0.15 * scale;
-                        const flowerBedHeight = 1.0 * scale;
-                        
                         monuments.push(
                           <g key={i}>
-                            <rect
-                              x={x - 0.15 * scale}
-                              y={y + monumentHeight}
-                              width={standWidth}
-                              height={standHeight}
-                              fill="#78716c"
-                              stroke="#57534e"
-                              strokeWidth="1.5"
-                            />
-                            
                             <rect
                               x={x}
                               y={y}
                               width={monumentWidth}
                               height={monumentHeight}
                               fill="#1f2937"
-                              stroke="#9ca3af"
+                              stroke="#111827"
                               strokeWidth="2"
                               rx="2"
                             />
-                            
-                            <line
-                              x1={x + monumentWidth * 0.3}
-                              y1={y + monumentHeight * 0.2}
-                              x2={x + monumentWidth * 0.3}
-                              y2={y + monumentHeight * 0.8}
-                              stroke="#9ca3af"
-                              strokeWidth="1"
-                              opacity="0.6"
-                            />
-                            <line
-                              x1={x + monumentWidth * 0.7}
-                              y1={y + monumentHeight * 0.2}
-                              x2={x + monumentWidth * 0.7}
-                              y2={y + monumentHeight * 0.8}
-                              stroke="#9ca3af"
-                              strokeWidth="1"
-                              opacity="0.6"
-                            />
-                            
-                            <rect
-                              x={x - 0.15 * scale}
-                              y={y + monumentHeight + standHeight}
-                              width={standWidth}
-                              height={flowerBedHeight}
-                              fill="none"
-                              stroke="#1f2937"
-                              strokeWidth="2"
-                              rx="1"
-                            />
-                            
-                            <rect
-                              x={x - 0.15 * scale + 3}
-                              y={y + monumentHeight + standHeight + 3}
-                              width={standWidth - 6}
-                              height={flowerBedHeight - 6}
-                              fill="url(#crumbPattern)"
-                              stroke="none"
-                            />
-                            
                             <text
                               x={x + monumentWidth / 2}
                               y={y + monumentHeight / 2}
