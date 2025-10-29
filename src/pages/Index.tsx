@@ -54,8 +54,7 @@ const Index = () => {
   const [widthInput, setWidthInput] = useState<string>('2');
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
-  const [borderWidth, setBorderWidth] = useState<number>(0.2);
-  const [borderWidthInput, setBorderWidthInput] = useState<string>('0.2');
+  const borderWidth = 0.2;
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
@@ -91,7 +90,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
