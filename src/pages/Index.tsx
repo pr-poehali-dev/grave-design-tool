@@ -169,6 +169,16 @@ const Index = () => {
         price: monumentMaterial.pricePerUnit,
         total: parseFloat((monumentCount * monumentMaterial.pricePerUnit).toFixed(2)),
       });
+      
+      if (includeInstallation) {
+        items.push({
+          name: 'Установка памятников',
+          quantity: monumentCount,
+          unit: 'шт',
+          price: installationPrice,
+          total: parseFloat((monumentCount * installationPrice).toFixed(2)),
+        });
+      }
     }
 
     if (includeCrumb) {
