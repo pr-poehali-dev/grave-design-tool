@@ -76,6 +76,8 @@ const Index = () => {
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
   const [installationPrice, setInstallationPrice] = useState<number>(3000);
   const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
+  const [tileCutReserve, setTileCutReserve] = useState<number>(10);
+  const [tileCutReserveInput, setTileCutReserveInput] = useState<string>('10');
   
   const [calculation, setCalculation] = useState<CalculationItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -90,7 +92,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth, tileCutReserve]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -105,17 +107,18 @@ const Index = () => {
     
     if (includeTile) {
       const tileSizeM2 = tileSize * tileSize;
-      const tileCount = Math.ceil(tileArea / tileSizeM2);
+      const tileAreaWithReserve = tileArea * (1 + tileCutReserve / 100);
+      const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
       const tileSizeCm = Math.round(tileSize * 100);
       items.push({
         name: tileMaterial.name,
-        quantity: parseFloat(tileArea.toFixed(2)),
+        quantity: parseFloat(tileAreaWithReserve.toFixed(2)),
         unit: tileMaterial.unit,
         price: tileMaterial.pricePerUnit,
-        total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
+        total: parseFloat((tileAreaWithReserve * tileMaterial.pricePerUnit).toFixed(2)),
       });
       items.push({
-        name: `└─ Количество плиток ${tileSizeCm}×${tileSizeCm} см`,
+        name: `└─ Количество плиток ${tileSizeCm}×${tileSizeCm} см (с запасом ${tileCutReserve}%)`,
         quantity: tileCount,
         unit: 'шт',
         price: 0,
@@ -358,6 +361,33 @@ const Index = () => {
                           50×50 см
                         </Button>
                       </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="tile-cut-reserve" className="text-sm text-muted-foreground flex items-center gap-2">
+                        <Icon name="Scissors" size={14} />
+                        Запас на подрезку (%)
+                      </Label>
+                      <Input
+                        id="tile-cut-reserve"
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="50"
+                        value={tileCutReserveInput}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setTileCutReserveInput(val);
+                          if (val === '' || val === '-') {
+                            setTileCutReserve(0);
+                            return;
+                          }
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setTileCutReserve(num);
+                          }
+                        }}
+                        className="text-sm"
+                      />
                     </div>
                   </>
                 )}
