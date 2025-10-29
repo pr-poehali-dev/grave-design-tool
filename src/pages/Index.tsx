@@ -570,13 +570,13 @@ const Index = () => {
                     className="w-full h-full"
                   >
                     <defs>
-                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={30 * (480 / Math.max(length, width))} height={30 * (480 / Math.max(length, width))}>
+                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(0.3 / length) * (480 * length / Math.max(length, width))} height={(0.3 / width) * (480 * width / Math.max(length, width))}>
                         <rect 
-                          width={30 * (480 / Math.max(length, width)) - 2} 
-                          height={30 * (480 / Math.max(length, width)) - 2} 
+                          width={(0.3 / length) * (480 * length / Math.max(length, width)) - 1} 
+                          height={(0.3 / width) * (480 * width / Math.max(length, width)) - 1} 
                           fill="#e0e7ff" 
                           stroke="#a5b4fc" 
-                          strokeWidth="2"
+                          strokeWidth="1"
                         />
                       </pattern>
                       <pattern id="sandPattern" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
