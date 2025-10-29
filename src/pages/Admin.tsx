@@ -270,15 +270,36 @@ const Admin = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label>URL изображения</Label>
+                    <Label>Изображение плитки</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              handleTileChange(tile.id, 'image', reader.result as string);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="cursor-pointer"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Выберите файл изображения (JPG, PNG)
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Или введите URL</Label>
                     <Input
                       value={tile.image}
                       onChange={(e) => handleTileChange(tile.id, 'image', e.target.value)}
                       placeholder="https://cdn.poehali.dev/files/..."
                     />
-                    <p className="text-xs text-gray-500">
-                      Загрузите изображение и вставьте URL
-                    </p>
                   </div>
                 </div>
 
