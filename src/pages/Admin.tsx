@@ -274,8 +274,11 @@ const Admin = () => {
                     <Input
                       value={tile.image}
                       onChange={(e) => handleTileChange(tile.id, 'image', e.target.value)}
-                      placeholder="https://..."
+                      placeholder="https://cdn.poehali.dev/files/..."
                     />
+                    <p className="text-xs text-gray-500">
+                      Загрузите изображение и вставьте URL
+                    </p>
                   </div>
                 </div>
 
