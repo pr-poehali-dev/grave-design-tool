@@ -593,46 +593,50 @@ const Index = () => {
                             y={60}
                             width={borderPixels}
                             height={tileHeight}
-                            fill="#a8a29e"
-                            stroke="none"
+                            fill="#44403c"
+                            stroke="#292524"
+                            strokeWidth="2"
                           />
                           <rect
                             x={60 + tileWidth - borderPixels}
                             y={60}
                             width={borderPixels}
                             height={tileHeight}
-                            fill="#a8a29e"
-                            stroke="none"
+                            fill="#44403c"
+                            stroke="#292524"
+                            strokeWidth="2"
                           />
                           <rect
                             x={60}
                             y={60}
                             width={tileWidth}
                             height={borderPixels}
-                            fill="#a8a29e"
-                            stroke="none"
+                            fill="#44403c"
+                            stroke="#292524"
+                            strokeWidth="2"
                           />
                           <rect
                             x={60}
                             y={60 + tileHeight - borderPixels}
                             width={tileWidth}
                             height={borderPixels}
-                            fill="#a8a29e"
-                            stroke="none"
+                            fill="#44403c"
+                            stroke="#292524"
+                            strokeWidth="2"
                           />
                           <line 
                             x1="60" 
                             y1={60 + borderPixels + 5} 
                             x2={60 + borderPixels} 
                             y2={60 + borderPixels + 5} 
-                            stroke="#57534e" 
+                            stroke="#e7e5e4" 
                             strokeWidth="2"
                           />
                           <text 
                             x={60 + borderPixels / 2} 
                             y={60 + borderPixels + 3} 
                             textAnchor="middle" 
-                            className="text-xs fill-stone-700 font-semibold"
+                            className="text-xs fill-stone-200 font-semibold"
                           >
                             {borderWidth} м
                           </text>
