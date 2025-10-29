@@ -333,6 +333,23 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    <div className="space-y-3">
+                      <Label className="text-sm text-muted-foreground">
+                        Вид плитки
+                      </Label>
+                      <div className="bg-white border-2 border-indigo-200 rounded-lg p-4 space-y-2">
+                        <div className="flex items-center justify-center">
+                          <img 
+                            src="https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png" 
+                            alt="Плитка Кирпич 40×40"
+                            className="w-32 h-32 rounded-lg shadow-md object-cover"
+                          />
+                        </div>
+                        <p className="text-center font-semibold text-gray-800">Кирпич 40×40 см</p>
+                        <p className="text-xs text-center text-gray-500">Тротуарная плитка брусчатка</p>
+                      </div>
+                    </div>
+                    
                     <div className="space-y-2">
                       <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
                         Размер плитки
