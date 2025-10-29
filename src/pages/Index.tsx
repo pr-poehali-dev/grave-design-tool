@@ -988,21 +988,28 @@ const Index = () => {
                         const x = startX + i * (monumentWidth + 20);
                         const y = 60 + borderOffset + monumentMargin;
                         
+                        const monumentWidthCm = size.w * 100;
+                        const monumentHeightCm = size.h * 100;
+                        const ratio = monumentHeightCm / monumentWidthCm;
+                        
+                        const displayWidth = monumentWidth;
+                        const displayHeight = displayWidth * ratio;
+                        
                         monuments.push(
                           <g key={i}>
                             <rect
                               x={x}
                               y={y}
-                              width={monumentWidth}
-                              height={monumentHeight}
+                              width={displayWidth}
+                              height={displayHeight}
                               fill="#1f2937"
                               stroke="#111827"
                               strokeWidth="2"
                               rx="2"
                             />
                             <text
-                              x={x + monumentWidth / 2}
-                              y={y + monumentHeight / 2}
+                              x={x + displayWidth / 2}
+                              y={y + displayHeight / 2}
                               textAnchor="middle"
                               dominantBaseline="middle"
                               className="text-xs fill-white font-bold"
