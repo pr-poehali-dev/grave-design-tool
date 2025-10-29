@@ -269,8 +269,8 @@ const Index = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="width" className="flex items-center gap-2">
-                    <Icon name="Move" size={16} className="rotate-90" />
-                    Ширина (м)
+                    <Icon name="ArrowUpDown" size={16} />
+                    Длина (м)
                   </Label>
                   <Input
                     id="width"
