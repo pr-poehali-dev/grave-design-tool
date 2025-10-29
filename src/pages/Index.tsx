@@ -66,7 +66,7 @@ const Index = () => {
   const [includeOmostka, setIncludeOmostka] = useState<boolean>(false);
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
-  const [includeMonument, setIncludeMonument] = useState<boolean>(false);
+  const [includeMonument, setIncludeMonument] = useState<boolean>(true);
   const [includeTile, setIncludeTile] = useState<boolean>(true);
   const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
   const [crumbKgPerM2, setCrumbKgPerM2] = useState<number>(50);
@@ -982,7 +982,7 @@ const Index = () => {
                       
                       const monuments = [];
                       const borderOffset = includeBorder ? borderWidth * scale : 0;
-                      const monumentMargin = 0.3 * scale;
+                      const monumentMargin = (includeBorder ? 0.15 : 0) * scale;
                       
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + 20);
