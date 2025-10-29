@@ -880,22 +880,14 @@ const Index = () => {
                             <>
                               <text 
                                 x={60 + tileWidth / 2} 
-                                y={60 + tileHeight - 40} 
+                                y={60 + tileHeight - 25} 
                                 textAnchor="middle" 
                                 className="text-sm fill-indigo-700 font-bold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
                               >
                                 Плитка: {tileAreaInner.toFixed(2)} м² · ≈{Math.ceil(tileAreaInner / (tileSize * tileSize))} шт ({Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см)
                               </text>
-                              <text 
-                                x={60 + tileWidth / 2} 
-                                y={60 + tileHeight - 20} 
-                                textAnchor="middle" 
-                                className="text-xs fill-gray-600 font-semibold"
-                                style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
-                              >
-                                Размеры: {length.toFixed(2)} × {width.toFixed(2)} м
-                              </text>
+
                             </>
                           ) : includeCrumb ? (
                             <>
