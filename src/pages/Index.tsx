@@ -97,12 +97,20 @@ const Index = () => {
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     
     if (includeTile) {
+      const tileCount = Math.ceil(tileArea / 0.09);
       items.push({
         name: tileMaterial.name,
         quantity: parseFloat(tileArea.toFixed(2)),
         unit: tileMaterial.unit,
         price: tileMaterial.pricePerUnit,
         total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
+      });
+      items.push({
+        name: '└─ Количество плиток 30×30 см',
+        quantity: tileCount,
+        unit: 'шт',
+        price: 0,
+        total: 0,
       });
     }
 
@@ -1006,14 +1014,18 @@ const Index = () => {
                   </TableHeader>
                   <TableBody>
                     {calculation.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableRow key={index} className={item.price === 0 ? 'bg-muted/30' : ''}>
+                        <TableCell className={`font-medium ${item.price === 0 ? 'text-muted-foreground text-sm' : ''}`}>
+                          {item.name}
+                        </TableCell>
                         <TableCell className="text-center">
                           {item.quantity} {item.unit}
                         </TableCell>
-                        <TableCell className="text-right">{item.price} ₽</TableCell>
+                        <TableCell className="text-right">
+                          {item.price > 0 ? `${item.price} ₽` : '—'}
+                        </TableCell>
                         <TableCell className="text-right font-semibold">
-                          {item.total.toLocaleString('ru-RU')} ₽
+                          {item.total > 0 ? `${item.total.toLocaleString('ru-RU')} ₽` : '—'}
                         </TableCell>
                       </TableRow>
                     ))}
