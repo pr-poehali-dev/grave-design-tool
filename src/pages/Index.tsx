@@ -497,7 +497,7 @@ const Index = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {materialsData.monument?.map((mat) => (
+                        {(materialsData.monument || []).map((mat) => (
                           <SelectItem key={mat.id} value={mat.id}>
                             {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
                           </SelectItem>
