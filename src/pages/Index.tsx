@@ -1073,28 +1073,26 @@ const Index = () => {
                 
                 <div className="space-y-3">
                   <h3 className="font-semibold text-sm text-gray-900">Отображение элементов:</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-2">
                     <Button
                       variant={includeTile ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setIncludeTile(!includeTile)}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 bg-indigo-600 rounded"></div>
+                      <div className="w-4 h-4 bg-indigo-600 rounded flex-shrink-0"></div>
                       Плитка
                     </Button>
                     
-                    <div className="col-span-2 space-y-2">
-                      <Button
-                        variant={includeBorder ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setIncludeBorder(!includeBorder)}
-                        className="w-full justify-start gap-2"
-                      >
-                        <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                        Поребрик
-                      </Button>
-                    </div>
+                    <Button
+                      variant={includeBorder ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeBorder(!includeBorder)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-purple-600 rounded flex-shrink-0"></div>
+                      Поребрик
+                    </Button>
                     
                     <Button
                       variant={includeFence ? 'default' : 'outline'}
@@ -1102,7 +1100,7 @@ const Index = () => {
                       onClick={() => setIncludeFence(!includeFence)}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
+                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded flex-shrink-0"></div>
                       Ограда
                     </Button>
                     
@@ -1112,7 +1110,7 @@ const Index = () => {
                       onClick={() => setIncludeOmostka(!includeOmostka)}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded"></div>
+                      <div className="w-4 h-4 bg-purple-200 border border-purple-300 rounded flex-shrink-0"></div>
                       Отмостка
                     </Button>
                     
@@ -1122,7 +1120,7 @@ const Index = () => {
                       onClick={() => setIncludeMonument(!includeMonument)}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 bg-gray-800 rounded"></div>
+                      <div className="w-4 h-4 bg-gray-800 rounded flex-shrink-0"></div>
                       Памятник
                     </Button>
                     
@@ -1132,7 +1130,7 @@ const Index = () => {
                       onClick={() => setIncludeCrumb(!includeCrumb)}
                       className="justify-start gap-2"
                     >
-                      <Icon name="Sparkles" size={16} />
+                      <Icon name="Sparkles" size={16} className="flex-shrink-0" />
                       Крошка
                     </Button>
                   </div>
