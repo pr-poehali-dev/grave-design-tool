@@ -54,7 +54,8 @@ const Index = () => {
   const [widthInput, setWidthInput] = useState<string>('2');
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
-  const borderWidth = 0.2;
+  const [borderWidth, setBorderWidth] = useState<number>(0.2);
+  const [borderWidthInput, setBorderWidthInput] = useState<string>('0.2');
   const [selectedTile, setSelectedTile] = useState<string>('granite');
   const [selectedBorder, setSelectedBorder] = useState<string>('concrete-border');
   const [selectedFence, setSelectedFence] = useState<string>('metal');
@@ -421,6 +422,32 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    <div className="space-y-2">
+                      <Label htmlFor="border-width" className="text-sm text-muted-foreground">
+                        Ширина поребрика (м)
+                      </Label>
+                      <Input
+                        id="border-width"
+                        type="number"
+                        step="0.05"
+                        min="0.1"
+                        max="1"
+                        value={borderWidthInput}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setBorderWidthInput(val);
+                          if (val === '' || val === '-') {
+                            setBorderWidth(0.1);
+                            return;
+                          }
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setBorderWidth(num);
+                          }
+                        }}
+                        className="text-sm"
+                      />
+                    </div>
                   </>
                 )}
               </div>
