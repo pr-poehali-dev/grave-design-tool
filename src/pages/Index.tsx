@@ -1062,26 +1062,27 @@ const Index = () => {
                       Плитка
                     </Button>
                     
-                    <div className="col-span-2 space-y-2">
-                      <Button
-                        variant={includeBorder ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setIncludeBorder(!includeBorder)}
-                        className="w-full justify-start gap-2"
-                      >
-                        <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                        Поребрик
-                      </Button>
-                    </div>
-                    
                     <Button
-                      variant={includeFence ? 'default' : 'outline'}
+                      variant={includeCrumb ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setIncludeFence(!includeFence)}
+                      onClick={() => {
+                        setIncludeCrumb(!includeCrumb);
+                        if (!includeCrumb) setIncludeTile(false);
+                      }}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
-                      Ограда
+                      <Icon name="Sparkles" size={16} />
+                      Крошка
+                    </Button>
+                    
+                    <Button
+                      variant={includeBorder ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeBorder(!includeBorder)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
+                      Поребрик
                     </Button>
                     
                     <Button
@@ -1095,6 +1096,16 @@ const Index = () => {
                     </Button>
                     
                     <Button
+                      variant={includeFence ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeFence(!includeFence)}
+                      className="justify-start gap-2"
+                    >
+                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
+                      Ограда
+                    </Button>
+                    
+                    <Button
                       variant={includeMonument ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setIncludeMonument(!includeMonument)}
@@ -1102,19 +1113,6 @@ const Index = () => {
                     >
                       <div className="w-4 h-4 bg-gray-800 rounded"></div>
                       Памятник
-                    </Button>
-                    
-                    <Button
-                      variant={includeCrumb ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => {
-                        setIncludeCrumb(!includeCrumb);
-                        if (!includeCrumb) setIncludeTile(false);
-                      }}
-                      className="justify-start gap-2"
-                    >
-                      <Icon name="Sparkles" size={16} />
-                      Крошка
                     </Button>
                   </div>
                   
