@@ -74,6 +74,9 @@ const Index = () => {
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
   const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
   const [tileSize, setTileSize] = useState<number>(0.4);
+  const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
+  const [installationPrice, setInstallationPrice] = useState<number>(3000);
+  const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
   
   const [calculation, setCalculation] = useState<CalculationItem[]>([]);
   const [total, setTotal] = useState<number>(0);
