@@ -1055,32 +1055,6 @@ const Index = () => {
                         <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
                         Поребрик
                       </Button>
-                      {includeBorder && (
-                        <div className="pl-6 space-y-2">
-                          <Label htmlFor="border-width-visual" className="text-xs text-muted-foreground">
-                            Ширина поребрика (м)
-                          </Label>
-                          <Input
-                            id="border-width-visual"
-                            type="number"
-                            step="0.01"
-                            value={borderWidthInput}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setBorderWidthInput(val);
-                              if (val === '' || val === '-') {
-                                setBorderWidth(0);
-                                return;
-                              }
-                              const num = parseFloat(val);
-                              if (!isNaN(num)) {
-                                setBorderWidth(num);
-                              }
-                            }}
-                            className="h-8"
-                          />
-                        </div>
-                      )}
                     </div>
                     
                     <Button
