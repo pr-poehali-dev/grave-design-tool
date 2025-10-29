@@ -97,6 +97,7 @@ interface CalculationItem {
 
 const Index = () => {
   const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
+  const [tileTypesData, setTileTypesData] = useState<TileType[]>(tileTypes);
   const [length, setLength] = useState<number>(2.5);
   const [lengthInput, setLengthInput] = useState<string>('2.5');
   const [width, setWidth] = useState<number>(2);
@@ -141,16 +142,22 @@ const Index = () => {
       const parsed = JSON.parse(savedMaterials);
       setMaterialsData(parsed);
     }
+
+    const savedTiles = localStorage.getItem('tileTypes');
+    if (savedTiles) {
+      setTileTypesData(JSON.parse(savedTiles));
+    }
   }, []);
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth, tileCutReserve]);
+  }, [length, width, omostkaWidth, selectedTileType, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth, tileCutReserve, tileTypesData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
     
-    if (!materialsData.tile.find(m => m.id === selectedTile)) return;
+    const currentTile = tileTypesData.find(t => t.id === selectedTileType);
+    if (!currentTile) return;
     
     const effectiveBorderWidth = includeBorder ? borderWidth : 0;
     const innerLength = length - 2 * effectiveBorderWidth;
@@ -382,7 +389,7 @@ const Index = () => {
                           size="sm"
                           onClick={() => {
                             setTileCategory('concrete');
-                            const firstConcrete = tileTypes.find(t => t.category === 'concrete');
+                            const firstConcrete = tileTypesData.find(t => t.category === 'concrete');
                             if (firstConcrete) {
                               setSelectedTileType(firstConcrete.id);
                               setSelectedTile('concrete');
@@ -400,7 +407,7 @@ const Index = () => {
                           size="sm"
                           onClick={() => {
                             setTileCategory('granite');
-                            const firstGranite = tileTypes.find(t => t.category === 'granite');
+                            const firstGranite = tileTypesData.find(t => t.category === 'granite');
                             if (firstGranite) {
                               setSelectedTileType(firstGranite.id);
                               setSelectedTile('granite');
@@ -417,8 +424,8 @@ const Index = () => {
                     </div>
 
                     {(() => {
-                      const currentTile = tileTypes.find(t => t.id === selectedTileType);
-                      const availableTiles = tileTypes.filter(t => t.category === tileCategory);
+                      const currentTile = tileTypesData.find(t => t.id === selectedTileType);
+                      const availableTiles = tileTypesData.filter(t => t.category === tileCategory);
                       
                       return (
                         <>

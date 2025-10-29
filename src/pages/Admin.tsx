@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 
 interface Material {
@@ -16,12 +17,56 @@ interface Material {
   unit: string;
 }
 
+interface TileType {
+  id: string;
+  name: string;
+  category: 'concrete' | 'granite';
+  pricePerUnit: number;
+  unit: string;
+  image: string;
+  sizes: number[];
+}
+
+const initialTileTypes: TileType[] = [
+  { 
+    id: 'concrete-brick', 
+    name: 'Кирпич', 
+    category: 'concrete',
+    pricePerUnit: 1200, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4, 0.5]
+  },
+  { 
+    id: 'concrete-square', 
+    name: 'Квадрат', 
+    category: 'concrete',
+    pricePerUnit: 1100, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4, 0.5]
+  },
+  { 
+    id: 'granite-brick', 
+    name: 'Кирпич', 
+    category: 'granite',
+    pricePerUnit: 2500, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4]
+  },
+  { 
+    id: 'granite-square', 
+    name: 'Квадрат', 
+    category: 'granite',
+    pricePerUnit: 2400, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4]
+  },
+];
+
 const initialMaterials: Record<string, Material[]> = {
-  tile: [
-    { id: 'granite', name: 'Плитка гранитная', pricePerUnit: 2500, unit: 'м²' },
-    { id: 'concrete', name: 'Плитка бетонная', pricePerUnit: 1200, unit: 'м²' },
-    { id: 'marble', name: 'Плитка мраморная', pricePerUnit: 3800, unit: 'м²' },
-  ],
   border: [
     { id: 'concrete-border', name: 'Поребрик бетонный', pricePerUnit: 400, unit: 'п.м.' },
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
@@ -31,13 +76,97 @@ const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.' },
     { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.' },
   ],
+  monument: [
+    { id: 'monument-40x80', name: 'Памятник 40×80 см', pricePerUnit: 8000, unit: 'шт' },
+    { id: 'monument-45x90', name: 'Памятник 45×90 см', pricePerUnit: 9000, unit: 'шт' },
+    { id: 'monument-100x50', name: 'Памятник 100×50 см', pricePerUnit: 10000, unit: 'шт' },
+    { id: 'monument-120x60', name: 'Памятник 120×60 см', pricePerUnit: 12000, unit: 'шт' },
+  ],
 };
 
 const Admin = () => {
+  const [tileTypes, setTileTypes] = useState<TileType[]>([]);
   const [materials, setMaterials] = useState<Record<string, Material[]>>(initialMaterials);
+  const [editingTileId, setEditingTileId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const savedTiles = localStorage.getItem('tileTypes');
+    if (savedTiles) {
+      setTileTypes(JSON.parse(savedTiles));
+    } else {
+      setTileTypes(initialTileTypes);
+    }
+
+    const savedMaterials = localStorage.getItem('materials');
+    if (savedMaterials) {
+      setMaterials(JSON.parse(savedMaterials));
+    }
+  }, []);
+
+  const handleTileChange = (id: string, field: keyof TileType, value: any) => {
+    setTileTypes(prev => prev.map(tile =>
+      tile.id === id ? { ...tile, [field]: value } : tile
+    ));
+  };
+
+  const handleAddSize = (tileId: string, size: number) => {
+    setTileTypes(prev => prev.map(tile =>
+      tile.id === tileId ? { ...tile, sizes: [...tile.sizes, size].sort((a, b) => a - b) } : tile
+    ));
+  };
+
+  const handleRemoveSize = (tileId: string, sizeIndex: number) => {
+    setTileTypes(prev => prev.map(tile =>
+      tile.id === tileId ? { ...tile, sizes: tile.sizes.filter((_, i) => i !== sizeIndex) } : tile
+    ));
+  };
+
+  const handleAddTile = () => {
+    const newId = `tile-${Date.now()}`;
+    const newTile: TileType = {
+      id: newId,
+      name: 'Новая плитка',
+      category: 'concrete',
+      pricePerUnit: 1000,
+      unit: 'м²',
+      image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+      sizes: [0.4]
+    };
+    
+    setTileTypes(prev => [...prev, newTile]);
+    setEditingTileId(newId);
+  };
+
+  const handleDeleteTile = (id: string) => {
+    if (tileTypes.length <= 1) {
+      toast({
+        title: 'Невозможно удалить',
+        description: 'Должна остаться хотя бы одна плитка',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setTileTypes(prev => prev.filter(tile => tile.id !== id));
+    
+    toast({
+      title: 'Плитка удалена',
+      description: 'Плитка успешно удалена из списка',
+    });
+  };
+
+  const handleSaveTiles = () => {
+    localStorage.setItem('tileTypes', JSON.stringify(tileTypes));
+    setEditingTileId(null);
+    
+    toast({
+      title: 'Изменения сохранены',
+      description: 'Плитки успешно обновлены',
+    });
+  };
 
   const handlePriceChange = (category: string, id: string, newPrice: number) => {
     setMaterials(prev => ({
@@ -63,7 +192,7 @@ const Admin = () => {
       id: newId,
       name: 'Новый материал',
       pricePerUnit: 0,
-      unit: category === 'tile' ? 'м²' : 'п.м.',
+      unit: 'п.м.',
     };
     
     setMaterials(prev => ({
@@ -96,25 +225,158 @@ const Admin = () => {
     });
   };
 
-  const handleSave = () => {
+  const handleSaveMaterials = () => {
     localStorage.setItem('materials', JSON.stringify(materials));
     setEditingId(null);
     setEditingCategory(null);
     
     toast({
       title: 'Изменения сохранены',
-      description: 'Цены и материалы успешно обновлены',
+      description: 'Материалы успешно обновлены',
     });
   };
 
   const getCategoryName = (category: string) => {
     switch (category) {
-      case 'tile': return 'Плитка';
       case 'border': return 'Поребрики';
       case 'fence': return 'Ограды';
+      case 'monument': return 'Памятники';
       default: return category;
     }
   };
+
+  const renderTileManager = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Управление плитками</h3>
+        <Button onClick={handleAddTile} size="sm" className="gap-2">
+          <Icon name="Plus" size={16} />
+          Добавить плитку
+        </Button>
+      </div>
+      
+      <div className="grid gap-6">
+        {tileTypes.map((tile) => (
+          <Card key={tile.id} className={editingTileId === tile.id ? 'border-2 border-indigo-500' : ''}>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center">
+                    <img 
+                      src={tile.image} 
+                      alt={tile.name}
+                      className="w-40 h-40 rounded-lg shadow-md object-cover border-2 border-gray-200"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>URL изображения</Label>
+                    <Input
+                      value={tile.image}
+                      onChange={(e) => handleTileChange(tile.id, 'image', e.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Название</Label>
+                    <Input
+                      value={tile.name}
+                      onChange={(e) => handleTileChange(tile.id, 'name', e.target.value)}
+                      placeholder="Название плитки"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Материал</Label>
+                    <Select
+                      value={tile.category}
+                      onValueChange={(value: 'concrete' | 'granite') => 
+                        handleTileChange(tile.id, 'category', value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="concrete">Бетонная</SelectItem>
+                        <SelectItem value="granite">Гранитная</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Цена за м²</Label>
+                    <Input
+                      type="number"
+                      value={tile.pricePerUnit}
+                      onChange={(e) => handleTileChange(tile.id, 'pricePerUnit', parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Доступные размеры (в метрах)</Label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {tile.sizes.map((size, index) => (
+                        <div key={index} className="flex items-center gap-1 bg-indigo-100 px-3 py-1 rounded-full">
+                          <span className="text-sm font-medium">{Math.round(size * 100)}×{Math.round(size * 100)} см</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleRemoveSize(tile.id, index)}
+                            className="h-5 w-5 p-0 hover:bg-red-200"
+                          >
+                            <Icon name="X" size={12} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Select
+                        onValueChange={(value) => handleAddSize(tile.id, parseFloat(value))}
+                      >
+                        <SelectTrigger className="w-40">
+                          <SelectValue placeholder="Добавить размер" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="0.2">20×20 см</SelectItem>
+                          <SelectItem value="0.3">30×30 см</SelectItem>
+                          <SelectItem value="0.4">40×40 см</SelectItem>
+                          <SelectItem value="0.5">50×50 см</SelectItem>
+                          <SelectItem value="0.6">60×60 см</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={() => handleDeleteTile(tile.id)}
+                      variant="destructive"
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <Icon name="Trash2" size={16} />
+                      Удалить
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="flex justify-end">
+        <Button onClick={handleSaveTiles} size="lg" className="gap-2">
+          <Icon name="Save" size={18} />
+          Сохранить все изменения
+        </Button>
+      </div>
+    </div>
+  );
 
   const renderMaterialTable = (category: string) => (
     <div className="space-y-4">
@@ -216,7 +478,7 @@ const Admin = () => {
               Панель администратора
             </h1>
             <p className="text-lg text-gray-600">
-              Управление ценами и материалами
+              Управление плитками и материалами
             </p>
           </div>
           <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
@@ -225,101 +487,94 @@ const Admin = () => {
           </Button>
         </header>
 
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Icon name="Package" size={24} className="text-primary" />
-              Управление материалами
-            </CardTitle>
-            <CardDescription>
-              Редактируйте названия, цены и добавляйте новые материалы
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="tile" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="tile" className="gap-2">
-                  <Icon name="Grid3x3" size={16} />
-                  Плитка
-                </TabsTrigger>
-                <TabsTrigger value="border" className="gap-2">
-                  <Icon name="Square" size={16} />
-                  Поребрики
-                </TabsTrigger>
-                <TabsTrigger value="fence" className="gap-2">
-                  <Icon name="Box" size={16} />
-                  Ограды
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="tile" className="mt-6">
-                {renderMaterialTable('tile')}
-              </TabsContent>
-              
-              <TabsContent value="border" className="mt-6">
+        <Tabs defaultValue="tiles" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="tiles" className="gap-2">
+              <Icon name="Grid3x3" size={16} />
+              Плитки
+            </TabsTrigger>
+            <TabsTrigger value="border" className="gap-2">
+              <Icon name="Frame" size={16} />
+              Поребрики
+            </TabsTrigger>
+            <TabsTrigger value="fence" className="gap-2">
+              <Icon name="Fence" size={16} />
+              Ограды
+            </TabsTrigger>
+            <TabsTrigger value="monument" className="gap-2">
+              <Icon name="Square" size={16} />
+              Памятники
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="tiles">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Grid3x3" size={24} className="text-primary" />
+                  Управление плитками
+                </CardTitle>
+                <CardDescription>
+                  Добавляйте, редактируйте и удаляйте плитки
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {renderTileManager()}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="border">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle>Поребрики</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {renderMaterialTable('border')}
-              </TabsContent>
-              
-              <TabsContent value="fence" className="mt-6">
+                <div className="flex justify-end mt-6">
+                  <Button onClick={handleSaveMaterials} size="lg" className="gap-2">
+                    <Icon name="Save" size={18} />
+                    Сохранить изменения
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="fence">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle>Ограды</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {renderMaterialTable('fence')}
-              </TabsContent>
-            </Tabs>
-
-            <Separator className="my-6" />
-
-            <div className="flex justify-end gap-3">
-              <Button 
-                variant="outline" 
-                size="lg"
-                onClick={() => {
-                  setMaterials(initialMaterials);
-                  localStorage.removeItem('materials');
-                  toast({
-                    title: 'Изменения сброшены',
-                    description: 'Все данные восстановлены к исходным значениям',
-                  });
-                }}
-              >
-                Сбросить изменения
-              </Button>
-              <Button onClick={handleSave} size="lg" className="gap-2">
-                <Icon name="Save" size={18} />
-                Сохранить все изменения
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mt-6 shadow-lg border-accent/20">
-          <CardHeader className="bg-gradient-to-r from-accent/5 to-primary/5">
-            <CardTitle className="flex items-center gap-2">
-              <Icon name="BarChart3" size={24} className="text-accent" />
-              Статистика
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-center p-4 rounded-lg bg-purple-50">
-                <div className="text-3xl font-bold text-primary mb-1">
-                  {materials.tile.length}
+                <div className="flex justify-end mt-6">
+                  <Button onClick={handleSaveMaterials} size="lg" className="gap-2">
+                    <Icon name="Save" size={18} />
+                    Сохранить изменения
+                  </Button>
                 </div>
-                <div className="text-sm text-gray-600">Типов плитки</div>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-blue-50">
-                <div className="text-3xl font-bold text-accent mb-1">
-                  {materials.border.length}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="monument">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle>Памятники</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderMaterialTable('monument')}
+                <div className="flex justify-end mt-6">
+                  <Button onClick={handleSaveMaterials} size="lg" className="gap-2">
+                    <Icon name="Save" size={18} />
+                    Сохранить изменения
+                  </Button>
                 </div>
-                <div className="text-sm text-gray-600">Типов поребриков</div>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-purple-50">
-                <div className="text-3xl font-bold text-primary mb-1">
-                  {materials.fence.length}
-                </div>
-                <div className="text-sm text-gray-600">Типов оград</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
