@@ -73,6 +73,7 @@ const Index = () => {
   const [crumbKgPerM2Input, setCrumbKgPerM2Input] = useState<string>('50');
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
   const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
+  const [tileSize, setTileSize] = useState<number>(0.4);
   
   const [calculation, setCalculation] = useState<CalculationItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -86,7 +87,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -97,7 +98,9 @@ const Index = () => {
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     
     if (includeTile) {
-      const tileCount = Math.ceil(tileArea / 0.16);
+      const tileSizeM2 = tileSize * tileSize;
+      const tileCount = Math.ceil(tileArea / tileSizeM2);
+      const tileSizeCm = Math.round(tileSize * 100);
       items.push({
         name: tileMaterial.name,
         quantity: parseFloat(tileArea.toFixed(2)),
@@ -106,7 +109,7 @@ const Index = () => {
         total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
       });
       items.push({
-        name: '└─ Количество плиток 40×40 см',
+        name: `└─ Количество плиток ${tileSizeCm}×${tileSizeCm} см`,
         quantity: tileCount,
         unit: 'шт',
         price: 0,
@@ -274,7 +277,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="tile" className="flex items-center gap-2">
                     <Icon name="Grid3x3" size={16} />
-                    Плитка 30×30 см
+                    Плитка {Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см
                   </Label>
                   <Button
                     variant={includeTile ? 'default' : 'outline'}
@@ -285,18 +288,51 @@ const Index = () => {
                   </Button>
                 </div>
                 {includeTile && (
-                  <Select value={selectedTile} onValueChange={setSelectedTile}>
-                    <SelectTrigger id="tile">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {materialsData.tile.map((mat) => (
-                        <SelectItem key={mat.id} value={mat.id}>
-                          {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <>
+                    <Select value={selectedTile} onValueChange={setSelectedTile}>
+                      <SelectTrigger id="tile">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {materialsData.tile.map((mat) => (
+                          <SelectItem key={mat.id} value={mat.id}>
+                            {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <div className="space-y-2">
+                      <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
+                        Размер плитки
+                      </Label>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={tileSize === 0.3 ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setTileSize(0.3)}
+                          className="flex-1"
+                        >
+                          30×30 см
+                        </Button>
+                        <Button
+                          variant={tileSize === 0.4 ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setTileSize(0.4)}
+                          className="flex-1"
+                        >
+                          40×40 см
+                        </Button>
+                        <Button
+                          variant={tileSize === 0.5 ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setTileSize(0.5)}
+                          className="flex-1"
+                        >
+                          50×50 см
+                        </Button>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
 
@@ -578,10 +614,10 @@ const Index = () => {
                     className="w-full h-full"
                   >
                     <defs>
-                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(0.4 / length) * (480 * length / Math.max(length, width))} height={(0.4 / width) * (480 * width / Math.max(length, width))}>
+                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={(tileSize / length) * (480 * length / Math.max(length, width))} height={(tileSize / width) * (480 * width / Math.max(length, width))}>
                         <rect 
-                          width={(0.4 / length) * (480 * length / Math.max(length, width)) - 1} 
-                          height={(0.4 / width) * (480 * width / Math.max(length, width)) - 1} 
+                          width={(tileSize / length) * (480 * length / Math.max(length, width)) - 1} 
+                          height={(tileSize / width) * (480 * width / Math.max(length, width)) - 1} 
                           fill="#e0e7ff" 
                           stroke="#a5b4fc" 
                           strokeWidth="1"
@@ -766,7 +802,7 @@ const Index = () => {
                                 className="text-sm fill-indigo-600 font-semibold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                               >
-                                ≈{Math.ceil(tileAreaInner / 0.16)} шт (40×40 см)
+                                ≈{Math.ceil(tileAreaInner / (tileSize * tileSize))} шт ({Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см)
                               </text>
                             </>
                           ) : (
@@ -804,7 +840,7 @@ const Index = () => {
                               className="text-sm fill-indigo-600 font-semibold"
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                             >
-                              ≈{Math.ceil((length * width) / 0.09)} шт (30×30 см)
+                              ≈{Math.ceil((length * width) / (tileSize * tileSize))} шт ({Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см)
                             </text>
                           </>
                         ) : (
