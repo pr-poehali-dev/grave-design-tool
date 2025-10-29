@@ -297,20 +297,18 @@ const Index = () => {
                       </Label>
                       <Input
                         id="border-width"
-                        type="text"
-                        inputMode="decimal"
+                        type="number"
+                        step="0.01"
                         value={borderWidth}
                         onChange={(e) => {
                           const val = e.target.value;
                           if (val === '' || val === '-') {
                             setBorderWidth(0);
-                          } else if (/^\d*\.?\d*$/.test(val)) {
-                            const num = parseFloat(val);
-                            if (!isNaN(num)) {
-                              setBorderWidth(num);
-                            } else if (val === '0' || val === '0.') {
-                              setBorderWidth(0);
-                            }
+                            return;
+                          }
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setBorderWidth(num);
                           }
                         }}
                         className="text-lg"
@@ -758,20 +756,18 @@ const Index = () => {
                           </Label>
                           <Input
                             id="border-width-visual"
-                            type="text"
-                            inputMode="decimal"
+                            type="number"
+                            step="0.01"
                             value={borderWidth}
                             onChange={(e) => {
                               const val = e.target.value;
                               if (val === '' || val === '-') {
                                 setBorderWidth(0);
-                              } else if (/^\d*\.?\d*$/.test(val)) {
-                                const num = parseFloat(val);
-                                if (!isNaN(num)) {
-                                  setBorderWidth(num);
-                                } else if (val === '0' || val === '0.') {
-                                  setBorderWidth(0);
-                                }
+                                return;
+                              }
+                              const num = parseFloat(val);
+                              if (!isNaN(num)) {
+                                setBorderWidth(num);
                               }
                             }}
                             className="h-8"
