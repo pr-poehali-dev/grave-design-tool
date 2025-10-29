@@ -552,6 +552,47 @@ const Index = () => {
                         </Select>
                       </div>
                     </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="installation" className="flex items-center gap-2">
+                          <Icon name="Wrench" size={16} />
+                          Установка памятников
+                        </Label>
+                        <Button
+                          variant={includeInstallation ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setIncludeInstallation(!includeInstallation)}
+                        >
+                          {includeInstallation ? 'Включена' : 'Выключена'}
+                        </Button>
+                      </div>
+                      {includeInstallation && (
+                        <div className="space-y-2">
+                          <Label htmlFor="installation-price" className="text-sm text-muted-foreground">
+                            Цена установки (₽/шт)
+                          </Label>
+                          <Input
+                            id="installation-price"
+                            type="number"
+                            step="100"
+                            value={installationPriceInput}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setInstallationPriceInput(val);
+                              if (val === '' || val === '-') {
+                                setInstallationPrice(0);
+                                return;
+                              }
+                              const num = parseFloat(val);
+                              if (!isNaN(num)) {
+                                setInstallationPrice(num);
+                              }
+                            }}
+                            className="text-lg"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
               </div>
