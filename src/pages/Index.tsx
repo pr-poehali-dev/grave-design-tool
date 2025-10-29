@@ -98,7 +98,10 @@ const Index = () => {
     
     if (!materialsData.tile.find(m => m.id === selectedTile)) return;
     
-    const tileArea = length * width;
+    const effectiveBorderWidth = includeBorder ? borderWidth : 0;
+    const innerLength = length - 2 * effectiveBorderWidth;
+    const innerWidth = width - 2 * effectiveBorderWidth;
+    const tileArea = includeBorder ? innerLength * innerWidth : length * width;
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     
     if (includeTile) {
@@ -125,7 +128,8 @@ const Index = () => {
     const outerLength = length + 2 * effectiveOmostkaWidth;
     const outerWidth = width + 2 * effectiveOmostkaWidth;
     const outerArea = outerLength * outerWidth;
-    const omostkaArea = outerArea - tileArea;
+    const fullInnerArea = length * width;
+    const omostkaArea = outerArea - fullInnerArea;
     
     if (includeOmostka && omostkaArea > 0) {
       items.push({
