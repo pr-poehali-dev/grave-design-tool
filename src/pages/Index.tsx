@@ -175,10 +175,17 @@ const Index = () => {
       const crumbQuantityKg = crumbArea * crumbKgPerM2;
       items.push({
         name: 'Крошка гранитная',
+        quantity: parseFloat(crumbArea.toFixed(2)),
+        unit: 'м²',
+        price: crumbKgPerM2 * crumbPricePerKg,
+        total: parseFloat((crumbQuantityKg * crumbPricePerKg).toFixed(2)),
+      });
+      items.push({
+        name: '└─ Вес крошки',
         quantity: parseFloat(crumbQuantityKg.toFixed(2)),
         unit: 'кг',
-        price: crumbPricePerKg,
-        total: parseFloat((crumbQuantityKg * crumbPricePerKg).toFixed(2)),
+        price: 0,
+        total: 0,
       });
     }
 
@@ -647,6 +654,16 @@ const Index = () => {
                         <circle cx="3" cy="7" r="0.5" fill="#6b7280" opacity="0.3"/>
                         <circle cx="7" cy="1" r="0.5" fill="#4b5563" opacity="0.4"/>
                       </pattern>
+                      <pattern id="crumbPattern" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+                        <rect width="4" height="4" fill="#78716c"/>
+                        <circle cx="0.5" cy="0.5" r="0.3" fill="#57534e" opacity="0.8"/>
+                        <circle cx="2" cy="1" r="0.25" fill="#a8a29e" opacity="0.7"/>
+                        <circle cx="3.2" cy="2.5" r="0.35" fill="#44403c" opacity="0.6"/>
+                        <circle cx="1" cy="3" r="0.2" fill="#292524" opacity="0.9"/>
+                        <circle cx="3" cy="0.3" r="0.3" fill="#a8a29e" opacity="0.5"/>
+                        <circle cx="1.5" cy="1.8" r="0.25" fill="#57534e" opacity="0.7"/>
+                        <circle cx="2.8" cy="3.5" r="0.2" fill="#292524" opacity="0.8"/>
+                      </pattern>
                     </defs>
 
                     {includeFence && (
@@ -698,7 +715,7 @@ const Index = () => {
                       y="60"
                       width={480 * length / Math.max(length, width)}
                       height={480 * width / Math.max(length, width)}
-                      fill={includeTile ? "url(#tilePattern)" : "url(#sandPattern)"}
+                      fill={includeTile ? "url(#tilePattern)" : includeCrumb ? "url(#crumbPattern)" : "url(#sandPattern)"}
                       stroke="#6366f1"
                       strokeWidth="4"
                       rx="4"
@@ -759,7 +776,7 @@ const Index = () => {
                             y={60 + borderPixels}
                             width={tileWidth - borderPixels * 2}
                             height={tileHeight - borderPixels * 2}
-                            fill={includeTile ? "url(#tilePattern)" : "url(#sandPattern)"}
+                            fill={includeTile ? "url(#tilePattern)" : includeCrumb ? "url(#crumbPattern)" : "url(#sandPattern)"}
                             stroke="none"
                           />
                           
@@ -811,6 +828,27 @@ const Index = () => {
                                 ≈{Math.ceil(tileAreaInner / (tileSize * tileSize))} шт ({Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см)
                               </text>
                             </>
+                          ) : includeCrumb ? (
+                            <>
+                              <text 
+                                x={60 + tileWidth / 2} 
+                                y={60 + tileHeight - 35} 
+                                textAnchor="middle" 
+                                className="text-lg fill-stone-700 font-bold"
+                                style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                              >
+                                Крошка: {tileAreaInner.toFixed(2)} м²
+                              </text>
+                              <text 
+                                x={60 + tileWidth / 2} 
+                                y={60 + tileHeight - 15} 
+                                textAnchor="middle" 
+                                className="text-sm fill-stone-600 font-semibold"
+                                style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                              >
+                                ≈{Math.ceil(tileAreaInner * crumbKgPerM2)} кг
+                              </text>
+                            </>
                           ) : (
                             <text 
                               x={60 + tileWidth / 2} 
@@ -847,6 +885,27 @@ const Index = () => {
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                             >
                               ≈{Math.ceil((length * width) / (tileSize * tileSize))} шт ({Math.round(tileSize * 100)}×{Math.round(tileSize * 100)} см)
+                            </text>
+                          </>
+                        ) : includeCrumb ? (
+                          <>
+                            <text 
+                              x={60 + (480 * length / Math.max(length, width)) / 2} 
+                              y={60 + (480 * width / Math.max(length, width)) - 35} 
+                              textAnchor="middle" 
+                              className="text-lg fill-stone-700 font-bold"
+                              style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                            >
+                              Крошка: {(length * width).toFixed(2)} м²
+                            </text>
+                            <text 
+                              x={60 + (480 * length / Math.max(length, width)) / 2} 
+                              y={60 + (480 * width / Math.max(length, width)) - 15} 
+                              textAnchor="middle" 
+                              className="text-sm fill-stone-600 font-semibold"
+                              style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                            >
+                              ≈{Math.ceil((length * width) * crumbKgPerM2)} кг
                             </text>
                           </>
                         ) : (
