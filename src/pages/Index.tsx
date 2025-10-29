@@ -49,8 +49,11 @@ interface CalculationItem {
 const Index = () => {
   const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
   const [length, setLength] = useState<number>(2.5);
+  const [lengthInput, setLengthInput] = useState<string>('2.5');
   const [width, setWidth] = useState<number>(2);
+  const [widthInput, setWidthInput] = useState<string>('2');
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
+  const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
   const [borderWidth, setBorderWidth] = useState<number>(0.2);
   const [borderWidthInput, setBorderWidthInput] = useState<string>('0.2');
   const [selectedTile, setSelectedTile] = useState<string>('granite');
@@ -58,6 +61,7 @@ const Index = () => {
   const [selectedFence, setSelectedFence] = useState<string>('metal');
   const [selectedMonument, setSelectedMonument] = useState<string>('monument-40x80');
   const [monumentCount, setMonumentCount] = useState<number>(1);
+  const [monumentCountInput, setMonumentCountInput] = useState<string>('1');
   const [monumentPosition, setMonumentPosition] = useState<string>('center');
   const [includeOmostka, setIncludeOmostka] = useState<boolean>(false);
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
@@ -65,7 +69,9 @@ const Index = () => {
   const [includeMonument, setIncludeMonument] = useState<boolean>(false);
   const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
   const [crumbKgPerM2, setCrumbKgPerM2] = useState<number>(50);
+  const [crumbKgPerM2Input, setCrumbKgPerM2Input] = useState<string>('50');
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
+  const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
   
   const [calculation, setCalculation] = useState<CalculationItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -206,13 +212,17 @@ const Index = () => {
                     type="number"
                     step="0.1"
                     min="0.5"
-                    value={length || ''}
+                    value={lengthInput}
                     onChange={(e) => {
                       const val = e.target.value;
+                      setLengthInput(val);
                       if (val === '' || val === '-') {
                         setLength(0);
-                      } else {
-                        setLength(parseFloat(val));
+                        return;
+                      }
+                      const num = parseFloat(val);
+                      if (!isNaN(num)) {
+                        setLength(num);
                       }
                     }}
                     className="text-lg"
@@ -228,13 +238,17 @@ const Index = () => {
                     type="number"
                     step="0.1"
                     min="0.5"
-                    value={width || ''}
+                    value={widthInput}
                     onChange={(e) => {
                       const val = e.target.value;
+                      setWidthInput(val);
                       if (val === '' || val === '-') {
                         setWidth(0);
-                      } else {
-                        setWidth(parseFloat(val));
+                        return;
+                      }
+                      const num = parseFloat(val);
+                      if (!isNaN(num)) {
+                        setWidth(num);
                       }
                     }}
                     className="text-lg"
@@ -330,13 +344,17 @@ const Index = () => {
                   type="number"
                   step="0.1"
                   min="0.1"
-                  value={omostkaWidth || ''}
+                  value={omostkaWidthInput}
                   onChange={(e) => {
                     const val = e.target.value;
+                    setOmostkaWidthInput(val);
                     if (val === '' || val === '-') {
                       setOmostkaWidth(0);
-                    } else {
-                      setOmostkaWidth(parseFloat(val));
+                      return;
+                    }
+                    const num = parseFloat(val);
+                    if (!isNaN(num)) {
+                      setOmostkaWidth(num);
                     }
                   }}
                   className="text-lg"
@@ -464,13 +482,17 @@ const Index = () => {
                         type="number"
                         step="1"
                         min="1"
-                        value={crumbKgPerM2}
+                        value={crumbKgPerM2Input}
                         onChange={(e) => {
                           const val = e.target.value;
+                          setCrumbKgPerM2Input(val);
                           if (val === '' || val === '-') {
                             setCrumbKgPerM2(0);
-                          } else {
-                            setCrumbKgPerM2(parseFloat(val));
+                            return;
+                          }
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setCrumbKgPerM2(num);
                           }
                         }}
                       />
@@ -484,13 +506,17 @@ const Index = () => {
                         type="number"
                         step="1"
                         min="1"
-                        value={crumbPricePerKg}
+                        value={crumbPricePerKgInput}
                         onChange={(e) => {
                           const val = e.target.value;
+                          setCrumbPricePerKgInput(val);
                           if (val === '' || val === '-') {
                             setCrumbPricePerKg(0);
-                          } else {
-                            setCrumbPricePerKg(parseFloat(val));
+                            return;
+                          }
+                          const num = parseFloat(val);
+                          if (!isNaN(num)) {
+                            setCrumbPricePerKg(num);
                           }
                         }}
                       />
