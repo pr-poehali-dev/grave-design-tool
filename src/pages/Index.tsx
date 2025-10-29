@@ -632,6 +632,11 @@ const Index = () => {
                       const tileWidth = 480 * length / Math.max(length, width);
                       const tileHeight = 480 * width / Math.max(length, width);
                       
+                      const innerLength = length - 2 * borderWidth;
+                      const innerWidth = width - 2 * borderWidth;
+                      const tileAreaInner = innerLength * innerWidth;
+                      const borderArea = length * width - tileAreaInner;
+                      
                       return (
                         <>
                           <rect
@@ -696,9 +701,41 @@ const Index = () => {
                           >
                             {borderWidth}м
                           </text>
+                          
+                          <text 
+                            x={60 + tileWidth / 2} 
+                            y={60 + borderPixels / 2 + 4} 
+                            textAnchor="middle" 
+                            className="text-sm fill-gray-700 font-bold bg-white"
+                            style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                          >
+                            Поребрик: {borderArea.toFixed(2)} м²
+                          </text>
+                          
+                          <text 
+                            x={60 + tileWidth / 2} 
+                            y={60 + tileHeight / 2} 
+                            textAnchor="middle" 
+                            className="text-lg fill-indigo-700 font-bold"
+                            style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                          >
+                            Плитка: {tileAreaInner.toFixed(2)} м²
+                          </text>
                         </>
                       );
                     })()}
+                    
+                    {!includeBorder && (
+                      <text 
+                        x={60 + (480 * length / Math.max(length, width)) / 2} 
+                        y={60 + (480 * width / Math.max(length, width)) / 2} 
+                        textAnchor="middle" 
+                        className="text-lg fill-indigo-700 font-bold"
+                        style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
+                      >
+                        Плитка: {(length * width).toFixed(2)} м²
+                      </text>
+                    )}
 
                     {includeMonument && (() => {
                       const monumentSizes: Record<string, { w: number; h: number }> = {
