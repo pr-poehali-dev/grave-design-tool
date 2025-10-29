@@ -758,7 +758,7 @@ const Index = () => {
                                 className="text-sm fill-indigo-600 font-semibold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                               >
-                                {Math.ceil(tileAreaInner / 0.09)} шт (30×30 см)
+                                {Math.ceil((tileAreaInner / 0.09) * 1.1)} шт (30×30 см + 10% обрезки)
                               </text>
                             </>
                           ) : (
@@ -796,7 +796,7 @@ const Index = () => {
                               className="text-sm fill-indigo-600 font-semibold"
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                             >
-                              {Math.ceil((length * width) / 0.09)} шт (30×30 см)
+                              {Math.ceil(((length * width) / 0.09) * 1.1)} шт (30×30 см + 10% обрезки)
                             </text>
                           </>
                         ) : (
