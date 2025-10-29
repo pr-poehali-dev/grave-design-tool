@@ -74,6 +74,7 @@ const Index = () => {
   const [crumbPricePerKg, setCrumbPricePerKg] = useState<number>(15);
   const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
   const [tileSize, setTileSize] = useState<number>(0.4);
+  const [tileType, setTileType] = useState<string>('standard');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
   const [installationPrice, setInstallationPrice] = useState<number>(3000);
   const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
@@ -332,6 +333,69 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    <div className="space-y-2">
+                      <Label className="text-sm text-muted-foreground">
+                        Тип укладки плитки
+                      </Label>
+                      <div className="grid grid-cols-3 gap-3">
+                        <button
+                          onClick={() => setTileType('brick')}
+                          className={`p-3 border-2 rounded-lg transition-all ${
+                            tileType === 'brick' 
+                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2">
+                            <svg viewBox="0 0 100 100" className="w-full h-full">
+                              <rect x="2" y="2" width="28" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                              <rect x="32" y="2" width="28" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                              <rect x="62" y="2" width="36" height="45" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                              <rect x="2" y="49" width="60" height="49" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                              <rect x="64" y="49" width="34" height="24" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                              <rect x="64" y="75" width="34" height="23" fill="#a5b4fc" stroke="#6366f1" strokeWidth="1.5"/>
+                            </svg>
+                          </div>
+                          <p className="text-xs font-medium text-center">Кирпич</p>
+                        </button>
+                        
+                        <button
+                          onClick={() => setTileType('standard')}
+                          className={`p-3 border-2 rounded-lg transition-all ${
+                            tileType === 'standard' 
+                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2">
+                            <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-1">
+                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
+                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
+                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
+                              <div className="bg-indigo-300 rounded-sm border border-indigo-500"></div>
+                            </div>
+                          </div>
+                          <p className="text-xs font-medium text-center">Стандарт</p>
+                        </button>
+                        
+                        <button
+                          onClick={() => setTileType('diagonal')}
+                          className={`p-3 border-2 rounded-lg transition-all ${
+                            tileType === 'diagonal' 
+                              ? 'border-indigo-500 bg-indigo-50 shadow-md' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="w-full aspect-square bg-white rounded border border-gray-200 p-1.5 mb-2 relative overflow-hidden">
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-[60%] h-[60%] bg-indigo-300 border-2 border-indigo-500 transform rotate-45"></div>
+                            </div>
+                          </div>
+                          <p className="text-xs font-medium text-center">Диагональ</p>
+                        </button>
+                      </div>
+                    </div>
+                    
                     <div className="space-y-2">
                       <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
                         Размер плитки
