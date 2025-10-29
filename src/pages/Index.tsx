@@ -15,6 +15,55 @@ interface Material {
   unit: string;
 }
 
+interface TileType {
+  id: string;
+  name: string;
+  category: 'concrete' | 'granite';
+  pricePerUnit: number;
+  unit: string;
+  image: string;
+  sizes: number[]; // доступные размеры в метрах
+}
+
+const tileTypes: TileType[] = [
+  { 
+    id: 'concrete-brick', 
+    name: 'Кирпич', 
+    category: 'concrete',
+    pricePerUnit: 1200, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4, 0.5]
+  },
+  { 
+    id: 'concrete-square', 
+    name: 'Квадрат', 
+    category: 'concrete',
+    pricePerUnit: 1100, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4, 0.5]
+  },
+  { 
+    id: 'granite-brick', 
+    name: 'Кирпич', 
+    category: 'granite',
+    pricePerUnit: 2500, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4]
+  },
+  { 
+    id: 'granite-square', 
+    name: 'Квадрат', 
+    category: 'granite',
+    pricePerUnit: 2400, 
+    unit: 'м²',
+    image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png',
+    sizes: [0.3, 0.4]
+  },
+];
+
 const materials: Record<string, Material[]> = {
   tile: [
     { id: 'granite', name: 'Плитка гранитная', pricePerUnit: 2500, unit: 'м²' },
@@ -75,6 +124,8 @@ const Index = () => {
   const [crumbPricePerKgInput, setCrumbPricePerKgInput] = useState<string>('15');
   const [tileSize, setTileSize] = useState<number>(0.4);
   const [tilePattern, setTilePattern] = useState<string>('standard');
+  const [tileCategory, setTileCategory] = useState<'concrete' | 'granite'>('concrete');
+  const [selectedTileType, setSelectedTileType] = useState<string>('concrete-brick');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
   const [installationPrice, setInstallationPrice] = useState<number>(3000);
   const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
@@ -321,66 +372,117 @@ const Index = () => {
                 </div>
                 {includeTile && (
                   <>
-                    <Select value={selectedTile} onValueChange={setSelectedTile}>
-                      <SelectTrigger id="tile">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {materialsData.tile.map((mat) => (
-                          <SelectItem key={mat.id} value={mat.id}>
-                            {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                     <div className="space-y-3">
                       <Label className="text-sm text-muted-foreground">
-                        Вид плитки
-                      </Label>
-                      <div className="bg-white border-2 border-indigo-200 rounded-lg p-4 space-y-2">
-                        <div className="flex items-center justify-center">
-                          <img 
-                            src="https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png" 
-                            alt="Плитка Кирпич 40×40"
-                            className="w-32 h-32 rounded-lg shadow-md object-cover"
-                          />
-                        </div>
-                        <p className="text-center font-semibold text-gray-800">Кирпич 40×40 см</p>
-                        <p className="text-xs text-center text-gray-500">Тротуарная плитка брусчатка</p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
-                        Размер плитки
+                        Материал плитки
                       </Label>
                       <div className="flex gap-2">
                         <Button
-                          variant={tileSize === 0.3 ? 'default' : 'outline'}
+                          variant={tileCategory === 'concrete' ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setTileSize(0.3)}
+                          onClick={() => {
+                            setTileCategory('concrete');
+                            const firstConcrete = tileTypes.find(t => t.category === 'concrete');
+                            if (firstConcrete) {
+                              setSelectedTileType(firstConcrete.id);
+                              setSelectedTile('concrete');
+                              if (!firstConcrete.sizes.includes(tileSize)) {
+                                setTileSize(firstConcrete.sizes[0]);
+                              }
+                            }
+                          }}
                           className="flex-1"
                         >
-                          30×30 см
+                          Бетонная
                         </Button>
                         <Button
-                          variant={tileSize === 0.4 ? 'default' : 'outline'}
+                          variant={tileCategory === 'granite' ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setTileSize(0.4)}
+                          onClick={() => {
+                            setTileCategory('granite');
+                            const firstGranite = tileTypes.find(t => t.category === 'granite');
+                            if (firstGranite) {
+                              setSelectedTileType(firstGranite.id);
+                              setSelectedTile('granite');
+                              if (!firstGranite.sizes.includes(tileSize)) {
+                                setTileSize(firstGranite.sizes[0]);
+                              }
+                            }
+                          }}
                           className="flex-1"
                         >
-                          40×40 см
-                        </Button>
-                        <Button
-                          variant={tileSize === 0.5 ? 'default' : 'outline'}
-                          size="sm"
-                          onClick={() => setTileSize(0.5)}
-                          className="flex-1"
-                        >
-                          50×50 см
+                          Гранитная
                         </Button>
                       </div>
                     </div>
+
+                    {(() => {
+                      const currentTile = tileTypes.find(t => t.id === selectedTileType);
+                      const availableTiles = tileTypes.filter(t => t.category === tileCategory);
+                      
+                      return (
+                        <>
+                          <div className="space-y-3">
+                            <Label className="text-sm text-muted-foreground">
+                              Вид плитки
+                            </Label>
+                            <div className="grid grid-cols-2 gap-3">
+                              {availableTiles.map((tile) => (
+                                <div
+                                  key={tile.id}
+                                  onClick={() => {
+                                    setSelectedTileType(tile.id);
+                                    setSelectedTile(tile.category);
+                                    if (!tile.sizes.includes(tileSize)) {
+                                      setTileSize(tile.sizes[0]);
+                                    }
+                                  }}
+                                  className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
+                                    selectedTileType === tile.id 
+                                      ? 'border-indigo-500 ring-2 ring-indigo-200' 
+                                      : 'border-gray-200 hover:border-indigo-300'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-center">
+                                    <img 
+                                      src={tile.image}
+                                      alt={tile.name}
+                                      className="w-20 h-20 rounded object-cover"
+                                    />
+                                  </div>
+                                  <p className="text-center text-sm font-semibold text-gray-800">{tile.name}</p>
+                                  <p className="text-xs text-center text-gray-500">{tile.pricePerUnit} ₽/м²</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {currentTile && (
+                            <div className="space-y-2">
+                              <Label htmlFor="tile-size" className="text-sm text-muted-foreground">
+                                Размер плитки
+                              </Label>
+                              <div className="flex gap-2 flex-wrap">
+                                {currentTile.sizes.map((size) => {
+                                  const sizeCm = Math.round(size * 100);
+                                  return (
+                                    <Button
+                                      key={size}
+                                      variant={tileSize === size ? 'default' : 'outline'}
+                                      size="sm"
+                                      onClick={() => setTileSize(size)}
+                                      className="flex-1"
+                                    >
+                                      {sizeCm}×{sizeCm} см
+                                    </Button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                     <div className="space-y-2">
                       <Label htmlFor="tile-cut-reserve" className="text-sm text-muted-foreground flex items-center gap-2">
                         <Icon name="Scissors" size={14} />
