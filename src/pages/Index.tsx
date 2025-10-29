@@ -744,7 +744,7 @@ const Index = () => {
                             <>
                               <text 
                                 x={60 + tileWidth / 2} 
-                                y={60 + tileHeight / 2 - 10} 
+                                y={60 + tileHeight - 35} 
                                 textAnchor="middle" 
                                 className="text-lg fill-indigo-700 font-bold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
@@ -753,18 +753,18 @@ const Index = () => {
                               </text>
                               <text 
                                 x={60 + tileWidth / 2} 
-                                y={60 + tileHeight / 2 + 10} 
+                                y={60 + tileHeight - 15} 
                                 textAnchor="middle" 
                                 className="text-sm fill-indigo-600 font-semibold"
                                 style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                               >
-                                {Math.ceil((tileAreaInner / 0.09) * 1.1)} шт (30×30 см + 10% обрезки)
+                                ≈{Math.ceil(tileAreaInner / 0.09)} шт (30×30 см)
                               </text>
                             </>
                           ) : (
                             <text 
                               x={60 + tileWidth / 2} 
-                              y={60 + tileHeight / 2} 
+                              y={60 + tileHeight - 25} 
                               textAnchor="middle" 
                               className="text-lg fill-amber-600 font-bold"
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
@@ -782,7 +782,7 @@ const Index = () => {
                           <>
                             <text 
                               x={60 + (480 * length / Math.max(length, width)) / 2} 
-                              y={60 + (480 * width / Math.max(length, width)) / 2 - 10} 
+                              y={60 + (480 * width / Math.max(length, width)) - 35} 
                               textAnchor="middle" 
                               className="text-lg fill-indigo-700 font-bold"
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
@@ -791,18 +791,18 @@ const Index = () => {
                             </text>
                             <text 
                               x={60 + (480 * length / Math.max(length, width)) / 2} 
-                              y={60 + (480 * width / Math.max(length, width)) / 2 + 10} 
+                              y={60 + (480 * width / Math.max(length, width)) - 15} 
                               textAnchor="middle" 
                               className="text-sm fill-indigo-600 font-semibold"
                               style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
                             >
-                              {Math.ceil(((length * width) / 0.09) * 1.1)} шт (30×30 см + 10% обрезки)
+                              ≈{Math.ceil((length * width) / 0.09)} шт (30×30 см)
                             </text>
                           </>
                         ) : (
                           <text 
                             x={60 + (480 * length / Math.max(length, width)) / 2} 
-                            y={60 + (480 * width / Math.max(length, width)) / 2} 
+                            y={60 + (480 * width / Math.max(length, width)) - 25} 
                             textAnchor="middle" 
                             className="text-lg fill-amber-600 font-bold"
                             style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
