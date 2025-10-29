@@ -243,8 +243,8 @@ const Index = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="length" className="flex items-center gap-2">
-                    <Icon name="Move" size={16} />
-                    Длина (м)
+                    <Icon name="ArrowLeftRight" size={16} />
+                    Ширина (м)
                   </Label>
                   <Input
                     id="length"
