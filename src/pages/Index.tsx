@@ -67,6 +67,7 @@ const Index = () => {
   const [includeBorder, setIncludeBorder] = useState<boolean>(true);
   const [includeFence, setIncludeFence] = useState<boolean>(true);
   const [includeMonument, setIncludeMonument] = useState<boolean>(false);
+  const [includeTile, setIncludeTile] = useState<boolean>(true);
   const [includeCrumb, setIncludeCrumb] = useState<boolean>(true);
   const [crumbKgPerM2, setCrumbKgPerM2] = useState<number>(50);
   const [crumbKgPerM2Input, setCrumbKgPerM2Input] = useState<string>('50');
@@ -85,7 +86,7 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, materialsData]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
@@ -94,13 +95,16 @@ const Index = () => {
     
     const tileArea = length * width;
     const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
-    items.push({
-      name: tileMaterial.name,
-      quantity: parseFloat(tileArea.toFixed(2)),
-      unit: tileMaterial.unit,
-      price: tileMaterial.pricePerUnit,
-      total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
-    });
+    
+    if (includeTile) {
+      items.push({
+        name: tileMaterial.name,
+        quantity: parseFloat(tileArea.toFixed(2)),
+        unit: tileMaterial.unit,
+        price: tileMaterial.pricePerUnit,
+        total: parseFloat((tileArea * tileMaterial.pricePerUnit).toFixed(2)),
+      });
+    }
 
     const effectiveOmostkaWidth = includeOmostka ? omostkaWidth : 0;
     const outerLength = length + 2 * effectiveOmostkaWidth;
@@ -259,22 +263,33 @@ const Index = () => {
               <Separator />
 
               <div className="space-y-2">
-                <Label htmlFor="tile" className="flex items-center gap-2">
-                  <Icon name="Grid3x3" size={16} />
-                  Тип плитки
-                </Label>
-                <Select value={selectedTile} onValueChange={setSelectedTile}>
-                  <SelectTrigger id="tile">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {materialsData.tile.map((mat) => (
-                      <SelectItem key={mat.id} value={mat.id}>
-                        {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="tile" className="flex items-center gap-2">
+                    <Icon name="Grid3x3" size={16} />
+                    Плитка 30×30 см
+                  </Label>
+                  <Button
+                    variant={includeTile ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setIncludeTile(!includeTile)}
+                  >
+                    {includeTile ? 'Включена' : 'Выключена'}
+                  </Button>
+                </div>
+                {includeTile && (
+                  <Select value={selectedTile} onValueChange={setSelectedTile}>
+                    <SelectTrigger id="tile">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {materialsData.tile.map((mat) => (
+                        <SelectItem key={mat.id} value={mat.id}>
+                          {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -555,8 +570,21 @@ const Index = () => {
                     className="w-full h-full"
                   >
                     <defs>
-                      <pattern id="tilePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <rect width="19" height="19" fill="#e0e7ff" stroke="#c7d2fe" strokeWidth="1"/>
+                      <pattern id="tilePattern" patternUnits="userSpaceOnUse" width={30 * (480 / Math.max(length, width))} height={30 * (480 / Math.max(length, width))}>
+                        <rect 
+                          width={30 * (480 / Math.max(length, width)) - 2} 
+                          height={30 * (480 / Math.max(length, width)) - 2} 
+                          fill="#e0e7ff" 
+                          stroke="#a5b4fc" 
+                          strokeWidth="2"
+                        />
+                      </pattern>
+                      <pattern id="sandPattern" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+                        <rect width="6" height="6" fill="#fbbf24"/>
+                        <circle cx="1" cy="1" r="0.4" fill="#f59e0b" opacity="0.6"/>
+                        <circle cx="4" cy="3" r="0.3" fill="#d97706" opacity="0.5"/>
+                        <circle cx="2" cy="5" r="0.3" fill="#f59e0b" opacity="0.4"/>
+                        <circle cx="5" cy="2" r="0.4" fill="#d97706" opacity="0.5"/>
                       </pattern>
                       <pattern id="omostkaPattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
                         <rect width="14" height="14" fill="#f3e8ff" stroke="#e9d5ff" strokeWidth="1"/>
@@ -620,7 +648,7 @@ const Index = () => {
                       y="60"
                       width={480 * length / Math.max(length, width)}
                       height={480 * width / Math.max(length, width)}
-                      fill="url(#tilePattern)"
+                      fill={includeTile ? "url(#tilePattern)" : "url(#sandPattern)"}
                       stroke="#6366f1"
                       strokeWidth="4"
                       rx="4"
@@ -681,7 +709,7 @@ const Index = () => {
                             y={60 + borderPixels}
                             width={tileWidth - borderPixels * 2}
                             height={tileHeight - borderPixels * 2}
-                            fill="url(#tilePattern)"
+                            fill={includeTile ? "url(#tilePattern)" : "url(#sandPattern)"}
                             stroke="none"
                           />
                           
@@ -716,10 +744,10 @@ const Index = () => {
                             x={60 + tileWidth / 2} 
                             y={60 + tileHeight / 2} 
                             textAnchor="middle" 
-                            className="text-lg fill-indigo-700 font-bold"
+                            className={`text-lg font-bold ${includeTile ? 'fill-indigo-700' : 'fill-amber-600'}`}
                             style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
                           >
-                            Плитка: {tileAreaInner.toFixed(2)} м²
+                            {includeTile ? `Плитка: ${tileAreaInner.toFixed(2)} м²` : `Песок: ${tileAreaInner.toFixed(2)} м²`}
                           </text>
                         </>
                       );
@@ -730,10 +758,10 @@ const Index = () => {
                         x={60 + (480 * length / Math.max(length, width)) / 2} 
                         y={60 + (480 * width / Math.max(length, width)) / 2} 
                         textAnchor="middle" 
-                        className="text-lg fill-indigo-700 font-bold"
+                        className={`text-lg font-bold ${includeTile ? 'fill-indigo-700' : 'fill-amber-600'}`}
                         style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 4 }}
                       >
-                        Плитка: {(length * width).toFixed(2)} м²
+                        {includeTile ? `Плитка: ${(length * width).toFixed(2)} м²` : `Песок: ${(length * width).toFixed(2)} м²`}
                       </text>
                     )}
 
