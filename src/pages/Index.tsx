@@ -404,30 +404,46 @@ const Index = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="omostka" className="flex items-center gap-2">
-                  <Icon name="Layers" size={16} />
-                  Ширина отмостки (м)
-                </Label>
-                <Input
-                  id="omostka"
-                  type="number"
-                  step="0.1"
-                  min="0.1"
-                  value={omostkaWidthInput}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setOmostkaWidthInput(val);
-                    if (val === '' || val === '-') {
-                      setOmostkaWidth(0);
-                      return;
-                    }
-                    const num = parseFloat(val);
-                    if (!isNaN(num)) {
-                      setOmostkaWidth(num);
-                    }
-                  }}
-                  className="text-lg"
-                />
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="omostka" className="flex items-center gap-2">
+                    <Icon name="Layers" size={16} />
+                    Отмостка
+                  </Label>
+                  <Button
+                    variant={includeOmostka ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setIncludeOmostka(!includeOmostka)}
+                  >
+                    {includeOmostka ? 'Включена' : 'Выключена'}
+                  </Button>
+                </div>
+                {includeOmostka && (
+                  <div className="space-y-2">
+                    <Label htmlFor="omostka-width" className="text-sm text-muted-foreground">
+                      Ширина отмостки (м)
+                    </Label>
+                    <Input
+                      id="omostka-width"
+                      type="number"
+                      step="0.1"
+                      min="0.1"
+                      value={omostkaWidthInput}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setOmostkaWidthInput(val);
+                        if (val === '' || val === '-') {
+                          setOmostkaWidth(0);
+                          return;
+                        }
+                        const num = parseFloat(val);
+                        if (!isNaN(num)) {
+                          setOmostkaWidth(num);
+                        }
+                      }}
+                      className="text-lg"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -680,35 +696,52 @@ const Index = () => {
                       />
                     )}
 
-                    {includeOmostka && (
-                      <>
-                        <rect
-                          x={60 - omostkaWidth * 120}
-                          y={60 - omostkaWidth * 120}
-                          width={(480 * length / Math.max(length, width)) + omostkaWidth * 240}
-                          height={(480 * width / Math.max(length, width)) + omostkaWidth * 240}
-                          fill="url(#omostkaPattern)"
-                          stroke="none"
-                          rx="6"
-                        />
-                        <line 
-                          x1={60 - omostkaWidth * 120} 
-                          y1={60 - omostkaWidth * 120 - 10} 
-                          x2="60" 
-                          y2={60 - omostkaWidth * 120 - 10} 
-                          stroke="#9333ea" 
-                          strokeWidth="2"
-                        />
-                        <text 
-                          x={60 - omostkaWidth * 60} 
-                          y={60 - omostkaWidth * 120 - 15} 
-                          textAnchor="middle" 
-                          className="text-sm fill-purple-700 font-semibold"
-                        >
-                          {omostkaWidth} м
-                        </text>
-                      </>
-                    )}
+                    {includeOmostka && (() => {
+                      const tileWidth = 480 * length / Math.max(length, width);
+                      const tileHeight = 480 * width / Math.max(length, width);
+                      const outerLength = length + 2 * omostkaWidth;
+                      const outerWidth = width + 2 * omostkaWidth;
+                      const omostkaArea = outerLength * outerWidth - length * width;
+                      
+                      return (
+                        <>
+                          <rect
+                            x={60 - omostkaWidth * 120}
+                            y={60 - omostkaWidth * 120}
+                            width={tileWidth + omostkaWidth * 240}
+                            height={tileHeight + omostkaWidth * 240}
+                            fill="url(#omostkaPattern)"
+                            stroke="none"
+                            rx="6"
+                          />
+                          <line 
+                            x1={60 - omostkaWidth * 120} 
+                            y1={60 - omostkaWidth * 120 - 10} 
+                            x2="60" 
+                            y2={60 - omostkaWidth * 120 - 10} 
+                            stroke="#9333ea" 
+                            strokeWidth="2"
+                          />
+                          <text 
+                            x={60 - omostkaWidth * 60} 
+                            y={60 - omostkaWidth * 120 - 15} 
+                            textAnchor="middle" 
+                            className="text-sm fill-purple-700 font-semibold"
+                          >
+                            {omostkaWidth} м
+                          </text>
+                          <text 
+                            x={60 - omostkaWidth * 120 + (tileWidth + omostkaWidth * 240) / 2} 
+                            y={60 - omostkaWidth * 60} 
+                            textAnchor="middle" 
+                            className="text-base fill-purple-700 font-bold"
+                            style={{ paintOrder: 'stroke', stroke: 'white', strokeWidth: 3 }}
+                          >
+                            Отмостка: {omostkaArea.toFixed(2)} м²
+                          </text>
+                        </>
+                      );
+                    })()}
 
                     <rect
                       x="60"
