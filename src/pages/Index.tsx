@@ -1052,7 +1052,10 @@ const Index = () => {
                     <Button
                       variant={includeTile ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setIncludeTile(!includeTile)}
+                      onClick={() => {
+                        setIncludeTile(!includeTile);
+                        if (!includeTile) setIncludeCrumb(false);
+                      }}
                       className="justify-start gap-2"
                     >
                       <div className="w-4 h-4 bg-indigo-600 rounded"></div>
@@ -1104,7 +1107,10 @@ const Index = () => {
                     <Button
                       variant={includeCrumb ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setIncludeCrumb(!includeCrumb)}
+                      onClick={() => {
+                        setIncludeCrumb(!includeCrumb);
+                        if (!includeCrumb) setIncludeTile(false);
+                      }}
                       className="justify-start gap-2"
                     >
                       <Icon name="Sparkles" size={16} />
