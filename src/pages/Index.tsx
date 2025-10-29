@@ -979,7 +979,8 @@ const Index = () => {
                       const innerTileWidth = tileWidth - 2 * borderPixels;
                       const innerTileHeight = tileHeight - 2 * borderPixels;
                       
-                      const totalMonumentsWidth = monumentWidth * monumentCount + (monumentCount - 1) * 20;
+                      const monumentSpacing = 40;
+                      const totalMonumentsWidth = monumentWidth * monumentCount + (monumentCount - 1) * monumentSpacing;
                       let startX = 60 + borderPixels;
                       
                       if (monumentPosition === 'center') {
@@ -994,7 +995,7 @@ const Index = () => {
                       const monumentMargin = 20;
                       
                       for (let i = 0; i < monumentCount; i++) {
-                        const x = startX + i * (monumentWidth + 20);
+                        const x = startX + i * (monumentWidth + monumentSpacing);
                         const y = 60 + borderPixels + monumentMargin;
                         
                         const monumentWidthCm = size.w * 100;
