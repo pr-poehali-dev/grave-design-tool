@@ -1033,12 +1033,12 @@ const Index = () => {
                     })()}
 
                     <text x={60 + (240 * length / Math.max(length, width))} y="40" textAnchor="middle" className="text-lg fill-gray-800 font-bold">
-                      {width} м
+                      {length} м
                     </text>
                     <line x1="60" y1="50" x2={60 + (480 * length / Math.max(length, width))} y2="50" stroke="#374151" strokeWidth="3" markerEnd="url(#arrowhead)"/>
                     
                     <text x="40" y={60 + (240 * width / Math.max(length, width))} textAnchor="middle" className="text-lg fill-gray-800 font-bold" transform={`rotate(-90 40 ${60 + (240 * width / Math.max(length, width))})`}>
-                      {length} м
+                      {width} м
                     </text>
                     <line x1="50" y1="60" x2="50" y2={60 + (480 * width / Math.max(length, width))} stroke="#374151" strokeWidth="3"/>
                   </svg>
@@ -1052,37 +1052,33 @@ const Index = () => {
                     <Button
                       variant={includeTile ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => {
-                        setIncludeTile(!includeTile);
-                        if (!includeTile) setIncludeCrumb(false);
-                      }}
+                      onClick={() => setIncludeTile(!includeTile)}
                       className="justify-start gap-2"
                     >
                       <div className="w-4 h-4 bg-indigo-600 rounded"></div>
                       Плитка
                     </Button>
                     
-                    <Button
-                      variant={includeCrumb ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => {
-                        setIncludeCrumb(!includeCrumb);
-                        if (!includeCrumb) setIncludeTile(false);
-                      }}
-                      className="justify-start gap-2"
-                    >
-                      <Icon name="Sparkles" size={16} />
-                      Крошка
-                    </Button>
+                    <div className="col-span-2 space-y-2">
+                      <Button
+                        variant={includeBorder ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setIncludeBorder(!includeBorder)}
+                        className="w-full justify-start gap-2"
+                      >
+                        <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
+                        Поребрик
+                      </Button>
+                    </div>
                     
                     <Button
-                      variant={includeBorder ? 'default' : 'outline'}
+                      variant={includeFence ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => setIncludeBorder(!includeBorder)}
+                      onClick={() => setIncludeFence(!includeFence)}
                       className="justify-start gap-2"
                     >
-                      <div className="w-4 h-4 border-2 border-purple-600 rounded"></div>
-                      Поребрик
+                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
+                      Ограда
                     </Button>
                     
                     <Button
@@ -1096,16 +1092,6 @@ const Index = () => {
                     </Button>
                     
                     <Button
-                      variant={includeFence ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setIncludeFence(!includeFence)}
-                      className="justify-start gap-2"
-                    >
-                      <div className="w-4 h-4 border-2 border-dashed border-gray-800 rounded"></div>
-                      Ограда
-                    </Button>
-                    
-                    <Button
                       variant={includeMonument ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setIncludeMonument(!includeMonument)}
@@ -1113,6 +1099,16 @@ const Index = () => {
                     >
                       <div className="w-4 h-4 bg-gray-800 rounded"></div>
                       Памятник
+                    </Button>
+                    
+                    <Button
+                      variant={includeCrumb ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setIncludeCrumb(!includeCrumb)}
+                      className="justify-start gap-2"
+                    >
+                      <Icon name="Sparkles" size={16} />
+                      Крошка
                     </Button>
                   </div>
                   
