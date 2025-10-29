@@ -303,8 +303,8 @@ const Index = () => {
                         value={borderWidth}
                         onChange={(e) => {
                           const val = e.target.value;
-                          if (val === '') {
-                            setBorderWidth(0.05);
+                          if (val === '' || val === '0') {
+                            setBorderWidth(0);
                           } else {
                             const num = parseFloat(val);
                             if (!isNaN(num)) {
@@ -763,8 +763,8 @@ const Index = () => {
                             value={borderWidth}
                             onChange={(e) => {
                               const val = e.target.value;
-                              if (val === '') {
-                                setBorderWidth(0.05);
+                              if (val === '' || val === '0') {
+                                setBorderWidth(0);
                               } else {
                                 const num = parseFloat(val);
                                 if (!isNaN(num)) {
