@@ -372,7 +372,10 @@ const Index = () => {
                   <Button
                     variant={includeBorder ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => setIncludeBorder(!includeBorder)}
+                    onClick={() => {
+                      setIncludeBorder(!includeBorder);
+                      if (!includeBorder) setIncludeCrumb(false);
+                    }}
                   >
                     {includeBorder ? 'Включен' : 'Выключен'}
                   </Button>
@@ -559,7 +562,10 @@ const Index = () => {
                     size="sm"
                     onClick={() => {
                       setIncludeCrumb(!includeCrumb);
-                      if (!includeCrumb) setIncludeTile(false);
+                      if (!includeCrumb) {
+                        setIncludeTile(false);
+                        setIncludeBorder(false);
+                      }
                     }}
                   >
                     {includeCrumb ? 'Включена' : 'Выключена'}
