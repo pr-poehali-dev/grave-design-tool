@@ -81,7 +81,11 @@ const Index = () => {
   useEffect(() => {
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
-      setMaterialsData(JSON.parse(savedMaterials));
+      const parsed = JSON.parse(savedMaterials);
+      setMaterialsData(parsed);
+      if (parsed.monument && parsed.monument.length > 0 && !parsed.monument.find((m: Material) => m.id === selectedMonument)) {
+        setSelectedMonument(parsed.monument[0].id);
+      }
     }
   }, []);
 
