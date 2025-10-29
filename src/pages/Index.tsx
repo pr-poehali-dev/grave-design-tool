@@ -145,31 +145,30 @@ const Index = () => {
 
   useEffect(() => {
     calculateCost();
-  }, [length, width, omostkaWidth, selectedTileType, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth, tileCutReserve]);
+  }, [length, width, omostkaWidth, selectedTile, selectedBorder, selectedFence, selectedMonument, monumentCount, includeOmostka, includeBorder, includeFence, includeMonument, includeTile, includeCrumb, crumbKgPerM2, crumbPricePerKg, tileSize, materialsData, borderWidth, tileCutReserve]);
 
   const calculateCost = () => {
     const items: CalculationItem[] = [];
     
-    const currentTile = tileTypes.find(t => t.id === selectedTileType);
-    if (!currentTile) return;
+    if (!materialsData.tile.find(m => m.id === selectedTile)) return;
     
     const effectiveBorderWidth = includeBorder ? borderWidth : 0;
     const innerLength = length - 2 * effectiveBorderWidth;
     const innerWidth = width - 2 * effectiveBorderWidth;
     const tileArea = includeBorder ? innerLength * innerWidth : length * width;
+    const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
     
     if (includeTile) {
       const tileSizeM2 = tileSize * tileSize;
       const tileAreaWithReserve = tileArea * (1 + tileCutReserve / 100);
       const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
       const tileSizeCm = Math.round(tileSize * 100);
-      const categoryName = currentTile.category === 'concrete' ? 'Бетонная' : 'Гранитная';
       items.push({
-        name: `${categoryName} плитка "${currentTile.name}"`,
+        name: tileMaterial.name,
         quantity: parseFloat(tileAreaWithReserve.toFixed(2)),
-        unit: currentTile.unit,
-        price: currentTile.pricePerUnit,
-        total: parseFloat((tileAreaWithReserve * currentTile.pricePerUnit).toFixed(2)),
+        unit: tileMaterial.unit,
+        price: tileMaterial.pricePerUnit,
+        total: parseFloat((tileAreaWithReserve * tileMaterial.pricePerUnit).toFixed(2)),
       });
       items.push({
         name: `└─ Количество плиток ${tileSizeCm}×${tileSizeCm} см (с запасом ${tileCutReserve}%)`,
@@ -191,9 +190,9 @@ const Index = () => {
       items.push({
         name: 'Отмостка',
         quantity: parseFloat(omostkaArea.toFixed(2)),
-        unit: currentTile.unit,
-        price: currentTile.pricePerUnit,
-        total: parseFloat((omostkaArea * currentTile.pricePerUnit).toFixed(2)),
+        unit: tileMaterial.unit,
+        price: tileMaterial.pricePerUnit,
+        total: parseFloat((omostkaArea * tileMaterial.pricePerUnit).toFixed(2)),
       });
     }
 
