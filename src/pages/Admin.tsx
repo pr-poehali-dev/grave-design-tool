@@ -720,7 +720,13 @@ const Admin = () => {
           <TabsContent value="border">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle>Поребрики</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Frame" size={24} className="text-primary" />
+                  Поребрики
+                </CardTitle>
+                <CardDescription>
+                  Управление поребриками и их ценами
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('border')}
@@ -738,7 +744,15 @@ const Admin = () => {
             <Card className="shadow-lg">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Ограды</CardTitle>
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Icon name="Shield" size={24} className="text-primary" />
+                      Ограды
+                    </CardTitle>
+                    <CardDescription className="mt-1">
+                      Управление оградами с изображениями и категориями
+                    </CardDescription>
+                  </div>
                   <Button 
                     onClick={() => {
                       setMaterials(prev => {
@@ -759,7 +773,7 @@ const Admin = () => {
                     className="gap-2"
                   >
                     <Icon name="RotateCcw" size={16} />
-                    Сбросить к начальным
+                    Сбросить
                   </Button>
                 </div>
               </CardHeader>
@@ -778,7 +792,13 @@ const Admin = () => {
           <TabsContent value="monument">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle>Памятники</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Landmark" size={24} className="text-primary" />
+                  Памятники
+                </CardTitle>
+                <CardDescription>
+                  Управление памятниками и их размерами
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('monument')}
