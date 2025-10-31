@@ -99,40 +99,117 @@ export const MaterialTable = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {materials.map((material) => (
             <div key={material.id} className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow space-y-3">
-              {showImages && material.image && (
-                <img 
-                  src={material.image} 
-                  alt={material.name}
-                  className="w-full h-40 object-cover rounded-md"
-                />
+              {editingId === material.id && editingCategory === category ? (
+                <div className="space-y-4">
+                  {showImages && (
+                    <div className="space-y-2">
+                      {material.image && (
+                        <img 
+                          src={material.image} 
+                          alt={material.name}
+                          className="w-full h-40 object-contain rounded-md border border-gray-200"
+                        />
+                      )}
+                      <div>
+                        <Label>URL изображения</Label>
+                        <Input
+                          value={material.image || ''}
+                          onChange={(e) => onImageChange(category, material.id, e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div>
+                        <Label>Категория</Label>
+                        <Select
+                          value={material.category || 'metal'}
+                          onValueChange={(value: 'metal' | 'granite' | 'forged') => 
+                            onImageChange(category, material.id, material.image || '')
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="metal">Металлическая</SelectItem>
+                            <SelectItem value="granite">Гранитная</SelectItem>
+                            <SelectItem value="forged">Кованая</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <Label>Название</Label>
+                    <Input
+                      value={material.name}
+                      onChange={(e) => onNameChange(category, material.id, e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Цена за {material.unit}</Label>
+                    <Input
+                      type="number"
+                      value={material.pricePerUnit}
+                      onChange={(e) => onPriceChange(category, material.id, Number(e.target.value))}
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      variant="default"
+                      onClick={finishEdit}
+                      className="flex-1 gap-2"
+                    >
+                      <Icon name="Check" size={16} />
+                      Готово
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => onDeleteMaterial(category, material.id)}
+                    >
+                      <Icon name="Trash2" size={16} />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {showImages && material.image && (
+                    <img 
+                      src={material.image} 
+                      alt={material.name}
+                      className="w-full h-40 object-contain rounded-md border border-gray-200"
+                    />
+                  )}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-lg">{material.name}</h4>
+                    <p className="text-2xl font-bold text-primary">{material.pricePerUnit.toLocaleString('ru-RU')} ₽/{material.unit}</p>
+                    {material.category && (
+                      <p className="text-sm text-gray-500">
+                        Категория: {material.category === 'metal' ? 'Металлическая' : material.category === 'granite' ? 'Гранитная' : 'Кованая'}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => startEdit(material.id, category)}
+                      className="flex-1 gap-2"
+                    >
+                      <Icon name="Pencil" size={16} />
+                      Редактировать
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => onDeleteMaterial(category, material.id)}
+                    >
+                      <Icon name="Trash2" size={16} />
+                    </Button>
+                  </div>
+                </>
               )}
-              <div className="space-y-2">
-                <h4 className="font-semibold text-lg">{material.name}</h4>
-                <p className="text-2xl font-bold text-primary">{material.pricePerUnit.toLocaleString('ru-RU')} ₽/{material.unit}</p>
-                {material.category && (
-                  <p className="text-sm text-gray-500">
-                    Категория: {material.category === 'metal' ? 'Металлическая' : material.category === 'granite' ? 'Гранитная' : 'Кованая'}
-                  </p>
-                )}
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => startEdit(material.id, category)}
-                  className="flex-1 gap-2"
-                >
-                  <Icon name="Pencil" size={16} />
-                  Редактировать
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => onDeleteMaterial(category, material.id)}
-                >
-                  <Icon name="Trash2" size={16} />
-                </Button>
-              </div>
             </div>
           ))}
         </div>
