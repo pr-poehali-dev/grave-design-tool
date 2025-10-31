@@ -68,10 +68,76 @@ export const MaterialTable = ({
   };
 
   const showImages = category === 'fence';
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('cards');
 
   return (
     <div className="space-y-4">
-      <Table>
+      <div className="flex justify-end mb-4">
+        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+          <Button
+            size="sm"
+            variant={viewMode === 'cards' ? 'default' : 'ghost'}
+            onClick={() => setViewMode('cards')}
+            className="gap-2"
+          >
+            <Icon name="LayoutGrid" size={16} />
+            Карточки
+          </Button>
+          <Button
+            size="sm"
+            variant={viewMode === 'table' ? 'default' : 'ghost'}
+            onClick={() => setViewMode('table')}
+            className="gap-2"
+          >
+            <Icon name="Table" size={16} />
+            Таблица
+          </Button>
+        </div>
+      </div>
+
+      {viewMode === 'cards' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {materials.map((material) => (
+            <div key={material.id} className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow space-y-3">
+              {showImages && material.image && (
+                <img 
+                  src={material.image} 
+                  alt={material.name}
+                  className="w-full h-40 object-cover rounded-md"
+                />
+              )}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-lg">{material.name}</h4>
+                <p className="text-2xl font-bold text-primary">{material.pricePerUnit.toLocaleString('ru-RU')} ₽/{material.unit}</p>
+                {material.category && (
+                  <p className="text-sm text-gray-500">
+                    Категория: {material.category === 'metal' ? 'Металлическая' : material.category === 'granite' ? 'Гранитная' : 'Кованая'}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => startEdit(material.id, category)}
+                  className="flex-1 gap-2"
+                >
+                  <Icon name="Pencil" size={16} />
+                  Редактировать
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => onDeleteMaterial(category, material.id)}
+                >
+                  <Icon name="Trash2" size={16} />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Table>
         <TableHeader>
           <TableRow>
             {showImages && <TableHead className="w-[100px]">Изображение</TableHead>}
@@ -170,6 +236,7 @@ export const MaterialTable = ({
           ))}
         </TableBody>
       </Table>
+      )}
       
       {showAddForm ? (
         <div className="p-4 border rounded-lg bg-gray-50 space-y-4">
