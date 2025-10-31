@@ -216,31 +216,28 @@ const Index = () => {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 15;
+    const margin = 10;
     let yPosition = margin;
-
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(20);
-    pdf.text('Смета благоустройства', pageWidth / 2, yPosition, { align: 'center' });
-    yPosition += 10;
-
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(`Дата: ${new Date().toLocaleDateString('ru-RU')}`, pageWidth / 2, yPosition, { align: 'center' });
-    yPosition += 15;
-
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('Размеры участка:', margin, yPosition);
-    yPosition += 7;
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
-    pdf.text(`Длина: ${length} м, Ширина: ${width} м`, margin, yPosition);
-    yPosition += 10;
 
     const visualElement = document.getElementById('visualization-svg');
     if (visualElement) {
       const canvas = await html2canvas(visualElement, { scale: 2, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pageWidth - 2 * margin;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+      yPosition += imgHeight + 5;
+    }
+
+    if (yPosition > pageHeight - 100) {
+      pdf.addPage();
+      yPosition = margin;
+    }
+
+    const tableElement = document.getElementById('calculation-table');
+    if (tableElement) {
+      const canvas = await html2canvas(tableElement, { scale: 2, backgroundColor: '#ffffff' });
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = pageWidth - 2 * margin;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -251,98 +248,7 @@ const Index = () => {
       }
       
       pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-      yPosition += imgHeight + 10;
     }
-
-    if (yPosition > pageHeight - 80) {
-      pdf.addPage();
-      yPosition = margin;
-    }
-
-    pdf.setFontSize(14);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('Выбранные материалы', margin, yPosition);
-    yPosition += 10;
-
-    if (includeFence) {
-      const fenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
-      if (fenceMaterial?.image) {
-        try {
-          const imgWidth = 40;
-          const imgHeight = 30;
-          pdf.addImage(fenceMaterial.image, 'JPEG', margin, yPosition, imgWidth, imgHeight);
-          pdf.setFontSize(10);
-          pdf.setFont('helvetica', 'bold');
-          pdf.text(fenceMaterial.name, margin + imgWidth + 5, yPosition + 7);
-          pdf.setFont('helvetica', 'normal');
-          pdf.text(`Цена: ${fenceMaterial.pricePerUnit} ₽/${fenceMaterial.unit}`, margin + imgWidth + 5, yPosition + 14);
-          yPosition += imgHeight + 8;
-        } catch (e) {
-          console.error('Ошибка загрузки изображения ограды');
-        }
-      }
-    }
-
-    if (yPosition > pageHeight - 60) {
-      pdf.addPage();
-      yPosition = margin;
-    }
-
-    pdf.setFontSize(14);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('Смета расходов', margin, yPosition);
-    yPosition += 8;
-
-    pdf.setFontSize(9);
-    pdf.setFont('helvetica', 'bold');
-    const colWidths = [80, 30, 30, 35];
-    let xPos = margin;
-    pdf.text('Материал', xPos, yPosition);
-    xPos += colWidths[0];
-    pdf.text('Кол-во', xPos, yPosition);
-    xPos += colWidths[1];
-    pdf.text('Цена', xPos, yPosition);
-    xPos += colWidths[2];
-    pdf.text('Сумма', xPos, yPosition);
-    yPosition += 6;
-
-    pdf.setFont('helvetica', 'normal');
-    calculation.forEach((item) => {
-      if (yPosition > pageHeight - margin - 10) {
-        pdf.addPage();
-        yPosition = margin;
-      }
-
-      xPos = margin;
-      const isSubItem = item.price === 0;
-      if (isSubItem) {
-        pdf.setFontSize(8);
-        pdf.setTextColor(100, 100, 100);
-      } else {
-        pdf.setFontSize(9);
-        pdf.setTextColor(0, 0, 0);
-      }
-
-      pdf.text(item.name.substring(0, 45), xPos, yPosition);
-      xPos += colWidths[0];
-      pdf.text(`${item.quantity} ${item.unit}`, xPos, yPosition);
-      xPos += colWidths[1];
-      pdf.text(item.price > 0 ? `${item.price} ₽` : '—', xPos, yPosition);
-      xPos += colWidths[2];
-      pdf.text(item.total > 0 ? `${item.total.toLocaleString('ru-RU')} ₽` : '—', xPos, yPosition);
-      yPosition += 6;
-    });
-
-    yPosition += 3;
-    pdf.setDrawColor(0, 0, 0);
-    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-    yPosition += 6;
-
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(0, 0, 0);
-    pdf.text('Итого:', margin, yPosition);
-    pdf.text(`${total.toLocaleString('ru-RU')} ₽`, pageWidth - margin - 35, yPosition);
 
     pdf.save(`smeta-blagoustroistvo-${new Date().getTime()}.pdf`);
   };
@@ -1662,6 +1568,7 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
+                <div id="calculation-table">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1696,6 +1603,7 @@ const Index = () => {
                     </TableRow>
                   </TableBody>
                 </Table>
+                </div>
 
                 <div className="mt-6 flex gap-3">
                   <Button onClick={generatePDF} className="flex-1 gap-2" size="lg">
