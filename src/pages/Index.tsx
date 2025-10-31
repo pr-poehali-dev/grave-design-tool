@@ -365,7 +365,7 @@ const Index = () => {
       const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
       const tileSizeCm = Math.round(tileSize * 100);
       items.push({
-        name: tileMaterial.name,
+        name: `Плитка "${tileMaterial.name}"`,
         quantity: parseFloat(tileAreaWithReserve.toFixed(2)),
         unit: tileMaterial.unit,
         price: tileMaterial.pricePerUnit,
