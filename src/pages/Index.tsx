@@ -221,7 +221,13 @@ const Index = () => {
 
     const visualElement = document.getElementById('visualization-svg');
     if (visualElement) {
-      const canvas = await html2canvas(visualElement, { scale: 2, backgroundColor: '#ffffff' });
+      const canvas = await html2canvas(visualElement, { 
+        scale: 2, 
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = pageWidth - 2 * margin;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -237,7 +243,13 @@ const Index = () => {
 
     const tableElement = document.getElementById('calculation-table');
     if (tableElement) {
-      const canvas = await html2canvas(tableElement, { scale: 2, backgroundColor: '#ffffff' });
+      const canvas = await html2canvas(tableElement, { 
+        scale: 2, 
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = pageWidth - 2 * margin;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
