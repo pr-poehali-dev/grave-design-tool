@@ -785,7 +785,10 @@ const Index = () => {
 
               <div className="space-y-4 p-4 rounded-lg border-2 border-slate-200 bg-slate-50/30">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="monument" className="flex items-center gap-2 text-base font-semibold">Установка памятника</Label>
+                  <Label htmlFor="monument" className="flex items-center gap-2 text-base font-semibold">
+                    <Icon name="Landmark" size={20} />
+                    Установка памятника
+                  </Label>
                   <Button
                     variant={includeMonument ? 'default' : 'outline'}
                     size="sm"
