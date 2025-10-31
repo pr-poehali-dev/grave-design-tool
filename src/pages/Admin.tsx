@@ -107,10 +107,8 @@ const Admin = () => {
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
       const parsed = JSON.parse(savedMaterials);
-      console.log('📦 Admin: Загружены материалы из localStorage:', parsed);
       setMaterials(parsed);
     } else {
-      console.log('📦 Admin: Использую начальные материалы:', initialMaterials);
       setMaterials(initialMaterials);
     }
   }, []);
@@ -415,10 +413,6 @@ const Admin = () => {
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
     
-    console.log('🔍 Рендер материалов для категории:', category);
-    console.log('📊 Все материалы:', materials);
-    console.log('📊 Материалы категории:', materials[category]);
-    
     if (!materials[category] || materials[category].length === 0) {
       return (
         <div className="text-center py-8 text-gray-500">
@@ -516,12 +510,12 @@ const Admin = () => {
                       <div className="space-y-2">
                         <Label>Тип ограды</Label>
                         <Select
-                          value={material.category || 'metal'}
-                          onValueChange={(value: 'metal' | 'granite' | 'forged') => {
+                          value={String(material.category || 'metal')}
+                          onValueChange={(value) => {
                             setMaterials(prev => ({
                               ...prev,
                               [category]: prev[category].map(m => 
-                                m.id === material.id ? { ...m, category: value } : m
+                                m.id === material.id ? { ...m, category: value as 'metal' | 'granite' | 'forged' } : m
                               )
                             }));
                           }}
