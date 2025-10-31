@@ -207,6 +207,18 @@ export const MaterialTable = ({
                     onChange={(e) => setNewMaterial(prev => ({ ...prev, image: e.target.value }))}
                     placeholder="https://..."
                   />
+                  {newMaterial.image && (
+                    <div className="mt-2">
+                      <img 
+                        src={newMaterial.image} 
+                        alt="Предпросмотр"
+                        className="w-32 h-24 object-cover rounded-md border border-gray-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
