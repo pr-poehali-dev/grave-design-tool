@@ -106,7 +106,21 @@ const Admin = () => {
 
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
-      setMaterials(JSON.parse(savedMaterials));
+      const parsed = JSON.parse(savedMaterials);
+      // Очистка проблемных изображений с Yandex Storage
+      if (parsed.fence) {
+        parsed.fence = parsed.fence.map((fence: Material) => {
+          if (fence.image && fence.image.includes('storage.yandexcloud.net')) {
+            // Заменяем проблемные URL на начальные изображения
+            const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
+            return { ...fence, image: initialFence?.image || '' };
+          }
+          return fence;
+        });
+      }
+      setMaterials(parsed);
+      // Сохраняем очищенную версию обратно в localStorage
+      localStorage.setItem('materials', JSON.stringify(parsed));
     }
   }, []);
 
