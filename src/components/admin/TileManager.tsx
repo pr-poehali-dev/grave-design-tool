@@ -61,6 +61,16 @@ export const TileManager = ({
 
           {editingTileId === tile.id ? (
             <div className="space-y-4">
+              {tile.image && (
+                <div className="flex justify-center">
+                  <img 
+                    src={tile.image} 
+                    alt={tile.name}
+                    className="w-full max-w-xs h-48 object-cover rounded-lg border-2 border-gray-200 shadow-sm"
+                  />
+                </div>
+              )}
+
               <div>
                 <Label>Название</Label>
                 <Input
@@ -100,6 +110,9 @@ export const TileManager = ({
                   value={tile.image}
                   onChange={(e) => onTileChange(tile.id, 'image', e.target.value)}
                 />
+                {tile.image && (
+                  <p className="text-xs text-gray-500 mt-1">Превью обновится автоматически</p>
+                )}
               </div>
 
               <div>
