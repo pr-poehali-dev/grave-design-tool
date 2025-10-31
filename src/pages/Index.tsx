@@ -26,6 +26,10 @@ interface TileType {
   sizes: number[]; // доступные размеры в метрах
 }
 
+interface FenceType extends Material {
+  category: 'metal' | 'granite' | 'forged';
+}
+
 const tileTypes: TileType[] = [
   { 
     id: 'concrete-brick', 
@@ -90,21 +94,24 @@ const materials: Record<string, Material[]> = {
       name: 'Ограда металлическая', 
       pricePerUnit: 1500, 
       unit: 'п.м.',
-      image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=300&fit=crop'
+      image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=300&fit=crop',
+      category: 'metal'
     },
     { 
       id: 'granite-fence', 
       name: 'Ограда гранитная', 
       pricePerUnit: 3500, 
       unit: 'п.м.',
-      image: 'https://images.unsplash.com/photo-1603042891252-f8499fc1fe48?w=400&h=300&fit=crop'
+      image: 'https://images.unsplash.com/photo-1603042891252-f8499fc1fe48?w=400&h=300&fit=crop',
+      category: 'granite'
     },
     { 
       id: 'forged', 
       name: 'Ограда кованая', 
       pricePerUnit: 2800, 
       unit: 'п.м.',
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+      category: 'forged'
     },
   ],
   monument: [
@@ -157,6 +164,7 @@ const Index = () => {
   const [tilePattern, setTilePattern] = useState<string>('standard');
   const [tileCategory, setTileCategory] = useState<'concrete' | 'granite'>('concrete');
   const [selectedTileType, setSelectedTileType] = useState<string>('concrete-brick');
+  const [fenceCategory, setFenceCategory] = useState<'metal' | 'granite' | 'forged'>('metal');
   const [useCustomMonumentPrice, setUseCustomMonumentPrice] = useState<boolean>(false);
   const [customMonumentPrice, setCustomMonumentPrice] = useState<number>(0);
   const [customMonumentPriceInput, setCustomMonumentPriceInput] = useState<string>('0');
@@ -634,31 +642,85 @@ const Index = () => {
                   </Button>
                 </div>
                 {includeFence && (
-                  <div className="grid grid-cols-1 gap-3">
-                    {materialsData.fence.map((mat) => (
-                      <div
-                        key={mat.id}
-                        onClick={() => setSelectedFence(mat.id)}
-                        className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
-                          selectedFence === mat.id 
-                            ? 'border-gray-500 ring-2 ring-gray-200' 
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        {mat.image && (
-                          <div className="flex items-center justify-center">
-                            <img 
-                              src={mat.image}
-                              alt={mat.name}
-                              className="w-20 h-20 rounded object-cover"
-                            />
-                          </div>
-                        )}
-                        <p className="text-center text-sm font-semibold text-gray-800">{mat.name}</p>
-                        <p className="text-xs text-center text-gray-500">{mat.pricePerUnit} ₽/{mat.unit}</p>
+                  <>
+                    <div className="space-y-3">
+                      <Label className="text-sm text-muted-foreground">
+                        Материал ограды
+                      </Label>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={fenceCategory === 'metal' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => {
+                            setFenceCategory('metal');
+                            const firstMetal = materialsData.fence.find(f => (f as any).category === 'metal');
+                            if (firstMetal) {
+                              setSelectedFence(firstMetal.id);
+                            }
+                          }}
+                          className="flex-1"
+                        >
+                          Металлическая
+                        </Button>
+                        <Button
+                          variant={fenceCategory === 'granite' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => {
+                            setFenceCategory('granite');
+                            const firstGranite = materialsData.fence.find(f => (f as any).category === 'granite');
+                            if (firstGranite) {
+                              setSelectedFence(firstGranite.id);
+                            }
+                          }}
+                          className="flex-1"
+                        >
+                          Гранитная
+                        </Button>
+                        <Button
+                          variant={fenceCategory === 'forged' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => {
+                            setFenceCategory('forged');
+                            const firstForged = materialsData.fence.find(f => (f as any).category === 'forged');
+                            if (firstForged) {
+                              setSelectedFence(firstForged.id);
+                            }
+                          }}
+                          className="flex-1"
+                        >
+                          Кованая
+                        </Button>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      {materialsData.fence
+                        .filter(f => (f as any).category === fenceCategory)
+                        .map((mat) => (
+                        <div
+                          key={mat.id}
+                          onClick={() => setSelectedFence(mat.id)}
+                          className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
+                            selectedFence === mat.id 
+                              ? 'border-gray-500 ring-2 ring-gray-200' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {mat.image && (
+                            <div className="flex items-center justify-center">
+                              <img 
+                                src={mat.image}
+                                alt={mat.name}
+                                className="w-20 h-20 rounded object-cover"
+                              />
+                            </div>
+                          )}
+                          <p className="text-center text-sm font-semibold text-gray-800">{mat.name}</p>
+                          <p className="text-xs text-center text-gray-500">{mat.pricePerUnit} ₽/{mat.unit}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
