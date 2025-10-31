@@ -423,6 +423,7 @@ const Admin = () => {
 
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
+    const categoryMaterials = materials[category] || [];
     
     if (showImages) {
       return (
@@ -436,7 +437,9 @@ const Admin = () => {
           </div>
           
           <div className="grid gap-4">
-            {materials[category].map((material) => (
+            {categoryMaterials.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">Нет данных</p>
+            ) : categoryMaterials.map((material) => (
               <Card key={material.id} className={editingId === material.id && editingCategory === category ? 'border-2 border-indigo-500' : ''}>
                 <CardContent className="p-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -554,7 +557,7 @@ const Admin = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )))}
           </div>
         </div>
       );
@@ -580,7 +583,13 @@ const Admin = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {materials[category].map((material) => (
+          {categoryMaterials.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-gray-500 py-4">
+                Нет данных
+              </TableCell>
+            </TableRow>
+          ) : categoryMaterials.map((material) => (
             <TableRow key={material.id}>
               <TableCell>
                 {editingId === material.id && editingCategory === category ? (
@@ -644,7 +653,7 @@ const Admin = () => {
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )))}
         </TableBody>
       </Table>
     </div>
