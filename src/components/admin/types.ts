@@ -5,6 +5,8 @@ export interface Material {
   unit: string;
   image?: string;
   category?: 'metal' | 'granite' | 'forged';
+  width?: number;
+  height?: number;
 }
 
 export interface TileType {
@@ -67,11 +69,12 @@ export const initialMaterials: Record<string, Material[]> = {
     { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop', category: 'forged' },
   ],
   monument: [
-    { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт' },
-    { id: 'monument-40x80', name: 'Памятник 40×80 см', pricePerUnit: 8000, unit: 'шт' },
-    { id: 'monument-45x90', name: 'Памятник 45×90 см', pricePerUnit: 9000, unit: 'шт' },
-    { id: 'monument-100x50', name: 'Памятник 100×50 см', pricePerUnit: 10000, unit: 'шт' },
-    { id: 'monument-100x60', name: 'Памятник 100×60 см', pricePerUnit: 11000, unit: 'шт' },
-    { id: 'monument-120x60', name: 'Памятник 120×60 см', pricePerUnit: 12000, unit: 'шт' },
+    { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт', width: 40, height: 60, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-40x80', name: 'Памятник 40×80 см', pricePerUnit: 8000, unit: 'шт', width: 40, height: 80, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-45x90', name: 'Памятник 45×90 см', pricePerUnit: 9000, unit: 'шт', width: 45, height: 90, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-100x50', name: 'Памятник 100×50 см', pricePerUnit: 10000, unit: 'шт', width: 100, height: 50, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-100x60', name: 'Памятник 100×60 см', pricePerUnit: 11000, unit: 'шт', width: 100, height: 60, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-120x60', name: 'Памятник 120×60 см', pricePerUnit: 12000, unit: 'шт', width: 120, height: 60, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
+    { id: 'monument-123x60', name: 'Памятник 123×60 см', pricePerUnit: 13500, unit: 'шт', width: 123, height: 60, image: 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png' },
   ],
 };
