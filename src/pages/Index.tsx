@@ -1352,8 +1352,8 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
-                      const fixedMonumentWidth = 50;
-                      const fixedMonumentHeight = 100;
+                      const fixedMonumentWidth = 60;
+                      const fixedMonumentHeight = 123;
                       
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
