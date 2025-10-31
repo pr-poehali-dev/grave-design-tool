@@ -175,16 +175,32 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const savedMaterials = localStorage.getItem('materials');
-    if (savedMaterials) {
-      const parsed = JSON.parse(savedMaterials);
-      setMaterialsData(parsed);
-    }
+    const loadData = () => {
+      const savedMaterials = localStorage.getItem('materials');
+      if (savedMaterials) {
+        const parsed = JSON.parse(savedMaterials);
+        setMaterialsData(parsed);
+      }
 
-    const savedTiles = localStorage.getItem('tileTypes');
-    if (savedTiles) {
-      setTileTypesData(JSON.parse(savedTiles));
-    }
+      const savedTiles = localStorage.getItem('tileTypes');
+      if (savedTiles) {
+        setTileTypesData(JSON.parse(savedTiles));
+      }
+    };
+
+    loadData();
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   useEffect(() => {
