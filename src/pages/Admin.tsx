@@ -673,10 +673,26 @@ const Admin = () => {
               Управление плитками и материалами
             </p>
           </div>
-          <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
-            <Icon name="ArrowLeft" size={18} />
-            К калькулятору
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => {
+                if (confirm('Вы уверены? Все данные будут сброшены к начальным значениям.')) {
+                  localStorage.removeItem('tileTypes');
+                  localStorage.removeItem('materials');
+                  window.location.reload();
+                }
+              }} 
+              variant="destructive" 
+              className="gap-2"
+            >
+              <Icon name="RotateCcw" size={18} />
+              Сбросить всё
+            </Button>
+            <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
+              <Icon name="ArrowLeft" size={18} />
+              К калькулятору
+            </Button>
+          </div>
         </header>
 
         <Tabs defaultValue="tiles" className="space-y-6">
