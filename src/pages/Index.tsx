@@ -135,10 +135,10 @@ interface CalculationItem {
 const Index = () => {
   const [materialsData, setMaterialsData] = useState<Record<string, Material[]>>(materials);
   const [tileTypesData, setTileTypesData] = useState<TileType[]>(tileTypes);
-  const [length, setLength] = useState<number>(2.5);
-  const [lengthInput, setLengthInput] = useState<string>('2.5');
-  const [width, setWidth] = useState<number>(2);
-  const [widthInput, setWidthInput] = useState<string>('2');
+  const [length, setLength] = useState<number>(2);
+  const [lengthInput, setLengthInput] = useState<string>('2');
+  const [width, setWidth] = useState<number>(2.5);
+  const [widthInput, setWidthInput] = useState<string>('2.5');
   const [omostkaWidth, setOmostkaWidth] = useState<number>(0.3);
   const [omostkaWidthInput, setOmostkaWidthInput] = useState<string>('0.3');
   const [borderWidth, setBorderWidth] = useState<number>(0.2);
