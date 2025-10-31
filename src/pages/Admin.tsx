@@ -722,7 +722,31 @@ const Admin = () => {
           <TabsContent value="fence">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle>Ограды</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Ограды</CardTitle>
+                  <Button 
+                    onClick={() => {
+                      setMaterials(prev => ({
+                        ...prev,
+                        fence: initialMaterials.fence
+                      }));
+                      localStorage.setItem('materials', JSON.stringify({
+                        ...materials,
+                        fence: initialMaterials.fence
+                      }));
+                      toast({
+                        title: 'Данные сброшены',
+                        description: 'Ограды возвращены к начальным значениям с изображениями',
+                      });
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                  >
+                    <Icon name="RotateCcw" size={16} />
+                    Сбросить к начальным
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('fence')}
