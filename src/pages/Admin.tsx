@@ -676,7 +676,7 @@ const Admin = () => {
               Поребрики
             </TabsTrigger>
             <TabsTrigger value="fence" className="gap-2">
-              <Icon name="Fence" size={16} />
+              <Icon name="Shield" size={16} />
               Ограды
             </TabsTrigger>
             <TabsTrigger value="monument" className="gap-2">
