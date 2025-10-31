@@ -156,18 +156,18 @@ const Admin = () => {
     }));
   };
 
-  const handleAddMaterial = (category: string, name?: string) => {
+  const handleAddMaterial = (category: string, data?: any) => {
     const newId = `new-${Date.now()}`;
     const newMaterial: Material = {
       id: newId,
-      name: name || 'Новый материал',
-      pricePerUnit: 0,
+      name: data?.name || 'Новый материал',
+      pricePerUnit: data?.price || 0,
       unit: category === 'monument' ? 'шт' : 'п.м.',
     };
     
     if (category === 'fence') {
-      newMaterial.image = '';
-      newMaterial.category = 'metal';
+      newMaterial.image = data?.image || '';
+      newMaterial.category = data?.category || 'metal';
     }
     
     setMaterials(prev => ({
@@ -175,8 +175,10 @@ const Admin = () => {
       [category]: [...prev[category], newMaterial],
     }));
     
-    setEditingId(newId);
-    setEditingCategory(category);
+    toast({
+      title: 'Материал добавлен',
+      description: `${newMaterial.name} успешно добавлен`,
+    });
   };
 
   const handleDeleteMaterial = (category: string, id: string) => {

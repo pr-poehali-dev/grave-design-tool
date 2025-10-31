@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Material } from './types';
 
 interface MaterialTableProps {
@@ -13,10 +15,17 @@ interface MaterialTableProps {
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
   onImageChange: (category: string, id: string, newImage: string) => void;
-  onAddMaterial: (category: string, name?: string) => void;
+  onAddMaterial: (category: string, data: any) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
   setEditingCategory: (category: string | null) => void;
+}
+
+interface NewMaterialForm {
+  name: string;
+  price: number;
+  image: string;
+  category: 'metal' | 'granite' | 'forged';
 }
 
 export const MaterialTable = ({
@@ -32,8 +41,13 @@ export const MaterialTable = ({
   setEditingId,
   setEditingCategory,
 }: MaterialTableProps) => {
-  const [newMaterialName, setNewMaterialName] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [newMaterial, setNewMaterial] = useState<NewMaterialForm>({
+    name: '',
+    price: 0,
+    image: '',
+    category: 'metal'
+  });
 
   const startEdit = (id: string, cat: string) => {
     setEditingId(id);
@@ -46,9 +60,9 @@ export const MaterialTable = ({
   };
 
   const handleAddMaterial = () => {
-    if (newMaterialName.trim()) {
-      onAddMaterial(category, newMaterialName.trim());
-      setNewMaterialName('');
+    if (newMaterial.name.trim()) {
+      onAddMaterial(category, newMaterial);
+      setNewMaterial({ name: '', price: 0, image: '', category: 'metal' });
       setShowAddForm(false);
     }
   };
@@ -158,23 +172,75 @@ export const MaterialTable = ({
       </Table>
       
       {showAddForm ? (
-        <div className="flex gap-2 items-center p-4 border rounded-lg bg-gray-50">
-          <Input
-            value={newMaterialName}
-            onChange={(e) => setNewMaterialName(e.target.value)}
-            placeholder="Название нового материала"
-            className="flex-1"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleAddMaterial();
-            }}
-          />
-          <Button onClick={handleAddMaterial} className="gap-2">
-            <Icon name="Check" size={18} />
-            Добавить
-          </Button>
-          <Button onClick={() => setShowAddForm(false)} variant="outline">
-            <Icon name="X" size={18} />
-          </Button>
+        <div className="p-4 border rounded-lg bg-gray-50 space-y-4">
+          <h3 className="font-semibold text-lg flex items-center gap-2">
+            <Icon name="Plus" size={20} />
+            Добавить новый материал
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Название *</Label>
+              <Input
+                value={newMaterial.name}
+                onChange={(e) => setNewMaterial(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Название материала"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Цена за {category === 'monument' ? 'шт' : 'п.м.'} *</Label>
+              <Input
+                type="number"
+                value={newMaterial.price}
+                onChange={(e) => setNewMaterial(prev => ({ ...prev, price: Number(e.target.value) }))}
+                placeholder="0"
+              />
+            </div>
+
+            {showImages && (
+              <>
+                <div className="space-y-2">
+                  <Label>URL изображения</Label>
+                  <Input
+                    value={newMaterial.image}
+                    onChange={(e) => setNewMaterial(prev => ({ ...prev, image: e.target.value }))}
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Категория</Label>
+                  <Select
+                    value={newMaterial.category}
+                    onValueChange={(value: 'metal' | 'granite' | 'forged') => 
+                      setNewMaterial(prev => ({ ...prev, category: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="metal">Металлическая</SelectItem>
+                      <SelectItem value="granite">Гранитная</SelectItem>
+                      <SelectItem value="forged">Кованая</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex gap-2 justify-end">
+            <Button onClick={() => setShowAddForm(false)} variant="outline">
+              <Icon name="X" size={18} />
+              Отмена
+            </Button>
+            <Button onClick={handleAddMaterial} className="gap-2" disabled={!newMaterial.name.trim()}>
+              <Icon name="Check" size={18} />
+              Добавить
+            </Button>
+          </div>
         </div>
       ) : (
         <Button onClick={() => setShowAddForm(true)} variant="outline" className="gap-2">
