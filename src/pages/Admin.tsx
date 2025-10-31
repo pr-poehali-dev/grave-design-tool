@@ -106,10 +106,7 @@ const Admin = () => {
 
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
-      const parsed = JSON.parse(savedMaterials);
-      setMaterials(parsed);
-    } else {
-      setMaterials(initialMaterials);
+      setMaterials(JSON.parse(savedMaterials));
     }
   }, []);
 
@@ -413,18 +410,6 @@ const Admin = () => {
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
     
-    if (!materials[category] || materials[category].length === 0) {
-      return (
-        <div className="text-center py-8 text-gray-500">
-          <p>Нет материалов в этой категории</p>
-          <Button onClick={() => handleAddMaterial(category)} className="mt-4 gap-2">
-            <Icon name="Plus" size={16} />
-            Добавить первый материал
-          </Button>
-        </div>
-      );
-    }
-    
     if (showImages) {
       return (
         <div className="space-y-4">
@@ -510,12 +495,12 @@ const Admin = () => {
                       <div className="space-y-2">
                         <Label>Тип ограды</Label>
                         <Select
-                          value={String(material.category || 'metal')}
-                          onValueChange={(value) => {
+                          value={material.category || 'metal'}
+                          onValueChange={(value: 'metal' | 'granite' | 'forged') => {
                             setMaterials(prev => ({
                               ...prev,
                               [category]: prev[category].map(m => 
-                                m.id === material.id ? { ...m, category: value as 'metal' | 'granite' | 'forged' } : m
+                                m.id === material.id ? { ...m, category: value } : m
                               )
                             }));
                           }}
@@ -720,13 +705,7 @@ const Admin = () => {
           <TabsContent value="border">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Frame" size={24} className="text-primary" />
-                  Поребрики
-                </CardTitle>
-                <CardDescription>
-                  Управление поребриками и их ценами
-                </CardDescription>
+                <CardTitle>Поребрики</CardTitle>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('border')}
@@ -744,15 +723,7 @@ const Admin = () => {
             <Card className="shadow-lg">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Icon name="Shield" size={24} className="text-primary" />
-                      Ограды
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      Управление оградами с изображениями и категориями
-                    </CardDescription>
-                  </div>
+                  <CardTitle>Ограды</CardTitle>
                   <Button 
                     onClick={() => {
                       setMaterials(prev => {
@@ -773,7 +744,7 @@ const Admin = () => {
                     className="gap-2"
                   >
                     <Icon name="RotateCcw" size={16} />
-                    Сбросить
+                    Сбросить к начальным
                   </Button>
                 </div>
               </CardHeader>
@@ -792,13 +763,7 @@ const Admin = () => {
           <TabsContent value="monument">
             <Card className="shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Landmark" size={24} className="text-primary" />
-                  Памятники
-                </CardTitle>
-                <CardDescription>
-                  Управление памятниками и их размерами
-                </CardDescription>
+                <CardTitle>Памятники</CardTitle>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('monument')}

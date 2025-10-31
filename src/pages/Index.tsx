@@ -179,16 +179,14 @@ const Index = () => {
       const savedMaterials = localStorage.getItem('materials');
       if (savedMaterials) {
         const parsed = JSON.parse(savedMaterials);
+        console.log('📦 Загружены материалы из localStorage:', parsed);
+        console.log('🚧 Ограды:', parsed.fence);
         setMaterialsData(parsed);
-      } else {
-        setMaterialsData(materials);
       }
 
       const savedTiles = localStorage.getItem('tileTypes');
       if (savedTiles) {
         setTileTypesData(JSON.parse(savedTiles));
-      } else {
-        setTileTypesData(tileTypes);
       }
     };
 
@@ -196,28 +194,15 @@ const Index = () => {
 
     const handleVisibilityChange = () => {
       if (!document.hidden) {
+        console.log('👁️ Страница стала видимой, обновляю данные...');
         loadData();
       }
-    };
-    
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'materials' || e.key === 'tileTypes') {
-        loadData();
-      }
-    };
-    
-    const handleFocus = () => {
-      loadData();
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('focus', handleFocus);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
@@ -730,6 +715,11 @@ const Index = () => {
                     {(() => {
                       const selectedFenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
                       const availableFences = materialsData.fence.filter(f => (f as any).category === fenceCategory);
+                      
+                      console.log('🔍 Фильтрация оград:');
+                      console.log('  Выбранная категория:', fenceCategory);
+                      console.log('  Все ограды:', materialsData.fence);
+                      console.log('  Доступные ограды:', availableFences);
                       
                       return (
                         <>
