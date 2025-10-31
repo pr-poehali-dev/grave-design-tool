@@ -718,42 +718,40 @@ const Index = () => {
                             </div>
                           )}
                           
-                          {availableFences.length > 1 && (
-                            <div className="space-y-2">
-                              <Label className="text-sm text-muted-foreground">
-                                Все варианты ({availableFences.length})
-                              </Label>
-                              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                {availableFences.map((mat) => (
-                                  <div
-                                    key={mat.id}
-                                    onClick={() => setSelectedFence(mat.id)}
-                                    className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
-                                      selectedFence === mat.id 
-                                        ? 'border-indigo-500 ring-2 ring-indigo-200 shadow-lg' 
-                                        : 'border-gray-200 hover:border-gray-400'
-                                    }`}
-                                  >
-                                    {mat.image ? (
-                                      <div className="flex items-center justify-center">
-                                        <img 
-                                          src={mat.image}
-                                          alt={mat.name}
-                                          className="w-full h-24 rounded object-cover"
-                                        />
-                                      </div>
-                                    ) : (
-                                      <div className="flex items-center justify-center h-24 bg-gray-100 rounded">
-                                        <Icon name="Image" size={32} className="text-gray-400" />
-                                      </div>
-                                    )}
-                                    <p className="text-center text-sm font-semibold text-gray-800 line-clamp-2">{mat.name}</p>
-                                    <p className="text-xs text-center text-indigo-600 font-medium">{mat.pricePerUnit} ₽/{mat.unit}</p>
-                                  </div>
-                                ))}
-                              </div>
+                          <div className="space-y-2">
+                            <Label className="text-sm text-muted-foreground">
+                              {availableFences.length > 1 ? `Все варианты (${availableFences.length})` : 'Доступные ограды'}
+                            </Label>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                              {availableFences.map((mat) => (
+                                <div
+                                  key={mat.id}
+                                  onClick={() => setSelectedFence(mat.id)}
+                                  className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
+                                    selectedFence === mat.id 
+                                      ? 'border-indigo-500 ring-2 ring-indigo-200 shadow-lg' 
+                                      : 'border-gray-200 hover:border-gray-400'
+                                  }`}
+                                >
+                                  {mat.image ? (
+                                    <div className="flex items-center justify-center">
+                                      <img 
+                                        src={mat.image}
+                                        alt={mat.name}
+                                        className="w-full h-24 rounded object-cover"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center justify-center h-24 bg-gray-100 rounded">
+                                      <Icon name="Image" size={32} className="text-gray-400" />
+                                    </div>
+                                  )}
+                                  <p className="text-center text-sm font-semibold text-gray-800 line-clamp-2">{mat.name}</p>
+                                  <p className="text-xs text-center text-indigo-600 font-medium">{mat.pricePerUnit} ₽/{mat.unit}</p>
+                                </div>
+                              ))}
                             </div>
-                          )}
+                          </div>
                         </>
                       );
                     })()}
