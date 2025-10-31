@@ -1352,8 +1352,10 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
-                      const fixedMonumentWidth = 60;
-                      const fixedMonumentHeight = 123;
+                      const monumentRealWidth = 1.23;
+                      const monumentRealHeight = 0.6;
+                      const proportionalMonumentHeight = (monumentRealHeight / monumentRealWidth) * innerTileWidth * 0.3;
+                      const proportionalMonumentWidth = innerTileWidth * 0.3;
                       
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
@@ -1363,15 +1365,15 @@ const Index = () => {
                           <g key={i}>
                             <image
                               href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
-                              x={x + (monumentWidth - fixedMonumentWidth) / 2}
+                              x={x + (monumentWidth - proportionalMonumentWidth) / 2}
                               y={y}
-                              width={fixedMonumentWidth}
-                              height={fixedMonumentHeight}
+                              width={proportionalMonumentWidth}
+                              height={proportionalMonumentHeight}
                               preserveAspectRatio="xMidYMid meet"
                             />
                             <text
                               x={x + monumentWidth / 2}
-                              y={y + fixedMonumentHeight / 2}
+                              y={y + proportionalMonumentHeight / 2}
                               textAnchor="middle"
                               dominantBaseline="middle"
                               className="text-xs fill-white font-bold"
