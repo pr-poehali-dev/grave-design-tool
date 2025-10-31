@@ -11,6 +11,7 @@ interface MaterialTableProps {
   editingCategory: string | null;
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
+  onImageChange: (category: string, id: string, newImage: string) => void;
   onAddMaterial: (category: string) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
@@ -24,6 +25,7 @@ export const MaterialTable = ({
   editingCategory,
   onPriceChange,
   onNameChange,
+  onImageChange,
   onAddMaterial,
   onDeleteMaterial,
   setEditingId,
@@ -57,12 +59,30 @@ export const MaterialTable = ({
             <TableRow key={material.id}>
               {showImages && (
                 <TableCell>
-                  {material.image && (
-                    <img 
-                      src={material.image} 
-                      alt={material.name}
-                      className="w-20 h-16 object-cover rounded-md border border-gray-200"
-                    />
+                  {editingId === material.id && editingCategory === category ? (
+                    <div className="space-y-2">
+                      {material.image && (
+                        <img 
+                          src={material.image} 
+                          alt={material.name}
+                          className="w-20 h-16 object-cover rounded-md border border-gray-200"
+                        />
+                      )}
+                      <Input
+                        value={material.image || ''}
+                        onChange={(e) => onImageChange(category, material.id, e.target.value)}
+                        placeholder="URL изображения"
+                        className="text-xs"
+                      />
+                    </div>
+                  ) : (
+                    material.image && (
+                      <img 
+                        src={material.image} 
+                        alt={material.name}
+                        className="w-20 h-16 object-cover rounded-md border border-gray-200"
+                      />
+                    )
                   )}
                 </TableCell>
               )}

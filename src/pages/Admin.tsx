@@ -147,6 +147,15 @@ const Admin = () => {
     }));
   };
 
+  const handleImageChange = (category: string, id: string, newImage: string) => {
+    setMaterials(prev => ({
+      ...prev,
+      [category]: prev[category].map(item =>
+        item.id === id ? { ...item, image: newImage } : item
+      ),
+    }));
+  };
+
   const handleAddMaterial = (category: string) => {
     const newId = `new-${Date.now()}`;
     const newMaterial: Material = {
@@ -292,6 +301,7 @@ const Admin = () => {
                   editingCategory={editingCategory}
                   onPriceChange={handlePriceChange}
                   onNameChange={handleNameChange}
+                  onImageChange={handleImageChange}
                   onAddMaterial={handleAddMaterial}
                   onDeleteMaterial={handleDeleteMaterial}
                   setEditingId={setEditingId}
@@ -320,6 +330,7 @@ const Admin = () => {
                   editingCategory={editingCategory}
                   onPriceChange={handlePriceChange}
                   onNameChange={handleNameChange}
+                  onImageChange={handleImageChange}
                   onAddMaterial={handleAddMaterial}
                   onDeleteMaterial={handleDeleteMaterial}
                   setEditingId={setEditingId}
@@ -348,6 +359,7 @@ const Admin = () => {
                   editingCategory={editingCategory}
                   onPriceChange={handlePriceChange}
                   onNameChange={handleNameChange}
+                  onImageChange={handleImageChange}
                   onAddMaterial={handleAddMaterial}
                   onDeleteMaterial={handleDeleteMaterial}
                   setEditingId={setEditingId}
