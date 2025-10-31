@@ -1365,12 +1365,14 @@ const Index = () => {
 
                     {includeMonument && (() => {
                       const monumentSizes: Record<string, { w: number; h: number }> = {
+                        'monument-40x60': { w: 0.4, h: 0.6 },
                         'monument-40x80': { w: 0.4, h: 0.8 },
                         'monument-45x90': { w: 0.45, h: 0.9 },
                         'monument-100x50': { w: 1.0, h: 0.5 },
+                        'monument-100x60': { w: 1.0, h: 0.6 },
                         'monument-120x60': { w: 1.2, h: 0.6 },
                       };
-                      const size = monumentSizes[selectedMonument] || { w: 0.4, h: 0.8 };
+                      const size = monumentSizes[selectedMonument] || { w: 0.6, h: 1.23 };
                       const scale = 480 / Math.max(length, width);
                       const monumentWidth = size.w * scale;
                       const monumentHeight = size.h * scale;
