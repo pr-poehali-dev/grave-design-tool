@@ -1352,33 +1352,26 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
-                      const selectedMonumentData = materialsData.monument.find(m => m.id === selectedMonument);
-                      const monumentSizeParts = selectedMonumentData?.name.match(/(\d+)×(\d+)/);
-                      const actualMonumentWidth = monumentSizeParts ? parseInt(monumentSizeParts[1]) : size.w * 100;
-                      const actualMonumentHeight = monumentSizeParts ? parseInt(monumentSizeParts[2]) : size.h * 100;
+                      const fixedMonumentWidth = 50;
+                      const fixedMonumentHeight = 100;
                       
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
                         const y = 60 + borderPixels + monumentMargin;
                         
-                        const ratio = actualMonumentHeight / actualMonumentWidth;
-                        
-                        const displayWidth = monumentWidth;
-                        const displayHeight = displayWidth * ratio;
-                        
                         monuments.push(
                           <g key={i}>
                             <image
                               href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
-                              x={x}
+                              x={x + (monumentWidth - fixedMonumentWidth) / 2}
                               y={y}
-                              width={displayWidth}
-                              height={displayHeight}
-                              preserveAspectRatio="none"
+                              width={fixedMonumentWidth}
+                              height={fixedMonumentHeight}
+                              preserveAspectRatio="xMidYMid meet"
                             />
                             <text
-                              x={x + displayWidth / 2}
-                              y={y + displayHeight / 2}
+                              x={x + monumentWidth / 2}
+                              y={y + fixedMonumentHeight / 2}
                               textAnchor="middle"
                               dominantBaseline="middle"
                               className="text-xs fill-white font-bold"
