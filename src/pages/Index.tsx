@@ -732,7 +732,7 @@ const Index = () => {
                                 <img 
                                   src={selectedFenceMaterial.image}
                                   alt={selectedFenceMaterial.name}
-                                  className="w-24 h-24 rounded-lg object-cover border-2 border-gray-200"
+                                  className="w-24 h-24 rounded-lg object-contain border-2 border-gray-200"
                                 />
                                 <div className="flex-1">
                                   <p className="text-base font-semibold text-gray-900">{selectedFenceMaterial.name}</p>
