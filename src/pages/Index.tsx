@@ -175,39 +175,16 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const loadData = () => {
-      const savedMaterials = localStorage.getItem('materials');
-      if (savedMaterials) {
-        const parsed = JSON.parse(savedMaterials);
-        setMaterialsData(parsed);
-      }
+    const savedMaterials = localStorage.getItem('materials');
+    if (savedMaterials) {
+      const parsed = JSON.parse(savedMaterials);
+      setMaterialsData(parsed);
+    }
 
-      const savedTiles = localStorage.getItem('tileTypes');
-      if (savedTiles) {
-        setTileTypesData(JSON.parse(savedTiles));
-      }
-    };
-
-    loadData();
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'materials' || e.key === 'tileTypes') {
-        loadData();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    const handleFocus = () => {
-      loadData();
-    };
-    
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleFocus);
-    };
+    const savedTiles = localStorage.getItem('tileTypes');
+    if (savedTiles) {
+      setTileTypesData(JSON.parse(savedTiles));
+    }
   }, []);
 
   useEffect(() => {
