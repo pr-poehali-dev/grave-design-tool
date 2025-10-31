@@ -186,7 +186,7 @@ export const TileManager = ({
                   <img 
                     src={tile.image} 
                     alt={tile.name}
-                    className="w-full h-40 object-cover rounded-lg border border-gray-200"
+                    className="w-full h-40 object-contain rounded-lg border border-gray-200"
                   />
                 </div>
               )}
