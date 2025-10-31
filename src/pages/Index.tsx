@@ -762,7 +762,7 @@ const Index = () => {
                                       <img 
                                         src={mat.image}
                                         alt={mat.name}
-                                        className="w-full h-24 rounded object-cover"
+                                        className="w-full h-24 rounded object-contain"
                                       />
                                     </div>
                                   ) : (
