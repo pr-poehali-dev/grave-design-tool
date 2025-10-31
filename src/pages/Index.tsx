@@ -179,6 +179,8 @@ const Index = () => {
       const savedMaterials = localStorage.getItem('materials');
       if (savedMaterials) {
         const parsed = JSON.parse(savedMaterials);
+        console.log('📦 Загружены материалы из localStorage:', parsed);
+        console.log('🚧 Ограды:', parsed.fence);
         setMaterialsData(parsed);
       }
 
@@ -192,6 +194,7 @@ const Index = () => {
 
     const handleVisibilityChange = () => {
       if (!document.hidden) {
+        console.log('👁️ Страница стала видимой, обновляю данные...');
         loadData();
       }
     };
@@ -712,6 +715,11 @@ const Index = () => {
                     {(() => {
                       const selectedFenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
                       const availableFences = materialsData.fence.filter(f => (f as any).category === fenceCategory);
+                      
+                      console.log('🔍 Фильтрация оград:');
+                      console.log('  Выбранная категория:', fenceCategory);
+                      console.log('  Все ограды:', materialsData.fence);
+                      console.log('  Доступные ограды:', availableFences);
                       
                       return (
                         <>
