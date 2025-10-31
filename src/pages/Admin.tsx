@@ -432,7 +432,7 @@ const Admin = () => {
                           <img 
                             src={material.image} 
                             alt={material.name}
-                            className="w-32 h-32 rounded-lg shadow-md object-cover border-2 border-gray-200"
+                            className="w-32 h-32 rounded-lg shadow-md object-contain border-2 border-gray-200"
                           />
                         </div>
                       )}
