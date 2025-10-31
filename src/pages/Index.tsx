@@ -172,9 +172,9 @@ const Index = () => {
     const innerLength = length - 2 * effectiveBorderWidth;
     const innerWidth = width - 2 * effectiveBorderWidth;
     const tileArea = includeBorder ? innerLength * innerWidth : length * width;
-    const tileMaterial = materialsData.tile.find(m => m.id === selectedTile)!;
+    const tileMaterial = tileTypesData.find(t => t.id === selectedTileType);
     
-    if (includeTile) {
+    if (includeTile && tileMaterial) {
       const tileSizeM2 = tileSize * tileSize;
       const tileAreaWithReserve = tileArea * (1 + tileCutReserve / 100);
       const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
