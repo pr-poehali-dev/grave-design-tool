@@ -452,31 +452,22 @@ const Admin = () => {
                       )}
                       
                       <div className="space-y-2">
-                        <Label>Изображение</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                  setMaterials(prev => ({
-                                    ...prev,
-                                    [category]: prev[category].map(m => 
-                                      m.id === material.id ? { ...m, image: reader.result as string } : m
-                                    )
-                                  }));
-                                };
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                            className="cursor-pointer"
-                          />
-                        </div>
+                        <Label>URL изображения</Label>
+                        <Input
+                          type="text"
+                          placeholder="https://example.com/image.jpg"
+                          value={material.image || ''}
+                          onChange={(e) => {
+                            setMaterials(prev => ({
+                              ...prev,
+                              [category]: prev[category].map(m => 
+                                m.id === material.id ? { ...m, image: e.target.value } : m
+                              )
+                            }));
+                          }}
+                        />
                         <p className="text-xs text-gray-500">
-                          Выберите файл изображения
+                          Вставьте ссылку на изображение
                         </p>
                       </div>
                       
