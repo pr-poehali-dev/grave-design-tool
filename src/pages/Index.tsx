@@ -1352,13 +1352,16 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
+                      const selectedMonumentData = materialsData.monument.find(m => m.id === selectedMonument);
+                      const monumentSizeParts = selectedMonumentData?.name.match(/(\d+)×(\d+)/);
+                      const actualMonumentWidth = monumentSizeParts ? parseInt(monumentSizeParts[1]) : size.w * 100;
+                      const actualMonumentHeight = monumentSizeParts ? parseInt(monumentSizeParts[2]) : size.h * 100;
+                      
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
                         const y = 60 + borderPixels + monumentMargin;
                         
-                        const monumentWidthCm = size.w * 100;
-                        const monumentHeightCm = size.h * 100;
-                        const ratio = monumentHeightCm / monumentWidthCm;
+                        const ratio = actualMonumentHeight / actualMonumentWidth;
                         
                         const displayWidth = monumentWidth;
                         const displayHeight = displayWidth * ratio;
