@@ -557,7 +557,7 @@ const Admin = () => {
                   </div>
                 </CardContent>
               </Card>
-            )))}
+            ))}
           </div>
         </div>
       );
@@ -653,7 +653,7 @@ const Admin = () => {
                 </div>
               </TableCell>
             </TableRow>
-          )))}
+          ))}
         </TableBody>
       </Table>
     </div>
