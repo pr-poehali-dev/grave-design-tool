@@ -39,12 +39,15 @@ export const MaterialTable = ({
     setEditingCategory(null);
   };
 
+  const showImages = category === 'fence';
+
   return (
     <div className="space-y-4">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[50%]">Название</TableHead>
+            {showImages && <TableHead className="w-[100px]">Изображение</TableHead>}
+            <TableHead className={showImages ? "w-[40%]" : "w-[50%]"}>Название</TableHead>
             <TableHead className="w-[30%]">Цена</TableHead>
             <TableHead className="w-[20%] text-right">Действия</TableHead>
           </TableRow>
@@ -52,6 +55,17 @@ export const MaterialTable = ({
         <TableBody>
           {materials.map((material) => (
             <TableRow key={material.id}>
+              {showImages && (
+                <TableCell>
+                  {material.image && (
+                    <img 
+                      src={material.image} 
+                      alt={material.name}
+                      className="w-20 h-16 object-cover rounded-md border border-gray-200"
+                    />
+                  )}
+                </TableCell>
+              )}
               <TableCell>
                 {editingId === material.id && editingCategory === category ? (
                   <Input
