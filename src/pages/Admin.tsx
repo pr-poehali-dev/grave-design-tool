@@ -156,14 +156,19 @@ const Admin = () => {
     }));
   };
 
-  const handleAddMaterial = (category: string) => {
+  const handleAddMaterial = (category: string, name?: string) => {
     const newId = `new-${Date.now()}`;
     const newMaterial: Material = {
       id: newId,
-      name: 'Новый материал',
+      name: name || 'Новый материал',
       pricePerUnit: 0,
       unit: category === 'monument' ? 'шт' : 'п.м.',
     };
+    
+    if (category === 'fence') {
+      newMaterial.image = '';
+      newMaterial.category = 'metal';
+    }
     
     setMaterials(prev => ({
       ...prev,

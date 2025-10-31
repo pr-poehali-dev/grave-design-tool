@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
@@ -12,7 +13,7 @@ interface MaterialTableProps {
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
   onImageChange: (category: string, id: string, newImage: string) => void;
-  onAddMaterial: (category: string) => void;
+  onAddMaterial: (category: string, name?: string) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
   setEditingCategory: (category: string | null) => void;
@@ -31,6 +32,9 @@ export const MaterialTable = ({
   setEditingId,
   setEditingCategory,
 }: MaterialTableProps) => {
+  const [newMaterialName, setNewMaterialName] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
+
   const startEdit = (id: string, cat: string) => {
     setEditingId(id);
     setEditingCategory(cat);
@@ -39,6 +43,14 @@ export const MaterialTable = ({
   const finishEdit = () => {
     setEditingId(null);
     setEditingCategory(null);
+  };
+
+  const handleAddMaterial = () => {
+    if (newMaterialName.trim()) {
+      onAddMaterial(category, newMaterialName.trim());
+      setNewMaterialName('');
+      setShowAddForm(false);
+    }
   };
 
   const showImages = category === 'fence';
@@ -144,10 +156,32 @@ export const MaterialTable = ({
           ))}
         </TableBody>
       </Table>
-      <Button onClick={() => onAddMaterial(category)} variant="outline" className="gap-2">
-        <Icon name="Plus" size={18} />
-        Добавить материал
-      </Button>
+      
+      {showAddForm ? (
+        <div className="flex gap-2 items-center p-4 border rounded-lg bg-gray-50">
+          <Input
+            value={newMaterialName}
+            onChange={(e) => setNewMaterialName(e.target.value)}
+            placeholder="Название нового материала"
+            className="flex-1"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleAddMaterial();
+            }}
+          />
+          <Button onClick={handleAddMaterial} className="gap-2">
+            <Icon name="Check" size={18} />
+            Добавить
+          </Button>
+          <Button onClick={() => setShowAddForm(false)} variant="outline">
+            <Icon name="X" size={18} />
+          </Button>
+        </div>
+      ) : (
+        <Button onClick={() => setShowAddForm(true)} variant="outline" className="gap-2">
+          <Icon name="Plus" size={18} />
+          Добавить материал
+        </Button>
+      )}
     </div>
   );
 };
