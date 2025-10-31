@@ -16,6 +16,7 @@ interface Material {
   pricePerUnit: number;
   unit: string;
   image?: string;
+  category?: 'metal' | 'granite' | 'forged';
 }
 
 interface TileType {
@@ -73,9 +74,9 @@ const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
   ],
   fence: [
-    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
-    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
-    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
+    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png', category: 'metal' },
+    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png', category: 'granite' },
+    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png', category: 'forged' },
   ],
   monument: [
     { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт' },
@@ -196,6 +197,7 @@ const Admin = () => {
       name: 'Новый материал',
       pricePerUnit: 0,
       unit: 'п.м.',
+      ...(category === 'fence' && { category: 'metal' as const, image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' })
     };
     
     setMaterials(prev => ({
@@ -488,6 +490,30 @@ const Admin = () => {
                           value={material.name}
                           onChange={(e) => handleNameChange(category, material.id, e.target.value)}
                         />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>Тип ограды</Label>
+                        <Select
+                          value={material.category || 'metal'}
+                          onValueChange={(value: 'metal' | 'granite' | 'forged') => {
+                            setMaterials(prev => ({
+                              ...prev,
+                              [category]: prev[category].map(m => 
+                                m.id === material.id ? { ...m, category: value } : m
+                              )
+                            }));
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="metal">Металлическая</SelectItem>
+                            <SelectItem value="granite">Гранитная</SelectItem>
+                            <SelectItem value="forged">Кованая</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div className="space-y-2">
