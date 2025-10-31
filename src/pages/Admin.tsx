@@ -44,15 +44,7 @@ const Admin = () => {
           monument: Array.isArray(parsed.monument) ? parsed.monument : initialMaterials.monument,
         };
         
-        if (validMaterials.fence) {
-          validMaterials.fence = validMaterials.fence.map((fence: Material) => {
-            if (fence.image && (fence.image.includes('storage.yandexcloud.net') || fence.image.length > 1000)) {
-              const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
-              return { ...fence, image: initialFence?.image || '' };
-            }
-            return fence;
-          });
-        }
+
         
         setMaterials(validMaterials);
         localStorage.setItem('materials', JSON.stringify(validMaterials));
