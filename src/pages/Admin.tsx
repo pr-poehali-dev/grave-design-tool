@@ -99,17 +99,24 @@ const Admin = () => {
   useEffect(() => {
     const savedTiles = localStorage.getItem('tileTypes');
     if (savedTiles) {
-      setTileTypes(JSON.parse(savedTiles));
+      const parsed = JSON.parse(savedTiles);
+      console.log('Loaded tiles from localStorage:', parsed);
+      setTileTypes(parsed);
     } else {
+      console.log('No tiles in localStorage, using initial data');
       setTileTypes(initialTileTypes);
+      localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
     }
 
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
       const parsed = JSON.parse(savedMaterials);
+      console.log('Loaded materials from localStorage:', parsed);
       setMaterials(parsed);
     } else {
+      console.log('No materials in localStorage, using initial data');
       setMaterials(initialMaterials);
+      localStorage.setItem('materials', JSON.stringify(initialMaterials));
     }
   }, []);
 
@@ -674,10 +681,29 @@ const Admin = () => {
               Управление плитками и материалами
             </p>
           </div>
-          <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
-            <Icon name="ArrowLeft" size={18} />
-            К калькулятору
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => {
+                localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
+                localStorage.setItem('materials', JSON.stringify(initialMaterials));
+                setTileTypes(initialTileTypes);
+                setMaterials(initialMaterials);
+                toast({
+                  title: 'Данные сброшены',
+                  description: 'Все данные возвращены к начальным значениям',
+                });
+              }} 
+              variant="outline" 
+              className="gap-2"
+            >
+              <Icon name="RotateCcw" size={18} />
+              Сбросить всё
+            </Button>
+            <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
+              <Icon name="ArrowLeft" size={18} />
+              К калькулятору
+            </Button>
+          </div>
         </header>
 
         <Tabs defaultValue="tiles" className="space-y-6">
