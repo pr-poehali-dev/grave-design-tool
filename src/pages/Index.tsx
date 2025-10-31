@@ -175,35 +175,16 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const loadData = () => {
-      const savedMaterials = localStorage.getItem('materials');
-      if (savedMaterials) {
-        const parsed = JSON.parse(savedMaterials);
-        console.log('📦 Загружены материалы из localStorage:', parsed);
-        console.log('🚧 Ограды:', parsed.fence);
-        setMaterialsData(parsed);
-      }
+    const savedMaterials = localStorage.getItem('materials');
+    if (savedMaterials) {
+      const parsed = JSON.parse(savedMaterials);
+      setMaterialsData(parsed);
+    }
 
-      const savedTiles = localStorage.getItem('tileTypes');
-      if (savedTiles) {
-        setTileTypesData(JSON.parse(savedTiles));
-      }
-    };
-
-    loadData();
-
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log('👁️ Страница стала видимой, обновляю данные...');
-        loadData();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    const savedTiles = localStorage.getItem('tileTypes');
+    if (savedTiles) {
+      setTileTypesData(JSON.parse(savedTiles));
+    }
   }, []);
 
   useEffect(() => {
@@ -716,11 +697,6 @@ const Index = () => {
                       const selectedFenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
                       const availableFences = materialsData.fence.filter(f => (f as any).category === fenceCategory);
                       
-                      console.log('🔍 Фильтрация оград:');
-                      console.log('  Выбранная категория:', fenceCategory);
-                      console.log('  Все ограды:', materialsData.fence);
-                      console.log('  Доступные ограды:', availableFences);
-                      
                       return (
                         <>
                           {selectedFenceMaterial?.image && (
@@ -762,7 +738,7 @@ const Index = () => {
                                       <img 
                                         src={mat.image}
                                         alt={mat.name}
-                                        className="w-full h-24 rounded object-contain"
+                                        className="w-full h-24 rounded object-cover"
                                       />
                                     </div>
                                   ) : (
@@ -786,8 +762,8 @@ const Index = () => {
               <div className="space-y-4 p-4 rounded-lg border-2 border-slate-200 bg-slate-50/30">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="monument" className="flex items-center gap-2 text-base font-semibold">
-                    <Icon name="Landmark" size={20} />
-                    Установка памятника
+                    <Icon name="BookMarked" size={20} />
+                    Памятник
                   </Label>
                   <Button
                     variant={includeMonument ? 'default' : 'outline'}
