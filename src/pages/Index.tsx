@@ -364,8 +364,9 @@ const Index = () => {
       const tileAreaWithReserve = tileArea * (1 + tileCutReserve / 100);
       const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
       const tileSizeCm = Math.round(tileSize * 100);
+      const categoryName = tileMaterial.category === 'granite' ? 'гранитная' : 'бетонная';
       items.push({
-        name: `Плитка "${tileMaterial.name}"`,
+        name: `Плитка ${categoryName} "${tileMaterial.name}"`,
         quantity: parseFloat(tileAreaWithReserve.toFixed(2)),
         unit: tileMaterial.unit,
         price: tileMaterial.pricePerUnit,
