@@ -726,14 +726,14 @@ const Admin = () => {
                   <CardTitle>Ограды</CardTitle>
                   <Button 
                     onClick={() => {
-                      setMaterials(prev => ({
-                        ...prev,
-                        fence: initialMaterials.fence
-                      }));
-                      localStorage.setItem('materials', JSON.stringify({
-                        ...materials,
-                        fence: initialMaterials.fence
-                      }));
+                      setMaterials(prev => {
+                        const updated = {
+                          ...prev,
+                          fence: initialMaterials.fence
+                        };
+                        localStorage.setItem('materials', JSON.stringify(updated));
+                        return updated;
+                      });
                       toast({
                         title: 'Данные сброшены',
                         description: 'Ограды возвращены к начальным значениям с изображениями',
