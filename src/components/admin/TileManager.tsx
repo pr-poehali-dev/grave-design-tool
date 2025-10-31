@@ -104,7 +104,7 @@ export const TileManager = ({
 
               <div>
                 <Label>Размеры (м)</Label>
-                <div className="flex flex-wrap gap-2 mb-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {tile.sizes.map((size, index) => (
                     <div key={index} className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-md">
                       <span>{size} м</span>
@@ -119,26 +119,50 @@ export const TileManager = ({
                     </div>
                   ))}
                 </div>
-                <div className="flex gap-2">
-                  <Input
-                    type="number"
-                    step="0.1"
-                    placeholder="0.4"
-                    value={newSize[tile.id] || ''}
-                    onChange={(e) => setNewSize(prev => ({ ...prev, [tile.id]: e.target.value }))}
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={() => {
-                      const size = parseFloat(newSize[tile.id] || '0');
-                      if (size > 0) {
-                        onAddSize(tile.id, size);
-                        setNewSize(prev => ({ ...prev, [tile.id]: '' }));
-                      }
-                    }}
-                  >
-                    <Icon name="Plus" size={16} />
-                  </Button>
+                
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    {[0.3, 0.4, 0.5].map((size) => (
+                      <Button
+                        key={size}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          if (!tile.sizes.includes(size)) {
+                            onAddSize(tile.id, size);
+                          }
+                        }}
+                        disabled={tile.sizes.includes(size)}
+                        className="gap-1"
+                      >
+                        <Icon name="Plus" size={14} />
+                        {size} м ({size * 100} × {size * 100} см)
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      placeholder="Другой размер"
+                      value={newSize[tile.id] || ''}
+                      onChange={(e) => setNewSize(prev => ({ ...prev, [tile.id]: e.target.value }))}
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={() => {
+                        const size = parseFloat(newSize[tile.id] || '0');
+                        if (size > 0) {
+                          onAddSize(tile.id, size);
+                          setNewSize(prev => ({ ...prev, [tile.id]: '' }));
+                        }
+                      }}
+                    >
+                      <Icon name="Plus" size={16} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
