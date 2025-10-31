@@ -15,6 +15,7 @@ interface Material {
   name: string;
   pricePerUnit: number;
   unit: string;
+  image?: string;
 }
 
 interface TileType {
@@ -72,9 +73,9 @@ const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
   ],
   fence: [
-    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.' },
-    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.' },
-    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.' },
+    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
+    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
+    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/305614c6-1798-43b2-852e-8a4c60339435.png' },
   ],
   monument: [
     { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт' },
@@ -404,7 +405,131 @@ const Admin = () => {
     </div>
   );
 
-  const renderMaterialTable = (category: string) => (
+  const renderMaterialTable = (category: string) => {
+    const showImages = category === 'fence';
+    
+    if (showImages) {
+      return (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">{getCategoryName(category)}</h3>
+            <Button onClick={() => handleAddMaterial(category)} size="sm" className="gap-2">
+              <Icon name="Plus" size={16} />
+              Добавить
+            </Button>
+          </div>
+          
+          <div className="grid gap-4">
+            {materials[category].map((material) => (
+              <Card key={material.id} className={editingId === material.id && editingCategory === category ? 'border-2 border-indigo-500' : ''}>
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      {material.image && (
+                        <div className="flex items-center justify-center">
+                          <img 
+                            src={material.image} 
+                            alt={material.name}
+                            className="w-32 h-32 rounded-lg shadow-md object-cover border-2 border-gray-200"
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="space-y-2">
+                        <Label>Изображение</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                  setMaterials(prev => ({
+                                    ...prev,
+                                    [category]: prev[category].map(m => 
+                                      m.id === material.id ? { ...m, image: reader.result as string } : m
+                                    )
+                                  }));
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                            className="cursor-pointer"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Выберите файл изображения
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>Или введите URL</Label>
+                        <Input
+                          value={material.image || ''}
+                          onChange={(e) => {
+                            setMaterials(prev => ({
+                              ...prev,
+                              [category]: prev[category].map(m => 
+                                m.id === material.id ? { ...m, image: e.target.value } : m
+                              )
+                            }));
+                          }}
+                          placeholder="https://cdn.poehali.dev/files/..."
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <Label>Название</Label>
+                        <Input
+                          value={material.name}
+                          onChange={(e) => handleNameChange(category, material.id, e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>Единица измерения</Label>
+                        <Input
+                          value={material.unit}
+                          disabled
+                          className="bg-gray-50"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>Цена (₽)</Label>
+                        <Input
+                          type="number"
+                          value={material.pricePerUnit}
+                          onChange={(e) => handlePriceChange(category, material.id, parseFloat(e.target.value) || 0)}
+                        />
+                      </div>
+                      
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          onClick={() => handleDeleteMaterial(category, material.id)}
+                          variant="destructive"
+                          size="sm"
+                          className="gap-2"
+                        >
+                          <Icon name="Trash2" size={16} />
+                          Удалить
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">{getCategoryName(category)}</h3>
@@ -492,7 +617,8 @@ const Admin = () => {
         </TableBody>
       </Table>
     </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
