@@ -1352,25 +1352,21 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
-                      const selectedMonumentData = materialsData.monument.find(m => m.id === selectedMonument);
-                      
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
                         const y = 60 + borderPixels + monumentMargin;
                         
-                        const monumentWidthCm = selectedMonumentData?.width || size.w * 100;
-                        const monumentHeightCm = selectedMonumentData?.height || size.h * 100;
+                        const monumentWidthCm = size.w * 100;
+                        const monumentHeightCm = size.h * 100;
                         const ratio = monumentHeightCm / monumentWidthCm;
                         
                         const displayWidth = monumentWidth;
                         const displayHeight = displayWidth * ratio;
                         
-                        const monumentImage = selectedMonumentData?.image || 'https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png';
-                        
                         monuments.push(
                           <g key={i}>
                             <image
-                              href={monumentImage}
+                              href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
                               x={x}
                               y={y}
                               width={displayWidth}
