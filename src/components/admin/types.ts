@@ -73,5 +73,6 @@ export const initialMaterials: Record<string, Material[]> = {
     { id: 'monument-100x50', name: 'Памятник 100×50 см', pricePerUnit: 10000, unit: 'шт' },
     { id: 'monument-100x60', name: 'Памятник 100×60 см', pricePerUnit: 11000, unit: 'шт' },
     { id: 'monument-120x60', name: 'Памятник 120×60 см', pricePerUnit: 12000, unit: 'шт' },
+    { id: 'monument-123x80', name: 'Памятник 123×80 см', pricePerUnit: 13500, unit: 'шт' },
   ],
 };
