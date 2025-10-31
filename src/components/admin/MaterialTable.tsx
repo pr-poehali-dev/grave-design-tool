@@ -107,10 +107,10 @@ export const MaterialTable = ({
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        variant="default"
-                        onClick={finishEdit}
+                        variant="outline"
+                        onClick={() => editingId === material.id ? finishEdit() : startEdit(material.id, category)}
                       >
-                        <Icon name="Check" size={16} />
+                        <Icon name={editingId === material.id ? "Check" : "Pencil"} size={16} />
                       </Button>
                       <Button
                         size="sm"
@@ -124,15 +124,6 @@ export const MaterialTable = ({
 
                   {editingId === material.id && editingCategory === category ? (
                     <div className="space-y-4">
-                      {showImages && material.image && (
-                        <div className="flex justify-center">
-                          <img 
-                            src={material.image} 
-                            alt={material.name}
-                            className="w-full max-w-xs h-48 object-contain rounded-lg border-2 border-gray-200 shadow-sm"
-                          />
-                        </div>
-                      )}
 
                       <div>
                         <Label>Название</Label>
