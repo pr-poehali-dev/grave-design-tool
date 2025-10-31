@@ -116,9 +116,17 @@ const Admin = () => {
       const savedMaterials = localStorage.getItem('materials');
       if (savedMaterials) {
         const parsed = JSON.parse(savedMaterials);
+        
+        // Проверяем, что все категории существуют
+        const validMaterials = {
+          border: Array.isArray(parsed.border) ? parsed.border : initialMaterials.border,
+          fence: Array.isArray(parsed.fence) ? parsed.fence : initialMaterials.fence,
+          monument: Array.isArray(parsed.monument) ? parsed.monument : initialMaterials.monument,
+        };
+        
         // Очистка проблемных изображений
-        if (parsed.fence) {
-          parsed.fence = parsed.fence.map((fence: Material) => {
+        if (validMaterials.fence) {
+          validMaterials.fence = validMaterials.fence.map((fence: Material) => {
             if (fence.image && (fence.image.includes('storage.yandexcloud.net') || fence.image.length > 1000)) {
               const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
               return { ...fence, image: initialFence?.image || '' };
@@ -126,8 +134,9 @@ const Admin = () => {
             return fence;
           });
         }
-        setMaterials(parsed);
-        localStorage.setItem('materials', JSON.stringify(parsed));
+        
+        setMaterials(validMaterials);
+        localStorage.setItem('materials', JSON.stringify(validMaterials));
       } else {
         setMaterials(initialMaterials);
         localStorage.setItem('materials', JSON.stringify(initialMaterials));
@@ -439,6 +448,8 @@ const Admin = () => {
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
     const categoryMaterials = materials[category] || [];
+    
+    console.log(`Рендер категории: ${category}, материалов: ${categoryMaterials.length}`);
     
     if (showImages) {
       return (
