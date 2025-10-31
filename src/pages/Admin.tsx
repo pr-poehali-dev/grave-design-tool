@@ -107,6 +107,8 @@ const Admin = () => {
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
       setMaterials(JSON.parse(savedMaterials));
+    } else {
+      setMaterials(initialMaterials);
     }
   }, []);
 
