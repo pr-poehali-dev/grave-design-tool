@@ -432,7 +432,7 @@ const Admin = () => {
                           <img 
                             src={material.image} 
                             alt={material.name}
-                            className="w-32 h-32 rounded-lg shadow-md object-contain border-2 border-gray-200"
+                            className="w-32 h-32 rounded-lg shadow-md object-cover border-2 border-gray-200"
                           />
                         </div>
                       )}
@@ -676,7 +676,7 @@ const Admin = () => {
               Поребрики
             </TabsTrigger>
             <TabsTrigger value="fence" className="gap-2">
-              <Icon name="Shield" size={16} />
+              <Icon name="Fence" size={16} />
               Ограды
             </TabsTrigger>
             <TabsTrigger value="monument" className="gap-2">
@@ -722,31 +722,7 @@ const Admin = () => {
           <TabsContent value="fence">
             <Card className="shadow-lg">
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Ограды</CardTitle>
-                  <Button 
-                    onClick={() => {
-                      setMaterials(prev => {
-                        const updated = {
-                          ...prev,
-                          fence: initialMaterials.fence
-                        };
-                        localStorage.setItem('materials', JSON.stringify(updated));
-                        return updated;
-                      });
-                      toast({
-                        title: 'Данные сброшены',
-                        description: 'Ограды возвращены к начальным значениям с изображениями',
-                      });
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="gap-2"
-                  >
-                    <Icon name="RotateCcw" size={16} />
-                    Сбросить к начальным
-                  </Button>
-                </div>
+                <CardTitle>Ограды</CardTitle>
               </CardHeader>
               <CardContent>
                 {renderMaterialTable('fence')}
