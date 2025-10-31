@@ -634,18 +634,31 @@ const Index = () => {
                   </Button>
                 </div>
                 {includeFence && (
-                  <Select value={selectedFence} onValueChange={setSelectedFence}>
-                    <SelectTrigger id="fence">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {materialsData.fence.map((mat) => (
-                        <SelectItem key={mat.id} value={mat.id}>
-                          {mat.name} — {mat.pricePerUnit} ₽/{mat.unit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="grid grid-cols-1 gap-3">
+                    {materialsData.fence.map((mat) => (
+                      <div
+                        key={mat.id}
+                        onClick={() => setSelectedFence(mat.id)}
+                        className={`cursor-pointer bg-white border-2 rounded-lg p-3 space-y-2 transition-all hover:shadow-md ${
+                          selectedFence === mat.id 
+                            ? 'border-gray-500 ring-2 ring-gray-200' 
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        {mat.image && (
+                          <div className="flex items-center justify-center">
+                            <img 
+                              src={mat.image}
+                              alt={mat.name}
+                              className="w-20 h-20 rounded object-cover"
+                            />
+                          </div>
+                        )}
+                        <p className="text-center text-sm font-semibold text-gray-800">{mat.name}</p>
+                        <p className="text-xs text-center text-gray-500">{mat.pricePerUnit} ₽/{mat.unit}</p>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
 
