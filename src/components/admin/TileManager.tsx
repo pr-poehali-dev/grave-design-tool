@@ -180,10 +180,21 @@ export const TileManager = ({
               </div>
             </div>
           ) : (
-            <div className="space-y-2 text-sm text-gray-600">
-              <p>Цена: {tile.pricePerUnit} ₽/{tile.unit}</p>
-              <p>Размеры: {tile.sizes.join(', ')} м</p>
-              <p>Категория: {tile.category === 'concrete' ? 'Бетон' : 'Гранит'}</p>
+            <div className="space-y-3">
+              {tile.image && (
+                <div className="flex justify-center">
+                  <img 
+                    src={tile.image} 
+                    alt={tile.name}
+                    className="w-full h-40 object-cover rounded-lg border border-gray-200"
+                  />
+                </div>
+              )}
+              <div className="space-y-2 text-sm text-gray-600">
+                <p className="text-lg font-semibold text-gray-900">{tile.pricePerUnit} ₽/{tile.unit}</p>
+                <p>Размеры: {tile.sizes.join(', ')} м</p>
+                <p>Категория: {tile.category === 'concrete' ? 'Бетон' : 'Гранит'}</p>
+              </div>
             </div>
           )}
         </div>
