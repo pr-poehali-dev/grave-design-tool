@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -96,121 +97,117 @@ export const MaterialTable = ({
       </div>
 
       {viewMode === 'cards' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {materials.map((material) => (
-            <div key={material.id} className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow space-y-3">
-              {editingId === material.id && editingCategory === category ? (
+            <Card key={material.id} className="shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
                 <div className="space-y-4">
-                  {showImages && (
-                    <div className="space-y-2">
-                      {material.image && (
-                        <img 
-                          src={material.image} 
-                          alt={material.name}
-                          className="w-full h-40 object-contain rounded-md border border-gray-200"
-                        />
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">{material.name}</h3>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        onClick={finishEdit}
+                      >
+                        <Icon name="Check" size={16} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => onDeleteMaterial(category, material.id)}
+                      >
+                        <Icon name="Trash2" size={16} />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {editingId === material.id && editingCategory === category ? (
+                    <div className="space-y-4">
+                      {showImages && material.image && (
+                        <div className="flex justify-center">
+                          <img 
+                            src={material.image} 
+                            alt={material.name}
+                            className="w-full max-w-xs h-48 object-contain rounded-lg border-2 border-gray-200 shadow-sm"
+                          />
+                        </div>
                       )}
+
                       <div>
-                        <Label>URL изображения</Label>
+                        <Label>Название</Label>
                         <Input
-                          value={material.image || ''}
-                          onChange={(e) => onImageChange(category, material.id, e.target.value)}
-                          placeholder="https://..."
+                          value={material.name}
+                          onChange={(e) => onNameChange(category, material.id, e.target.value)}
                         />
                       </div>
+
                       <div>
-                        <Label>Категория</Label>
-                        <Select
-                          value={material.category || 'metal'}
-                          onValueChange={(value: 'metal' | 'granite' | 'forged') => 
-                            onImageChange(category, material.id, material.image || '')
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="metal">Металлическая</SelectItem>
-                            <SelectItem value="granite">Гранитная</SelectItem>
-                            <SelectItem value="forged">Кованая</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label>Цена за {material.unit}</Label>
+                        <Input
+                          type="number"
+                          value={material.pricePerUnit}
+                          onChange={(e) => onPriceChange(category, material.id, Number(e.target.value))}
+                        />
+                      </div>
+
+                      {showImages && (
+                        <>
+                          <div>
+                            <Label>URL изображения</Label>
+                            <Input
+                              value={material.image || ''}
+                              onChange={(e) => onImageChange(category, material.id, e.target.value)}
+                              placeholder="https://..."
+                            />
+                            {material.image && (
+                              <p className="text-xs text-gray-500 mt-1">Превью обновится автоматически</p>
+                            )}
+                          </div>
+
+                          <div>
+                            <Label>Категория</Label>
+                            <Select
+                              value={material.category || 'metal'}
+                              onValueChange={(value: 'metal' | 'granite' | 'forged') => 
+                                onImageChange(category, material.id, material.image || '')
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="metal">Металлическая</SelectItem>
+                                <SelectItem value="granite">Гранитная</SelectItem>
+                                <SelectItem value="forged">Кованая</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {showImages && material.image && (
+                        <div className="flex justify-center">
+                          <img 
+                            src={material.image} 
+                            alt={material.name}
+                            className="w-full h-40 object-contain rounded-lg border border-gray-200"
+                          />
+                        </div>
+                      )}
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p className="text-lg font-semibold text-gray-900">{material.pricePerUnit.toLocaleString('ru-RU')} ₽/{material.unit}</p>
+                        {material.category && (
+                          <p>Категория: {material.category === 'metal' ? 'Металлическая' : material.category === 'granite' ? 'Гранитная' : 'Кованая'}</p>
+                        )}
                       </div>
                     </div>
                   )}
-                  <div>
-                    <Label>Название</Label>
-                    <Input
-                      value={material.name}
-                      onChange={(e) => onNameChange(category, material.id, e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Цена за {material.unit}</Label>
-                    <Input
-                      type="number"
-                      value={material.pricePerUnit}
-                      onChange={(e) => onPriceChange(category, material.id, Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={finishEdit}
-                      className="flex-1 gap-2"
-                    >
-                      <Icon name="Check" size={16} />
-                      Готово
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => onDeleteMaterial(category, material.id)}
-                    >
-                      <Icon name="Trash2" size={16} />
-                    </Button>
-                  </div>
                 </div>
-              ) : (
-                <>
-                  {showImages && material.image && (
-                    <img 
-                      src={material.image} 
-                      alt={material.name}
-                      className="w-full h-40 object-contain rounded-md border border-gray-200"
-                    />
-                  )}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-lg">{material.name}</h4>
-                    <p className="text-2xl font-bold text-primary">{material.pricePerUnit.toLocaleString('ru-RU')} ₽/{material.unit}</p>
-                    {material.category && (
-                      <p className="text-sm text-gray-500">
-                        Категория: {material.category === 'metal' ? 'Металлическая' : material.category === 'granite' ? 'Гранитная' : 'Кованая'}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => startEdit(material.id, category)}
-                      className="flex-1 gap-2"
-                    >
-                      <Icon name="Pencil" size={16} />
-                      Редактировать
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => onDeleteMaterial(category, material.id)}
-                    >
-                      <Icon name="Trash2" size={16} />
-                    </Button>
-                  </div>
-                </>
-              )}
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       ) : (
