@@ -1365,15 +1365,13 @@ const Index = () => {
                         
                         monuments.push(
                           <g key={i}>
-                            <rect
+                            <image
+                              href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
                               x={x}
                               y={y}
                               width={displayWidth}
                               height={displayHeight}
-                              fill="#1f2937"
-                              stroke="#111827"
-                              strokeWidth="2"
-                              rx="2"
+                              preserveAspectRatio="none"
                             />
                             <text
                               x={x + displayWidth / 2}
@@ -1381,6 +1379,7 @@ const Index = () => {
                               textAnchor="middle"
                               dominantBaseline="middle"
                               className="text-xs fill-white font-bold"
+                              style={{ textShadow: '0 0 3px black, 0 0 3px black' }}
                             >
                               {i + 1}
                             </text>
