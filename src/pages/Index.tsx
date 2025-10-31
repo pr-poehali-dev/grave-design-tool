@@ -138,9 +138,11 @@ const Index = () => {
   const [tilePattern, setTilePattern] = useState<string>('standard');
   const [tileCategory, setTileCategory] = useState<'concrete' | 'granite'>('concrete');
   const [selectedTileType, setSelectedTileType] = useState<string>('concrete-brick');
-  const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
-  const [installationPrice, setInstallationPrice] = useState<number>(3000);
-  const [installationPriceInput, setInstallationPriceInput] = useState<string>('3000');
+  const [useCustomMonumentPrice, setUseCustomMonumentPrice] = useState<boolean>(false);
+  const [customMonumentPrice, setCustomMonumentPrice] = useState<number>(0);
+  const [customMonumentPriceInput, setCustomMonumentPriceInput] = useState<string>('0');
+  const [customInstallationPrice, setCustomInstallationPrice] = useState<number>(0);
+  const [customInstallationPriceInput, setCustomInstallationPriceInput] = useState<string>('0');
   const [tileCutReserve, setTileCutReserve] = useState<number>(10);
   const [tileCutReserveInput, setTileCutReserveInput] = useState<string>('10');
   
@@ -242,23 +244,19 @@ const Index = () => {
 
     if (includeMonument && materialsData.monument && materialsData.monument.find(m => m.id === selectedMonument)) {
       const monumentMaterial = materialsData.monument.find(m => m.id === selectedMonument)!;
+      const monumentPrice = useCustomMonumentPrice ? customMonumentPrice : monumentMaterial.pricePerUnit;
+      const installPrice = useCustomMonumentPrice ? customInstallationPrice : 0;
+      const totalMonumentPrice = monumentPrice + installPrice;
+      
       items.push({
-        name: monumentMaterial.name,
+        name: useCustomMonumentPrice 
+          ? `${monumentMaterial.name} (своя цена с установкой)`
+          : `${monumentMaterial.name} с установкой`,
         quantity: monumentCount,
         unit: monumentMaterial.unit,
-        price: monumentMaterial.pricePerUnit,
-        total: parseFloat((monumentCount * monumentMaterial.pricePerUnit).toFixed(2)),
+        price: totalMonumentPrice,
+        total: parseFloat((monumentCount * totalMonumentPrice).toFixed(2)),
       });
-      
-      if (includeInstallation) {
-        items.push({
-          name: 'Установка памятников',
-          quantity: monumentCount,
-          unit: 'шт',
-          price: installationPrice,
-          total: parseFloat((monumentCount * installationPrice).toFixed(2)),
-        });
-      }
     }
 
     if (includeCrumb) {
@@ -698,44 +696,86 @@ const Index = () => {
                         </Select>
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-4 p-4 rounded-lg border-2 border-gray-200 bg-gray-50">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="installation" className="flex items-center gap-2">
-                          <Icon name="Wrench" size={16} />
-                          Установка памятников
+                        <Label className="flex items-center gap-2 font-semibold">
+                          <Icon name="DollarSign" size={16} />
+                          Цена и установка
                         </Label>
                         <Button
-                          variant={includeInstallation ? 'default' : 'outline'}
+                          variant={useCustomMonumentPrice ? 'default' : 'outline'}
                           size="sm"
-                          onClick={() => setIncludeInstallation(!includeInstallation)}
+                          onClick={() => setUseCustomMonumentPrice(!useCustomMonumentPrice)}
                         >
-                          {includeInstallation ? 'Включена' : 'Выключена'}
+                          {useCustomMonumentPrice ? 'Своя цена' : 'Прайс'}
                         </Button>
                       </div>
-                      {includeInstallation && (
-                        <div className="space-y-2">
-                          <Label htmlFor="installation-price" className="text-sm text-muted-foreground">
-                            Цена установки (₽/шт)
-                          </Label>
-                          <Input
-                            id="installation-price"
-                            type="number"
-                            step="100"
-                            value={installationPriceInput}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setInstallationPriceInput(val);
-                              if (val === '' || val === '-') {
-                                setInstallationPrice(0);
-                                return;
-                              }
-                              const num = parseFloat(val);
-                              if (!isNaN(num)) {
-                                setInstallationPrice(num);
-                              }
-                            }}
-                            className="text-lg"
-                          />
+                      
+                      {useCustomMonumentPrice ? (
+                        <div className="space-y-3">
+                          <div className="space-y-2">
+                            <Label htmlFor="custom-monument-price" className="text-sm text-muted-foreground">
+                              Цена памятника (₽/шт)
+                            </Label>
+                            <Input
+                              id="custom-monument-price"
+                              type="number"
+                              step="100"
+                              value={customMonumentPriceInput}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setCustomMonumentPriceInput(val);
+                                if (val === '' || val === '-') {
+                                  setCustomMonumentPrice(0);
+                                  return;
+                                }
+                                const num = parseFloat(val);
+                                if (!isNaN(num)) {
+                                  setCustomMonumentPrice(num);
+                                }
+                              }}
+                              className="text-lg"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="custom-installation-price" className="text-sm text-muted-foreground">
+                              Цена установки (₽/шт)
+                            </Label>
+                            <Input
+                              id="custom-installation-price"
+                              type="number"
+                              step="100"
+                              value={customInstallationPriceInput}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setCustomInstallationPriceInput(val);
+                                if (val === '' || val === '-') {
+                                  setCustomInstallationPrice(0);
+                                  return;
+                                }
+                                const num = parseFloat(val);
+                                if (!isNaN(num)) {
+                                  setCustomInstallationPrice(num);
+                                }
+                              }}
+                              className="text-lg"
+                            />
+                          </div>
+                          <div className="pt-2 border-t border-gray-300">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-gray-600">Итого за комплект:</span>
+                              <span className="text-lg font-bold text-indigo-600">
+                                {(customMonumentPrice + customInstallationPrice).toLocaleString('ru-RU')} ₽
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-600 bg-white p-3 rounded border border-gray-200">
+                          <div className="flex items-center gap-2">
+                            <Icon name="Info" size={14} />
+                            <span>Используется цена из прайс-листа</span>
+                          </div>
                         </div>
                       )}
                     </div>
