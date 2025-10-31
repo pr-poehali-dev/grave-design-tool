@@ -722,26 +722,26 @@ const Admin = () => {
         </header>
 
         <Tabs defaultValue="tiles" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="tiles" className="gap-2">
+          <TabsList className="grid w-full grid-cols-4 bg-gray-100">
+            <TabsTrigger value="tiles" className="gap-2 data-[state=active]:bg-white">
               <Icon name="Grid3x3" size={16} />
               Плитки
             </TabsTrigger>
-            <TabsTrigger value="border" className="gap-2">
+            <TabsTrigger value="border" className="gap-2 data-[state=active]:bg-white">
               <Icon name="Frame" size={16} />
               Поребрики
             </TabsTrigger>
-            <TabsTrigger value="fence" className="gap-2">
+            <TabsTrigger value="fence" className="gap-2 data-[state=active]:bg-white">
               <Icon name="Fence" size={16} />
               Ограды
             </TabsTrigger>
-            <TabsTrigger value="monument" className="gap-2">
+            <TabsTrigger value="monument" className="gap-2 data-[state=active]:bg-white">
               <Icon name="Square" size={16} />
               Памятники
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="tiles">
+          <TabsContent value="tiles" className="min-h-[400px]">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -758,7 +758,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="border">
+          <TabsContent value="border" className="min-h-[400px]">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle>Поребрики</CardTitle>
@@ -775,7 +775,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="fence">
+          <TabsContent value="fence" className="min-h-[400px]">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle>Ограды</CardTitle>
@@ -792,7 +792,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="monument">
+          <TabsContent value="monument" className="min-h-[400px]">
             <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle>Памятники</CardTitle>
