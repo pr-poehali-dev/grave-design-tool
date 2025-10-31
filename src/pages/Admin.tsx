@@ -97,30 +97,45 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedTiles = localStorage.getItem('tileTypes');
-    if (savedTiles) {
-      setTileTypes(JSON.parse(savedTiles));
-    } else {
+    try {
+      const savedTiles = localStorage.getItem('tileTypes');
+      if (savedTiles) {
+        const parsed = JSON.parse(savedTiles);
+        setTileTypes(parsed);
+      } else {
+        setTileTypes(initialTileTypes);
+        localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки плиток:', error);
       setTileTypes(initialTileTypes);
+      localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
     }
 
-    const savedMaterials = localStorage.getItem('materials');
-    if (savedMaterials) {
-      const parsed = JSON.parse(savedMaterials);
-      // Очистка проблемных изображений с Yandex Storage
-      if (parsed.fence) {
-        parsed.fence = parsed.fence.map((fence: Material) => {
-          if (fence.image && fence.image.includes('storage.yandexcloud.net')) {
-            // Заменяем проблемные URL на начальные изображения
-            const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
-            return { ...fence, image: initialFence?.image || '' };
-          }
-          return fence;
-        });
+    try {
+      const savedMaterials = localStorage.getItem('materials');
+      if (savedMaterials) {
+        const parsed = JSON.parse(savedMaterials);
+        // Очистка проблемных изображений
+        if (parsed.fence) {
+          parsed.fence = parsed.fence.map((fence: Material) => {
+            if (fence.image && (fence.image.includes('storage.yandexcloud.net') || fence.image.length > 1000)) {
+              const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
+              return { ...fence, image: initialFence?.image || '' };
+            }
+            return fence;
+          });
+        }
+        setMaterials(parsed);
+        localStorage.setItem('materials', JSON.stringify(parsed));
+      } else {
+        setMaterials(initialMaterials);
+        localStorage.setItem('materials', JSON.stringify(initialMaterials));
       }
-      setMaterials(parsed);
-      // Сохраняем очищенную версию обратно в localStorage
-      localStorage.setItem('materials', JSON.stringify(parsed));
+    } catch (error) {
+      console.error('Ошибка загрузки материалов:', error);
+      setMaterials(initialMaterials);
+      localStorage.setItem('materials', JSON.stringify(initialMaterials));
     }
   }, []);
 
