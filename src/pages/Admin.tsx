@@ -106,8 +106,11 @@ const Admin = () => {
 
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
-      setMaterials(JSON.parse(savedMaterials));
+      const parsed = JSON.parse(savedMaterials);
+      console.log('📦 Admin: Загружены материалы из localStorage:', parsed);
+      setMaterials(parsed);
     } else {
+      console.log('📦 Admin: Использую начальные материалы:', initialMaterials);
       setMaterials(initialMaterials);
     }
   }, []);
@@ -411,6 +414,22 @@ const Admin = () => {
 
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
+    
+    console.log('🔍 Рендер материалов для категории:', category);
+    console.log('📊 Все материалы:', materials);
+    console.log('📊 Материалы категории:', materials[category]);
+    
+    if (!materials[category] || materials[category].length === 0) {
+      return (
+        <div className="text-center py-8 text-gray-500">
+          <p>Нет материалов в этой категории</p>
+          <Button onClick={() => handleAddMaterial(category)} className="mt-4 gap-2">
+            <Icon name="Plus" size={16} />
+            Добавить первый материал
+          </Button>
+        </div>
+      );
+    }
     
     if (showImages) {
       return (
