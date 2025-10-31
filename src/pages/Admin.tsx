@@ -74,9 +74,9 @@ const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
   ],
   fence: [
-    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=300&fit=crop', category: 'metal' },
-    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1603042891252-f8499fc1fe48?w=400&h=300&fit=crop', category: 'granite' },
-    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop', category: 'forged' },
+    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=200&h=200&fit=crop', category: 'metal' },
+    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1603042891252-f8499fc1fe48?w=200&h=200&fit=crop', category: 'granite' },
+    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop', category: 'forged' },
   ],
   monument: [
     { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт' },
@@ -106,7 +106,21 @@ const Admin = () => {
 
     const savedMaterials = localStorage.getItem('materials');
     if (savedMaterials) {
-      setMaterials(JSON.parse(savedMaterials));
+      const parsed = JSON.parse(savedMaterials);
+      // Очистка проблемных изображений с Yandex Storage
+      if (parsed.fence) {
+        parsed.fence = parsed.fence.map((fence: Material) => {
+          if (fence.image && fence.image.includes('storage.yandexcloud.net')) {
+            // Заменяем проблемные URL на начальные изображения
+            const initialFence = initialMaterials.fence.find(f => f.id === fence.id);
+            return { ...fence, image: initialFence?.image || '' };
+          }
+          return fence;
+        });
+      }
+      setMaterials(parsed);
+      // Сохраняем очищенную версию обратно в localStorage
+      localStorage.setItem('materials', JSON.stringify(parsed));
     }
   }, []);
 
@@ -409,6 +423,7 @@ const Admin = () => {
 
   const renderMaterialTable = (category: string) => {
     const showImages = category === 'fence';
+    const categoryMaterials = materials[category] || [];
     
     if (showImages) {
       return (
@@ -422,7 +437,9 @@ const Admin = () => {
           </div>
           
           <div className="grid gap-4">
-            {materials[category].map((material) => (
+            {categoryMaterials.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">Нет данных</p>
+            ) : categoryMaterials.map((material) => (
               <Card key={material.id} className={editingId === material.id && editingCategory === category ? 'border-2 border-indigo-500' : ''}>
                 <CardContent className="p-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -438,31 +455,22 @@ const Admin = () => {
                       )}
                       
                       <div className="space-y-2">
-                        <Label>Изображение</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                  setMaterials(prev => ({
-                                    ...prev,
-                                    [category]: prev[category].map(m => 
-                                      m.id === material.id ? { ...m, image: reader.result as string } : m
-                                    )
-                                  }));
-                                };
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                            className="cursor-pointer"
-                          />
-                        </div>
+                        <Label>URL изображения</Label>
+                        <Input
+                          type="text"
+                          placeholder="https://example.com/image.jpg"
+                          value={material.image || ''}
+                          onChange={(e) => {
+                            setMaterials(prev => ({
+                              ...prev,
+                              [category]: prev[category].map(m => 
+                                m.id === material.id ? { ...m, image: e.target.value } : m
+                              )
+                            }));
+                          }}
+                        />
                         <p className="text-xs text-gray-500">
-                          Выберите файл изображения
+                          Вставьте ссылку на изображение
                         </p>
                       </div>
                       
@@ -575,7 +583,13 @@ const Admin = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {materials[category].map((material) => (
+          {categoryMaterials.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-gray-500 py-4">
+                Нет данных
+              </TableCell>
+            </TableRow>
+          ) : categoryMaterials.map((material) => (
             <TableRow key={material.id}>
               <TableCell>
                 {editingId === material.id && editingCategory === category ? (
