@@ -180,11 +180,15 @@ const Index = () => {
       if (savedMaterials) {
         const parsed = JSON.parse(savedMaterials);
         setMaterialsData(parsed);
+      } else {
+        setMaterialsData(materials);
       }
 
       const savedTiles = localStorage.getItem('tileTypes');
       if (savedTiles) {
         setTileTypesData(JSON.parse(savedTiles));
+      } else {
+        setTileTypesData(tileTypes);
       }
     };
 
@@ -195,11 +199,25 @@ const Index = () => {
         loadData();
       }
     };
+    
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'materials' || e.key === 'tileTypes') {
+        loadData();
+      }
+    };
+    
+    const handleFocus = () => {
+      loadData();
+    };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
