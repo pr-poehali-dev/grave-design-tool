@@ -1397,13 +1397,28 @@ const Index = () => {
                         
                         monuments.push(
                           <g key={i}>
-                            <image
-                              href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
+                            <rect
                               x={x}
                               y={y}
                               width={monumentWidth}
                               height={monumentHeight}
-                              preserveAspectRatio="none"
+                              fill="#1a1a1a"
+                              stroke="#000"
+                              strokeWidth="2"
+                            />
+                            <rect
+                              x={x + monumentWidth * 0.1}
+                              y={y + monumentHeight * 0.1}
+                              width={monumentWidth * 0.8}
+                              height={monumentHeight * 0.3}
+                              fill="#4a4a4a"
+                            />
+                            <rect
+                              x={x + monumentWidth * 0.1}
+                              y={y + monumentHeight * 0.45}
+                              width={monumentWidth * 0.8}
+                              height={monumentHeight * 0.45}
+                              fill="#2d5016"
                             />
                             <text
                               x={x + monumentWidth / 2}
