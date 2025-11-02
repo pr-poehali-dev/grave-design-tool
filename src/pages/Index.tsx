@@ -779,25 +779,6 @@ const Index = () => {
                       
                       return (
                         <>
-                          {selectedFenceMaterial?.image && (
-                            <div className="p-4 rounded-lg border-2 border-gray-300 bg-white shadow-sm">
-                              <Label className="text-sm text-muted-foreground mb-2 block">
-                                Выбранная ограда
-                              </Label>
-                              <div className="flex items-center gap-4">
-                                <img 
-                                  src={selectedFenceMaterial.image}
-                                  alt={selectedFenceMaterial.name}
-                                  className="w-24 h-24 rounded-lg object-cover border-2 border-gray-200"
-                                />
-                                <div className="flex-1">
-                                  <p className="text-base font-semibold text-gray-900">{selectedFenceMaterial.name}</p>
-                                  <p className="text-sm text-gray-600 mt-1">{selectedFenceMaterial.pricePerUnit} ₽/{selectedFenceMaterial.unit}</p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          
                           <div className="space-y-2">
                             <Label className="text-sm text-muted-foreground">
                               {availableFences.length > 1 ? `Все варианты (${availableFences.length})` : 'Доступные ограды'}
