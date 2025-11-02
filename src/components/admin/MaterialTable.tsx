@@ -16,7 +16,6 @@ interface MaterialTableProps {
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
   onImageChange: (category: string, id: string, newImage: string) => void;
-  onCategoryChange?: (category: string, id: string, newCategory: 'metal' | 'granite' | 'forged') => void;
   onAddMaterial: (category: string, data: any) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
@@ -38,7 +37,6 @@ export const MaterialTable = ({
   onPriceChange,
   onNameChange,
   onImageChange,
-  onCategoryChange,
   onAddMaterial,
   onDeleteMaterial,
   setEditingId,
@@ -146,25 +144,25 @@ export const MaterialTable = ({
 
                       {showImages && (
                         <>
-                          <div className="space-y-2">
-                            <Label>Изображение</Label>
+                          <div>
+                            <Label>URL изображения</Label>
                             <Input
                               value={material.image || ''}
                               onChange={(e) => onImageChange(category, material.id, e.target.value)}
-                              placeholder="URL изображения: https://..."
+                              placeholder="https://..."
                             />
-                            <p className="text-xs text-gray-500">Используйте прямую ссылку на изображение</p>
+                            {material.image && (
+                              <p className="text-xs text-gray-500 mt-1">Превью обновится автоматически</p>
+                            )}
                           </div>
 
                           <div>
                             <Label>Категория</Label>
                             <Select
                               value={material.category || 'metal'}
-                              onValueChange={(value: 'metal' | 'granite' | 'forged') => {
-                                if (onCategoryChange) {
-                                  onCategoryChange(category, material.id, value);
-                                }
-                              }}
+                              onValueChange={(value: 'metal' | 'granite' | 'forged') => 
+                                onImageChange(category, material.id, material.image || '')
+                              }
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -181,28 +179,13 @@ export const MaterialTable = ({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {showImages && (
-                        <div className="flex justify-center bg-gray-50 rounded-lg p-2">
-                          {material.image ? (
-                            <img 
-                              src={material.image} 
-                              alt={material.name}
-                              className="w-full max-w-xs h-40 object-contain rounded-lg"
-                              loading="lazy"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.style.display = 'none';
-                                const parent = target.parentElement;
-                                if (parent) {
-                                  parent.innerHTML = '<div class="flex items-center justify-center h-40 text-gray-400"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
-                                }
-                              }}
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-40 text-gray-400">
-                              <Icon name="Image" size={48} />
-                            </div>
-                          )}
+                      {showImages && material.image && (
+                        <div className="flex justify-center">
+                          <img 
+                            src={material.image} 
+                            alt={material.name}
+                            className="w-full h-40 object-contain rounded-lg border border-gray-200"
+                          />
                         </div>
                       )}
                       <div className="space-y-2 text-sm text-gray-600">
@@ -349,27 +332,12 @@ export const MaterialTable = ({
 
             {showImages && (
               <>
-                <div className="space-y-2 md:col-span-2">
-                  <Label>Изображение</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const compressedUrl = await compressImage(file);
-                          setNewMaterial(prev => ({ ...prev, image: compressedUrl }));
-                        }
-                      }}
-                      className="flex-1"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label>URL изображения</Label>
                   <Input
                     value={newMaterial.image}
                     onChange={(e) => setNewMaterial(prev => ({ ...prev, image: e.target.value }))}
-                    placeholder="или укажите URL: https://..."
-                    className="text-sm"
+                    placeholder="https://..."
                   />
                   {newMaterial.image && (
                     <div className="mt-2">

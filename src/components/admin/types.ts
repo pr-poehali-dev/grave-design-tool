@@ -62,9 +62,9 @@ export const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
   ],
   fence: [
-    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/94216720-503b-4c1e-bfb1-a7ee16afffbb.jpg', category: 'metal' },
-    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://cdn.poehali.dev/projects/d12043e2-62fe-468a-8892-3f4a88c29059/files/9ef3624a-5065-424c-ae70-c89f7ff61856.jpg', category: 'granite' },
-    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/5bb1ef3a-aacf-4243-b097-771a31f3ffbc.jpg', category: 'forged' },
+    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=200&h=200&fit=crop', category: 'metal' },
+    { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1603042891252-f8499fc1fe48?w=200&h=200&fit=crop', category: 'granite' },
+    { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop', category: 'forged' },
   ],
   monument: [
     { id: 'monument-40x60', name: 'Памятник 40×60 см', pricePerUnit: 7000, unit: 'шт' },

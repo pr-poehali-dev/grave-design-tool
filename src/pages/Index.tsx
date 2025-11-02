@@ -9,9 +9,6 @@ import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import funcUrls from '@/func2url.json';
-
-const API_URL = funcUrls.materials;
 
 interface Material {
   id: string;
@@ -180,22 +177,18 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch(`${API_URL}?type=all`);
-        const data = await response.json();
-        
-        if (data.materials) {
-          console.log('📦 Загружены материалы из API:', data.materials);
-          setMaterialsData(data.materials);
-        }
-        
-        if (data.tiles && data.tiles.length > 0) {
-          console.log('🔲 Загружены плитки из API:', data.tiles);
-          setTileTypesData(data.tiles);
-        }
-      } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
+    const loadData = () => {
+      const savedMaterials = localStorage.getItem('materials');
+      if (savedMaterials) {
+        const parsed = JSON.parse(savedMaterials);
+        console.log('📦 Загружены материалы из localStorage:', parsed);
+        console.log('🚧 Ограды:', parsed.fence);
+        setMaterialsData(parsed);
+      }
+
+      const savedTiles = localStorage.getItem('tileTypes');
+      if (savedTiles) {
+        setTileTypesData(JSON.parse(savedTiles));
       }
     };
 
@@ -223,40 +216,31 @@ const Index = () => {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10;
+    const margin = 15;
     let yPosition = margin;
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(20);
+    pdf.text('Смета благоустройства', pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 10;
+
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Дата: ${new Date().toLocaleDateString('ru-RU')}`, pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 15;
+
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Размеры участка:', margin, yPosition);
+    yPosition += 7;
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(10);
+    pdf.text(`Длина: ${length} м, Ширина: ${width} м`, margin, yPosition);
+    yPosition += 10;
 
     const visualElement = document.getElementById('visualization-svg');
     if (visualElement) {
-      const canvas = await html2canvas(visualElement, { 
-        scale: 2, 
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = pageWidth - 2 * margin;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-      yPosition += imgHeight + 5;
-    }
-
-    if (yPosition > pageHeight - 100) {
-      pdf.addPage();
-      yPosition = margin;
-    }
-
-    const tableElement = document.getElementById('calculation-table');
-    if (tableElement) {
-      const canvas = await html2canvas(tableElement, { 
-        scale: 2, 
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
+      const canvas = await html2canvas(visualElement, { scale: 2, backgroundColor: '#ffffff' });
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = pageWidth - 2 * margin;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -267,7 +251,98 @@ const Index = () => {
       }
       
       pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+      yPosition += imgHeight + 10;
     }
+
+    if (yPosition > pageHeight - 80) {
+      pdf.addPage();
+      yPosition = margin;
+    }
+
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Выбранные материалы', margin, yPosition);
+    yPosition += 10;
+
+    if (includeFence) {
+      const fenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
+      if (fenceMaterial?.image) {
+        try {
+          const imgWidth = 40;
+          const imgHeight = 30;
+          pdf.addImage(fenceMaterial.image, 'JPEG', margin, yPosition, imgWidth, imgHeight);
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(fenceMaterial.name, margin + imgWidth + 5, yPosition + 7);
+          pdf.setFont('helvetica', 'normal');
+          pdf.text(`Цена: ${fenceMaterial.pricePerUnit} ₽/${fenceMaterial.unit}`, margin + imgWidth + 5, yPosition + 14);
+          yPosition += imgHeight + 8;
+        } catch (e) {
+          console.error('Ошибка загрузки изображения ограды');
+        }
+      }
+    }
+
+    if (yPosition > pageHeight - 60) {
+      pdf.addPage();
+      yPosition = margin;
+    }
+
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Смета расходов', margin, yPosition);
+    yPosition += 8;
+
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'bold');
+    const colWidths = [80, 30, 30, 35];
+    let xPos = margin;
+    pdf.text('Материал', xPos, yPosition);
+    xPos += colWidths[0];
+    pdf.text('Кол-во', xPos, yPosition);
+    xPos += colWidths[1];
+    pdf.text('Цена', xPos, yPosition);
+    xPos += colWidths[2];
+    pdf.text('Сумма', xPos, yPosition);
+    yPosition += 6;
+
+    pdf.setFont('helvetica', 'normal');
+    calculation.forEach((item) => {
+      if (yPosition > pageHeight - margin - 10) {
+        pdf.addPage();
+        yPosition = margin;
+      }
+
+      xPos = margin;
+      const isSubItem = item.price === 0;
+      if (isSubItem) {
+        pdf.setFontSize(8);
+        pdf.setTextColor(100, 100, 100);
+      } else {
+        pdf.setFontSize(9);
+        pdf.setTextColor(0, 0, 0);
+      }
+
+      pdf.text(item.name.substring(0, 45), xPos, yPosition);
+      xPos += colWidths[0];
+      pdf.text(`${item.quantity} ${item.unit}`, xPos, yPosition);
+      xPos += colWidths[1];
+      pdf.text(item.price > 0 ? `${item.price} ₽` : '—', xPos, yPosition);
+      xPos += colWidths[2];
+      pdf.text(item.total > 0 ? `${item.total.toLocaleString('ru-RU')} ₽` : '—', xPos, yPosition);
+      yPosition += 6;
+    });
+
+    yPosition += 3;
+    pdf.setDrawColor(0, 0, 0);
+    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 6;
+
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(0, 0, 0);
+    pdf.text('Итого:', margin, yPosition);
+    pdf.text(`${total.toLocaleString('ru-RU')} ₽`, pageWidth - margin - 35, yPosition);
 
     pdf.save(`smeta-blagoustroistvo-${new Date().getTime()}.pdf`);
   };
@@ -289,9 +364,8 @@ const Index = () => {
       const tileAreaWithReserve = tileArea * (1 + tileCutReserve / 100);
       const tileCount = Math.ceil(tileAreaWithReserve / tileSizeM2);
       const tileSizeCm = Math.round(tileSize * 100);
-      const categoryName = tileMaterial.category === 'granite' ? 'гранитная' : 'бетонная';
       items.push({
-        name: `Плитка ${categoryName} "${tileMaterial.name}"`,
+        name: tileMaterial.name,
         quantity: parseFloat(tileAreaWithReserve.toFixed(2)),
         unit: tileMaterial.unit,
         price: tileMaterial.pricePerUnit,
@@ -786,6 +860,25 @@ const Index = () => {
                       
                       return (
                         <>
+                          {selectedFenceMaterial?.image && (
+                            <div className="p-4 rounded-lg border-2 border-gray-300 bg-white shadow-sm">
+                              <Label className="text-sm text-muted-foreground mb-2 block">
+                                Выбранная ограда
+                              </Label>
+                              <div className="flex items-center gap-4">
+                                <img 
+                                  src={selectedFenceMaterial.image}
+                                  alt={selectedFenceMaterial.name}
+                                  className="w-24 h-24 rounded-lg object-cover border-2 border-gray-200"
+                                />
+                                <div className="flex-1">
+                                  <p className="text-base font-semibold text-gray-900">{selectedFenceMaterial.name}</p>
+                                  <p className="text-sm text-gray-600 mt-1">{selectedFenceMaterial.pricePerUnit} ₽/{selectedFenceMaterial.unit}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
                           <div className="space-y-2">
                             <Label className="text-sm text-muted-foreground">
                               {availableFences.length > 1 ? `Все варианты (${availableFences.length})` : 'Доступные ограды'}
@@ -1365,14 +1458,12 @@ const Index = () => {
 
                     {includeMonument && (() => {
                       const monumentSizes: Record<string, { w: number; h: number }> = {
-                        'monument-40x60': { w: 0.4, h: 0.6 },
                         'monument-40x80': { w: 0.4, h: 0.8 },
                         'monument-45x90': { w: 0.45, h: 0.9 },
                         'monument-100x50': { w: 1.0, h: 0.5 },
-                        'monument-100x60': { w: 1.0, h: 0.6 },
                         'monument-120x60': { w: 1.2, h: 0.6 },
                       };
-                      const size = monumentSizes[selectedMonument] || { w: 0.6, h: 1.23 };
+                      const size = monumentSizes[selectedMonument] || { w: 0.4, h: 0.8 };
                       const scale = 480 / Math.max(length, width);
                       const monumentWidth = size.w * scale;
                       const monumentHeight = size.h * scale;
@@ -1450,25 +1541,19 @@ const Index = () => {
                 {includeFence && (() => {
                   const selectedFenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
                   
-                  return selectedFenceMaterial ? (
+                  return selectedFenceMaterial?.image ? (
                     <div className="mb-6 p-4 rounded-lg border-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100">
                       <h3 className="font-semibold text-sm text-gray-900 mb-3 flex items-center gap-2">
                         <Icon name="FenceIcon" size={16} fallback="Box" />
                         Выбранная ограда
                       </h3>
                       <div className="flex items-center gap-4 bg-white p-3 rounded-lg shadow-sm">
-                        {selectedFenceMaterial.image ? (
-                          <img 
-                            src={selectedFenceMaterial.image}
-                            alt={selectedFenceMaterial.name}
-                            className="w-20 h-20 rounded-lg object-contain border-2 border-gray-200 shadow-md flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 rounded-lg border-2 border-gray-200 shadow-md flex-shrink-0 bg-gray-100 flex items-center justify-center">
-                            <Icon name="Image" size={24} className="text-gray-400" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
+                        <img 
+                          src={selectedFenceMaterial.image}
+                          alt={selectedFenceMaterial.name}
+                          className="w-20 h-20 rounded-lg object-cover border-2 border-gray-200 shadow-md"
+                        />
+                        <div className="flex-1">
                           <p className="text-base font-semibold text-gray-900">{selectedFenceMaterial.name}</p>
                           <p className="text-sm text-gray-600 mt-1">{selectedFenceMaterial.pricePerUnit} ₽/{selectedFenceMaterial.unit}</p>
                           <p className="text-xs text-gray-500 mt-1">
@@ -1576,7 +1661,6 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
-                <div id="calculation-table">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1611,7 +1695,6 @@ const Index = () => {
                     </TableRow>
                   </TableBody>
                 </Table>
-                </div>
 
                 <div className="mt-6 flex gap-3">
                   <Button onClick={generatePDF} className="flex-1 gap-2" size="lg">

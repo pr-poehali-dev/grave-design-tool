@@ -8,9 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { TileManager } from '@/components/admin/TileManager';
 import { MaterialTable } from '@/components/admin/MaterialTable';
 import { Material, TileType, initialTileTypes, initialMaterials } from '@/components/admin/types';
-import funcUrls from '@/func2url.json';
-
-const API_URL = funcUrls.materials;
 
 const Admin = () => {
   const [tileTypes, setTileTypes] = useState<TileType[]>([]);
@@ -21,37 +18,46 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
     try {
-      const response = await fetch(`${API_URL}?type=all`);
-      const data = await response.json();
-      
-      if (data.tiles && data.tiles.length > 0) {
-        setTileTypes(data.tiles);
+      const savedTiles = localStorage.getItem('tileTypes');
+      if (savedTiles) {
+        const parsed = JSON.parse(savedTiles);
+        setTileTypes(parsed);
       } else {
         setTileTypes(initialTileTypes);
-      }
-      
-      if (data.materials) {
-        setMaterials(data.materials);
-      } else {
-        setMaterials(initialMaterials);
+        localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
       }
     } catch (error) {
-      console.error('Ошибка загрузки данных:', error);
+      console.error('Ошибка загрузки плиток:', error);
       setTileTypes(initialTileTypes);
-      setMaterials(initialMaterials);
-      
-      toast({
-        title: 'Ошибка загрузки',
-        description: 'Не удалось загрузить данные из базы',
-        variant: 'destructive',
-      });
+      localStorage.setItem('tileTypes', JSON.stringify(initialTileTypes));
     }
-  };
+
+    try {
+      const savedMaterials = localStorage.getItem('materials');
+      if (savedMaterials) {
+        const parsed = JSON.parse(savedMaterials);
+        
+        const validMaterials = {
+          border: Array.isArray(parsed.border) ? parsed.border : initialMaterials.border,
+          fence: Array.isArray(parsed.fence) ? parsed.fence : initialMaterials.fence,
+          monument: Array.isArray(parsed.monument) ? parsed.monument : initialMaterials.monument,
+        };
+        
+
+        
+        setMaterials(validMaterials);
+        localStorage.setItem('materials', JSON.stringify(validMaterials));
+      } else {
+        setMaterials(initialMaterials);
+        localStorage.setItem('materials', JSON.stringify(initialMaterials));
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки материалов:', error);
+      setMaterials(initialMaterials);
+      localStorage.setItem('materials', JSON.stringify(initialMaterials));
+    }
+  }, []);
 
   const handleTileChange = (id: string, field: keyof TileType, value: any) => {
     setTileTypes(prev => prev.map(tile =>
@@ -105,31 +111,14 @@ const Admin = () => {
     });
   };
 
-  const handleSaveTiles = async () => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'save_tiles', tiles: tileTypes })
-      });
-      
-      if (response.ok) {
-        setEditingTileId(null);
-        toast({
-          title: 'Изменения сохранены',
-          description: 'Плитки успешно обновлены в базе данных',
-        });
-      } else {
-        throw new Error('Ошибка сохранения');
-      }
-    } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось сохранить изменения',
-        variant: 'destructive',
-      });
-    }
+  const handleSaveTiles = () => {
+    localStorage.setItem('tileTypes', JSON.stringify(tileTypes));
+    setEditingTileId(null);
+    
+    toast({
+      title: 'Изменения сохранены',
+      description: 'Плитки успешно обновлены',
+    });
   };
 
   const handlePriceChange = (category: string, id: string, newPrice: number) => {
@@ -155,15 +144,6 @@ const Admin = () => {
       ...prev,
       [category]: prev[category].map(item =>
         item.id === id ? { ...item, image: newImage } : item
-      ),
-    }));
-  };
-
-  const handleCategoryChange = (category: string, id: string, newCategory: 'metal' | 'granite' | 'forged') => {
-    setMaterials(prev => ({
-      ...prev,
-      [category]: prev[category].map(item =>
-        item.id === id ? { ...item, category: newCategory } : item
       ),
     }));
   };
@@ -214,32 +194,15 @@ const Admin = () => {
     });
   };
 
-  const handleSaveMaterials = async () => {
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'save_materials', materials })
-      });
-      
-      if (response.ok) {
-        setEditingId(null);
-        setEditingCategory(null);
-        toast({
-          title: 'Изменения сохранены',
-          description: 'Материалы успешно обновлены в базе данных',
-        });
-      } else {
-        throw new Error('Ошибка сохранения');
-      }
-    } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось сохранить изменения',
-        variant: 'destructive',
-      });
-    }
+  const handleSaveMaterials = () => {
+    localStorage.setItem('materials', JSON.stringify(materials));
+    setEditingId(null);
+    setEditingCategory(null);
+    
+    toast({
+      title: 'Изменения сохранены',
+      description: 'Материалы успешно обновлены',
+    });
   };
 
   return (
@@ -257,12 +220,18 @@ const Admin = () => {
 
           <div className="flex flex-wrap gap-3">
             <Button 
-              onClick={() => loadData()} 
-              variant="outline" 
+              onClick={() => {
+                if (confirm('Вы уверены? Все данные будут сброшены к начальным значениям.')) {
+                  localStorage.removeItem('tileTypes');
+                  localStorage.removeItem('materials');
+                  window.location.reload();
+                }
+              }} 
+              variant="destructive" 
               className="gap-2"
             >
-              <Icon name="RefreshCw" size={18} />
-              Обновить данные
+              <Icon name="RotateCcw" size={18} />
+              Сбросить всё
             </Button>
             <Button onClick={() => window.location.href = '/'} variant="outline" className="gap-2">
               <Icon name="ArrowLeft" size={18} />
@@ -361,7 +330,6 @@ const Admin = () => {
                   onPriceChange={handlePriceChange}
                   onNameChange={handleNameChange}
                   onImageChange={handleImageChange}
-                  onCategoryChange={handleCategoryChange}
                   onAddMaterial={handleAddMaterial}
                   onDeleteMaterial={handleDeleteMaterial}
                   setEditingId={setEditingId}
