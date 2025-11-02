@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "Get all data",
+      "method": "GET",
+      "path": "/?type=all",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "tiles": "array",
+        "materials": "object"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get tiles only",
+      "method": "GET",
+      "path": "/?type=tiles",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "tiles": "array"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get materials only",
+      "method": "GET",
+      "path": "/?type=materials",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "materials": "object"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

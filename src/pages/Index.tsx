@@ -9,6 +9,9 @@ import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import funcUrls from '../func2url.json';
+
+const API_URL = funcUrls.materials;
 
 interface Material {
   id: string;
@@ -177,18 +180,22 @@ const Index = () => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const loadData = () => {
-      const savedMaterials = localStorage.getItem('materials');
-      if (savedMaterials) {
-        const parsed = JSON.parse(savedMaterials);
-        console.log('📦 Загружены материалы из localStorage:', parsed);
-        console.log('🚧 Ограды:', parsed.fence);
-        setMaterialsData(parsed);
-      }
-
-      const savedTiles = localStorage.getItem('tileTypes');
-      if (savedTiles) {
-        setTileTypesData(JSON.parse(savedTiles));
+    const loadData = async () => {
+      try {
+        const response = await fetch(`${API_URL}?type=all`);
+        const data = await response.json();
+        
+        if (data.materials) {
+          console.log('📦 Загружены материалы из API:', data.materials);
+          setMaterialsData(data.materials);
+        }
+        
+        if (data.tiles && data.tiles.length > 0) {
+          console.log('🔲 Загружены плитки из API:', data.tiles);
+          setTileTypesData(data.tiles);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
       }
     };
 
