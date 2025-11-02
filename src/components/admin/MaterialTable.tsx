@@ -153,7 +153,35 @@ export const MaterialTable = ({
                               onChange={(e) => onImageChange(category, material.id, e.target.value)}
                               placeholder="URL изображения: https://..."
                             />
-                            <p className="text-xs text-gray-500">Используйте прямую ссылку на изображение</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-gray-500">или</span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="gap-2"
+                                onClick={() => {
+                                  const input = document.createElement('input');
+                                  input.type = 'file';
+                                  input.accept = 'image/*';
+                                  input.onchange = (e) => {
+                                    const file = (e.target as HTMLInputElement).files?.[0];
+                                    if (file) {
+                                      const reader = new FileReader();
+                                      reader.onload = (e) => {
+                                        const result = e.target?.result as string;
+                                        onImageChange(category, material.id, result);
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }
+                                  };
+                                  input.click();
+                                }}
+                              >
+                                <Icon name="Upload" size={16} />
+                                Загрузить с компьютера
+                              </Button>
+                            </div>
                           </div>
 
                           <div>

@@ -105,14 +105,46 @@ export const TileManager = ({
               </div>
 
               <div>
-                <Label>URL изображения</Label>
-                <Input
-                  value={tile.image}
-                  onChange={(e) => onTileChange(tile.id, 'image', e.target.value)}
-                />
-                {tile.image && (
-                  <p className="text-xs text-gray-500 mt-1">Превью обновится автоматически</p>
-                )}
+                <Label>Изображение</Label>
+                <div className="space-y-2">
+                  <Input
+                    value={tile.image}
+                    onChange={(e) => onTileChange(tile.id, 'image', e.target.value)}
+                    placeholder="URL изображения"
+                  />
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">или</span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = (e) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                              const result = e.target?.result as string;
+                              onTileChange(tile.id, 'image', result);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        };
+                        input.click();
+                      }}
+                    >
+                      <Icon name="Upload" size={16} />
+                      Загрузить с компьютера
+                    </Button>
+                  </div>
+                  {tile.image && (
+                    <p className="text-xs text-gray-500">Превью обновится автоматически</p>
+                  )}
+                </div>
               </div>
 
               <div>
