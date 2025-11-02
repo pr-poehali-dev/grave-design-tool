@@ -349,7 +349,7 @@ const Index = () => {
     if (includeFence && materialsData.fence.find(m => m.id === selectedFence)) {
       const fenceMaterial = materialsData.fence.find(m => m.id === selectedFence)!;
       items.push({
-        name: fenceMaterial.name,
+        name: `Ограда "${fenceMaterial.name}"`,
         quantity: parseFloat(perimeter.toFixed(2)),
         unit: fenceMaterial.unit,
         price: fenceMaterial.pricePerUnit,
