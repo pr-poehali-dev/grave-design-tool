@@ -103,6 +103,14 @@ const materials: Record<string, Material[]> = {
       category: 'metal'
     },
     { 
+      id: 'rectangle', 
+      name: 'Прямоугольник', 
+      pricePerUnit: 1600, 
+      unit: 'п.м.',
+      image: 'https://cdn.poehali.dev/files/e119c09c-972b-45cc-8386-59e231618a23.jpg',
+      category: 'metal'
+    },
+    { 
       id: 'granite-fence', 
       name: 'Ограда гранитная', 
       pricePerUnit: 3500, 
