@@ -228,19 +228,51 @@ const Index = () => {
 
     const visualElement = document.getElementById('visualization-svg');
     if (visualElement) {
-      const canvas = await html2canvas(visualElement, { 
-        scale: 2, 
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = pageWidth - 2 * margin;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-      yPosition += imgHeight + 5;
+      try {
+        const svgClone = visualElement.cloneNode(true) as SVGElement;
+        const images = svgClone.querySelectorAll('image');
+        
+        for (const img of Array.from(images)) {
+          const href = img.getAttribute('href') || img.getAttribute('xlink:href');
+          if (href && href.startsWith('http')) {
+            try {
+              const response = await fetch(href);
+              const blob = await response.blob();
+              const base64 = await new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(blob);
+              });
+              img.setAttribute('href', base64);
+            } catch (error) {
+              console.warn('Не удалось загрузить изображение:', href);
+            }
+          }
+        }
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        tempDiv.appendChild(svgClone);
+        document.body.appendChild(tempDiv);
+        
+        const canvas = await html2canvas(svgClone, { 
+          scale: 2, 
+          backgroundColor: '#ffffff',
+          logging: false
+        });
+        
+        document.body.removeChild(tempDiv);
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pageWidth - 2 * margin;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+        yPosition += imgHeight + 5;
+      } catch (error) {
+        console.error('Ошибка при генерации визуализации:', error);
+      }
     }
 
     if (yPosition > pageHeight - 100) {
@@ -250,23 +282,25 @@ const Index = () => {
 
     const tableElement = document.getElementById('calculation-table');
     if (tableElement) {
-      const canvas = await html2canvas(tableElement, { 
-        scale: 2, 
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = pageWidth - 2 * margin;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      if (yPosition + imgHeight > pageHeight - margin) {
-        pdf.addPage();
-        yPosition = margin;
+      try {
+        const canvas = await html2canvas(tableElement, { 
+          scale: 2, 
+          backgroundColor: '#ffffff',
+          logging: false
+        });
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pageWidth - 2 * margin;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        if (yPosition + imgHeight > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+      } catch (error) {
+        console.error('Ошибка при генерации таблицы:', error);
       }
-      
-      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
     }
 
     pdf.save(`smeta-blagoustroistvo-${new Date().getTime()}.pdf`);
