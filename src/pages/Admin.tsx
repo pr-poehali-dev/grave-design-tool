@@ -148,6 +148,15 @@ const Admin = () => {
     }));
   };
 
+  const handleCategoryChange = (category: string, id: string, newCategory: 'metal' | 'granite' | 'forged') => {
+    setMaterials(prev => ({
+      ...prev,
+      [category]: prev[category].map(item =>
+        item.id === id ? { ...item, category: newCategory } : item
+      ),
+    }));
+  };
+
   const handleAddMaterial = (category: string, data?: any) => {
     const newId = `new-${Date.now()}`;
     const newMaterial: Material = {
@@ -330,6 +339,7 @@ const Admin = () => {
                   onPriceChange={handlePriceChange}
                   onNameChange={handleNameChange}
                   onImageChange={handleImageChange}
+                  onCategoryChange={handleCategoryChange}
                   onAddMaterial={handleAddMaterial}
                   onDeleteMaterial={handleDeleteMaterial}
                   setEditingId={setEditingId}

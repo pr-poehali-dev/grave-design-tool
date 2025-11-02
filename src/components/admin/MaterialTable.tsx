@@ -16,6 +16,7 @@ interface MaterialTableProps {
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
   onImageChange: (category: string, id: string, newImage: string) => void;
+  onCategoryChange?: (category: string, id: string, newCategory: 'metal' | 'granite' | 'forged') => void;
   onAddMaterial: (category: string, data: any) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
@@ -37,6 +38,7 @@ export const MaterialTable = ({
   onPriceChange,
   onNameChange,
   onImageChange,
+  onCategoryChange,
   onAddMaterial,
   onDeleteMaterial,
   setEditingId,
@@ -160,9 +162,11 @@ export const MaterialTable = ({
                             <Label>Категория</Label>
                             <Select
                               value={material.category || 'metal'}
-                              onValueChange={(value: 'metal' | 'granite' | 'forged') => 
-                                onImageChange(category, material.id, material.image || '')
-                              }
+                              onValueChange={(value: 'metal' | 'granite' | 'forged') => {
+                                if (onCategoryChange) {
+                                  onCategoryChange(category, material.id, value);
+                                }
+                              }}
                             >
                               <SelectTrigger>
                                 <SelectValue />
