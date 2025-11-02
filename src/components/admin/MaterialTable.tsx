@@ -8,43 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Material } from './types';
 
-const compressImage = (file: File): Promise<string> => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        
-        const maxSize = 400;
-        if (width > height && width > maxSize) {
-          height = (height * maxSize) / width;
-          width = maxSize;
-        } else if (height > maxSize) {
-          width = (width * maxSize) / height;
-          height = maxSize;
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, width, height);
-        }
-        
-        resolve(canvas.toDataURL('image/jpeg', 0.6));
-      };
-      img.src = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-};
-
 interface MaterialTableProps {
   category: string;
   materials: Material[];
@@ -135,121 +98,6 @@ export const MaterialTable = ({
         </div>
       </div>
 
-      {!showAddForm ? (
-        <Button
-          onClick={() => setShowAddForm(true)}
-          className="w-full gap-2"
-          variant="outline"
-        >
-          <Icon name="Plus" size={18} />
-          Добавить материал
-        </Button>
-      ) : (
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-lg">Новый материал ограды</h3>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setNewMaterial({ name: '', price: 0, image: '', category: 'metal' });
-                  }}
-                >
-                  <Icon name="X" size={16} />
-                </Button>
-              </div>
-
-              <div>
-                <Label>Название</Label>
-                <Input
-                  value={newMaterial.name}
-                  onChange={(e) => setNewMaterial({ ...newMaterial, name: e.target.value })}
-                  placeholder="Например: Профлист С-21"
-                />
-              </div>
-
-              <div>
-                <Label>Цена за п.м.</Label>
-                <Input
-                  type="number"
-                  value={newMaterial.price}
-                  onChange={(e) => setNewMaterial({ ...newMaterial, price: Number(e.target.value) })}
-                  placeholder="0"
-                />
-              </div>
-
-              <div>
-                <Label>Категория</Label>
-                <Select
-                  value={newMaterial.category}
-                  onValueChange={(value: 'metal' | 'granite' | 'forged') => 
-                    setNewMaterial({ ...newMaterial, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="metal">Металл</SelectItem>
-                    <SelectItem value="granite">Гранит</SelectItem>
-                    <SelectItem value="forged">Кованые</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Изображение</Label>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const compressedUrl = await compressImage(file);
-                      setNewMaterial({ ...newMaterial, image: compressedUrl });
-                    }
-                  }}
-                />
-                <Input
-                  value={newMaterial.image}
-                  onChange={(e) => setNewMaterial({ ...newMaterial, image: e.target.value })}
-                  placeholder="или укажите URL: https://..."
-                  className="text-sm"
-                />
-                {newMaterial.image && (
-                  <div className="mt-2">
-                    <img src={newMaterial.image} alt="Preview" className="w-32 h-32 object-cover rounded" />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleAddMaterial}
-                  disabled={!newMaterial.name.trim()}
-                  className="flex-1"
-                >
-                  <Icon name="Check" size={18} className="mr-2" />
-                  Добавить
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setNewMaterial({ name: '', price: 0, image: '', category: 'metal' });
-                  }}
-                >
-                  Отмена
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {viewMode === 'cards' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {materials.map((material) => (
@@ -300,29 +148,12 @@ export const MaterialTable = ({
                         <>
                           <div className="space-y-2">
                             <Label>Изображение</Label>
-                            <div className="flex gap-2">
-                              <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const compressedUrl = await compressImage(file);
-                                    onImageChange(category, material.id, compressedUrl);
-                                  }
-                                }}
-                                className="flex-1"
-                              />
-                            </div>
                             <Input
                               value={material.image || ''}
                               onChange={(e) => onImageChange(category, material.id, e.target.value)}
-                              placeholder="или укажите URL: https://..."
-                              className="text-sm"
+                              placeholder="URL изображения: https://..."
                             />
-                            {material.image && (
-                              <p className="text-xs text-gray-500">Изображение загружено</p>
-                            )}
+                            <p className="text-xs text-gray-500">Используйте прямую ссылку на изображение</p>
                           </div>
 
                           <div>
