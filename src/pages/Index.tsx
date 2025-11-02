@@ -1384,7 +1384,7 @@ const Index = () => {
                       const innerTileWidth = tileWidth - 2 * borderPixels;
                       const innerTileHeight = tileHeight - 2 * borderPixels;
                       
-                      const monumentSpacing = 80;
+                      const monumentSpacing = 30;
                       const totalMonumentsWidth = monumentWidth * monumentCount + (monumentCount - 1) * monumentSpacing;
                       let startX = 60 + borderPixels;
                       
