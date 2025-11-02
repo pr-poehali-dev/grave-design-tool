@@ -8,43 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Material } from './types';
 
-const compressImage = (file: File): Promise<string> => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        
-        const maxSize = 400;
-        if (width > height && width > maxSize) {
-          height = (height * maxSize) / width;
-          width = maxSize;
-        } else if (height > maxSize) {
-          width = (width * maxSize) / height;
-          height = maxSize;
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, width, height);
-        }
-        
-        resolve(canvas.toDataURL('image/jpeg', 0.6));
-      };
-      img.src = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-};
-
 interface MaterialTableProps {
   category: string;
   materials: Material[];
@@ -185,29 +148,12 @@ export const MaterialTable = ({
                         <>
                           <div className="space-y-2">
                             <Label>Изображение</Label>
-                            <div className="flex gap-2">
-                              <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const compressedUrl = await compressImage(file);
-                                    onImageChange(category, material.id, compressedUrl);
-                                  }
-                                }}
-                                className="flex-1"
-                              />
-                            </div>
                             <Input
                               value={material.image || ''}
                               onChange={(e) => onImageChange(category, material.id, e.target.value)}
-                              placeholder="или укажите URL: https://..."
-                              className="text-sm"
+                              placeholder="URL изображения: https://..."
                             />
-                            {material.image && (
-                              <p className="text-xs text-gray-500">Изображение загружено</p>
-                            )}
+                            <p className="text-xs text-gray-500">Используйте прямую ссылку на изображение</p>
                           </div>
 
                           <div>
