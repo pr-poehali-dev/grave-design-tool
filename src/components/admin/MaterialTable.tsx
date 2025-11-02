@@ -18,7 +18,7 @@ const compressImage = (file: File): Promise<string> => {
         let width = img.width;
         let height = img.height;
         
-        const maxSize = 800;
+        const maxSize = 400;
         if (width > height && width > maxSize) {
           height = (height * maxSize) / width;
           width = maxSize;
@@ -37,7 +37,7 @@ const compressImage = (file: File): Promise<string> => {
           ctx.drawImage(img, 0, 0, width, height);
         }
         
-        resolve(canvas.toDataURL('image/jpeg', 0.85));
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
       };
       img.src = e.target?.result as string;
     };
@@ -235,13 +235,28 @@ export const MaterialTable = ({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {showImages && material.image && (
-                        <div className="flex justify-center">
-                          <img 
-                            src={material.image} 
-                            alt={material.name}
-                            className="w-full h-40 object-contain rounded-lg border border-gray-200"
-                          />
+                      {showImages && (
+                        <div className="flex justify-center bg-gray-50 rounded-lg p-2">
+                          {material.image ? (
+                            <img 
+                              src={material.image} 
+                              alt={material.name}
+                              className="w-full max-w-xs h-40 object-contain rounded-lg"
+                              loading="lazy"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const parent = target.parentElement;
+                                if (parent) {
+                                  parent.innerHTML = '<div class="flex items-center justify-center h-40 text-gray-400"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                                }
+                              }}
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-40 text-gray-400">
+                              <Icon name="Image" size={48} />
+                            </div>
+                          )}
                         </div>
                       )}
                       <div className="space-y-2 text-sm text-gray-600">
