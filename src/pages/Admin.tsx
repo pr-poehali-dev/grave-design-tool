@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { TileManager } from '@/components/admin/TileManager';
 import { MaterialTable } from '@/components/admin/MaterialTable';
 import { Material, TileType, initialTileTypes, initialMaterials } from '@/components/admin/types';
-import funcUrls from '../func2url.json';
+import funcUrls from '@/func2url.json';
 
 const API_URL = funcUrls.materials;
 

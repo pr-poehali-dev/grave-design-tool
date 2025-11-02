@@ -9,7 +9,7 @@ import Icon from '@/components/ui/icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import funcUrls from '../func2url.json';
+import funcUrls from '@/func2url.json';
 
 const API_URL = funcUrls.materials;
 
