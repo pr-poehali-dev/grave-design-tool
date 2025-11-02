@@ -1398,28 +1398,38 @@ const Index = () => {
                       const monuments = [];
                       const monumentMargin = 20;
                       
-                      const monumentRealLength = 1.23;
-                      const monumentRealWidth = 0.6;
-                      const monumentDisplayLength = monumentRealLength * scale;
-                      const monumentDisplayWidth = monumentRealWidth * scale;
-                      
                       for (let i = 0; i < monumentCount; i++) {
                         const x = startX + i * (monumentWidth + monumentSpacing);
                         const y = 60 + borderPixels + monumentMargin;
                         
                         monuments.push(
                           <g key={i}>
-                            <image
-                              href="https://cdn.poehali.dev/files/a518ee57-bdc9-49c8-b4b6-cd71611ef7a7.png"
-                              x={x + (monumentWidth - monumentDisplayWidth) / 2}
+                            <rect
+                              x={x}
                               y={y}
-                              width={monumentDisplayWidth}
-                              height={monumentDisplayLength}
-                              preserveAspectRatio="none"
+                              width={monumentWidth}
+                              height={monumentHeight}
+                              fill="#1a1a1a"
+                              stroke="#000"
+                              strokeWidth="2"
+                            />
+                            <rect
+                              x={x + monumentWidth * 0.1}
+                              y={y + monumentHeight * 0.1}
+                              width={monumentWidth * 0.8}
+                              height={monumentHeight * 0.3}
+                              fill="#4a4a4a"
+                            />
+                            <rect
+                              x={x + monumentWidth * 0.1}
+                              y={y + monumentHeight * 0.45}
+                              width={monumentWidth * 0.8}
+                              height={monumentHeight * 0.45}
+                              fill="#2d5016"
                             />
                             <text
                               x={x + monumentWidth / 2}
-                              y={y + monumentDisplayLength / 2}
+                              y={y + monumentHeight / 2}
                               textAnchor="middle"
                               dominantBaseline="middle"
                               className="text-xs fill-white font-bold"
