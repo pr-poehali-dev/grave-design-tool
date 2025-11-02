@@ -228,24 +228,19 @@ const Index = () => {
 
     const visualElement = document.getElementById('visualization-svg');
     if (visualElement) {
-      try {
-        const canvas = await html2canvas(visualElement, { 
-          scale: 2, 
-          backgroundColor: '#ffffff',
-          useCORS: false,
-          allowTaint: false,
-          logging: false,
-          foreignObjectRendering: true
-        });
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = pageWidth - 2 * margin;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-        yPosition += imgHeight + 5;
-      } catch (error) {
-        console.error('Ошибка при генерации визуализации:', error);
-      }
+      const canvas = await html2canvas(visualElement, { 
+        scale: 2, 
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pageWidth - 2 * margin;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+      yPosition += imgHeight + 5;
     }
 
     if (yPosition > pageHeight - 100) {
@@ -255,27 +250,23 @@ const Index = () => {
 
     const tableElement = document.getElementById('calculation-table');
     if (tableElement) {
-      try {
-        const canvas = await html2canvas(tableElement, { 
-          scale: 2, 
-          backgroundColor: '#ffffff',
-          useCORS: false,
-          allowTaint: false,
-          logging: false
-        });
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = pageWidth - 2 * margin;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        if (yPosition + imgHeight > pageHeight - margin) {
-          pdf.addPage();
-          yPosition = margin;
-        }
-        
-        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-      } catch (error) {
-        console.error('Ошибка при генерации таблицы:', error);
+      const canvas = await html2canvas(tableElement, { 
+        scale: 2, 
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pageWidth - 2 * margin;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      if (yPosition + imgHeight > pageHeight - margin) {
+        pdf.addPage();
+        yPosition = margin;
       }
+      
+      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
     }
 
     pdf.save(`smeta-blagoustroistvo-${new Date().getTime()}.pdf`);
