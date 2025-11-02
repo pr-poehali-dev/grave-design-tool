@@ -1443,39 +1443,6 @@ const Index = () => {
                 
                 <Separator className="my-6" />
                 
-                {includeFence && (() => {
-                  const selectedFenceMaterial = materialsData.fence.find(f => f.id === selectedFence);
-                  
-                  return selectedFenceMaterial ? (
-                    <div className="mb-6 p-4 rounded-lg border-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100">
-                      <h3 className="font-semibold text-sm text-gray-900 mb-3 flex items-center gap-2">
-                        <Icon name="FenceIcon" size={16} fallback="Box" />
-                        Выбранная ограда
-                      </h3>
-                      <div className="flex items-center gap-4 bg-white p-3 rounded-lg shadow-sm">
-                        {selectedFenceMaterial.image ? (
-                          <img 
-                            src={selectedFenceMaterial.image}
-                            alt={selectedFenceMaterial.name}
-                            className="w-20 h-20 rounded-lg object-contain border-2 border-gray-200 shadow-md flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 rounded-lg border-2 border-gray-200 shadow-md flex-shrink-0 bg-gray-100 flex items-center justify-center">
-                            <Icon name="Image" size={24} className="text-gray-400" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-base font-semibold text-gray-900">{selectedFenceMaterial.name}</p>
-                          <p className="text-sm text-gray-600 mt-1">{selectedFenceMaterial.pricePerUnit} ₽/{selectedFenceMaterial.unit}</p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Периметр: {(2 * (length + width)).toFixed(2)} п.м.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null;
-                })()}
-                
                 <div className="space-y-3">
                   <h3 className="font-semibold text-sm text-gray-900">Отображение элементов:</h3>
                   <div className="grid grid-cols-3 gap-2">
