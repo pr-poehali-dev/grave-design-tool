@@ -8,6 +8,43 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Material } from './types';
 
+const compressImage = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        const maxSize = 400;
+        if (width > height && width > maxSize) {
+          height = (height * maxSize) / width;
+          width = maxSize;
+        } else if (height > maxSize) {
+          width = (width * maxSize) / height;
+          height = maxSize;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+        }
+        
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 interface MaterialTableProps {
   category: string;
   materials: Material[];
@@ -16,6 +53,7 @@ interface MaterialTableProps {
   onPriceChange: (category: string, id: string, newPrice: number) => void;
   onNameChange: (category: string, id: string, newName: string) => void;
   onImageChange: (category: string, id: string, newImage: string) => void;
+  onCategoryChange?: (category: string, id: string, newCategory: 'metal' | 'granite' | 'forged') => void;
   onAddMaterial: (category: string, data: any) => void;
   onDeleteMaterial: (category: string, id: string) => void;
   setEditingId: (id: string | null) => void;
@@ -37,6 +75,7 @@ export const MaterialTable = ({
   onPriceChange,
   onNameChange,
   onImageChange,
+  onCategoryChange,
   onAddMaterial,
   onDeleteMaterial,
   setEditingId,
@@ -96,6 +135,121 @@ export const MaterialTable = ({
         </div>
       </div>
 
+      {!showAddForm ? (
+        <Button
+          onClick={() => setShowAddForm(true)}
+          className="w-full gap-2"
+          variant="outline"
+        >
+          <Icon name="Plus" size={18} />
+          Добавить материал
+        </Button>
+      ) : (
+        <Card className="bg-blue-50 border-blue-200">
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-lg">Новый материал ограды</h3>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setNewMaterial({ name: '', price: 0, image: '', category: 'metal' });
+                  }}
+                >
+                  <Icon name="X" size={16} />
+                </Button>
+              </div>
+
+              <div>
+                <Label>Название</Label>
+                <Input
+                  value={newMaterial.name}
+                  onChange={(e) => setNewMaterial({ ...newMaterial, name: e.target.value })}
+                  placeholder="Например: Профлист С-21"
+                />
+              </div>
+
+              <div>
+                <Label>Цена за п.м.</Label>
+                <Input
+                  type="number"
+                  value={newMaterial.price}
+                  onChange={(e) => setNewMaterial({ ...newMaterial, price: Number(e.target.value) })}
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <Label>Категория</Label>
+                <Select
+                  value={newMaterial.category}
+                  onValueChange={(value: 'metal' | 'granite' | 'forged') => 
+                    setNewMaterial({ ...newMaterial, category: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="metal">Металл</SelectItem>
+                    <SelectItem value="granite">Гранит</SelectItem>
+                    <SelectItem value="forged">Кованые</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Изображение</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const compressedUrl = await compressImage(file);
+                      setNewMaterial({ ...newMaterial, image: compressedUrl });
+                    }
+                  }}
+                />
+                <Input
+                  value={newMaterial.image}
+                  onChange={(e) => setNewMaterial({ ...newMaterial, image: e.target.value })}
+                  placeholder="или укажите URL: https://..."
+                  className="text-sm"
+                />
+                {newMaterial.image && (
+                  <div className="mt-2">
+                    <img src={newMaterial.image} alt="Preview" className="w-32 h-32 object-cover rounded" />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleAddMaterial}
+                  disabled={!newMaterial.name.trim()}
+                  className="flex-1"
+                >
+                  <Icon name="Check" size={18} className="mr-2" />
+                  Добавить
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setNewMaterial({ name: '', price: 0, image: '', category: 'metal' });
+                  }}
+                >
+                  Отмена
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {viewMode === 'cards' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {materials.map((material) => (
@@ -144,15 +298,30 @@ export const MaterialTable = ({
 
                       {showImages && (
                         <>
-                          <div>
-                            <Label>URL изображения</Label>
+                          <div className="space-y-2">
+                            <Label>Изображение</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const compressedUrl = await compressImage(file);
+                                    onImageChange(category, material.id, compressedUrl);
+                                  }
+                                }}
+                                className="flex-1"
+                              />
+                            </div>
                             <Input
                               value={material.image || ''}
                               onChange={(e) => onImageChange(category, material.id, e.target.value)}
-                              placeholder="https://..."
+                              placeholder="или укажите URL: https://..."
+                              className="text-sm"
                             />
                             {material.image && (
-                              <p className="text-xs text-gray-500 mt-1">Превью обновится автоматически</p>
+                              <p className="text-xs text-gray-500">Изображение загружено</p>
                             )}
                           </div>
 
@@ -160,9 +329,11 @@ export const MaterialTable = ({
                             <Label>Категория</Label>
                             <Select
                               value={material.category || 'metal'}
-                              onValueChange={(value: 'metal' | 'granite' | 'forged') => 
-                                onImageChange(category, material.id, material.image || '')
-                              }
+                              onValueChange={(value: 'metal' | 'granite' | 'forged') => {
+                                if (onCategoryChange) {
+                                  onCategoryChange(category, material.id, value);
+                                }
+                              }}
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -179,13 +350,28 @@ export const MaterialTable = ({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {showImages && material.image && (
-                        <div className="flex justify-center">
-                          <img 
-                            src={material.image} 
-                            alt={material.name}
-                            className="w-full h-40 object-contain rounded-lg border border-gray-200"
-                          />
+                      {showImages && (
+                        <div className="flex justify-center bg-gray-50 rounded-lg p-2">
+                          {material.image ? (
+                            <img 
+                              src={material.image} 
+                              alt={material.name}
+                              className="w-full max-w-xs h-40 object-contain rounded-lg"
+                              loading="lazy"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const parent = target.parentElement;
+                                if (parent) {
+                                  parent.innerHTML = '<div class="flex items-center justify-center h-40 text-gray-400"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                                }
+                              }}
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-40 text-gray-400">
+                              <Icon name="Image" size={48} />
+                            </div>
+                          )}
                         </div>
                       )}
                       <div className="space-y-2 text-sm text-gray-600">
@@ -332,12 +518,27 @@ export const MaterialTable = ({
 
             {showImages && (
               <>
-                <div className="space-y-2">
-                  <Label>URL изображения</Label>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Изображение</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const compressedUrl = await compressImage(file);
+                          setNewMaterial(prev => ({ ...prev, image: compressedUrl }));
+                        }
+                      }}
+                      className="flex-1"
+                    />
+                  </div>
                   <Input
                     value={newMaterial.image}
                     onChange={(e) => setNewMaterial(prev => ({ ...prev, image: e.target.value }))}
-                    placeholder="https://..."
+                    placeholder="или укажите URL: https://..."
+                    className="text-sm"
                   />
                   {newMaterial.image && (
                     <div className="mt-2">
