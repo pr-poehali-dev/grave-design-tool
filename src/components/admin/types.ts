@@ -62,7 +62,7 @@ export const initialMaterials: Record<string, Material[]> = {
     { id: 'granite-border', name: 'Поребрик гранитный', pricePerUnit: 1200, unit: 'п.м.' },
   ],
   fence: [
-    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/projects/d12043e2-62fe-468a-8892-3f4a88c29059/files/24df5a30-6379-486c-a08e-988e4916306a.jpg', category: 'metal' },
+    { id: 'metal', name: 'Ограда металлическая', pricePerUnit: 1500, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/94216720-503b-4c1e-bfb1-a7ee16afffbb.jpg', category: 'metal' },
     { id: 'granite-fence', name: 'Ограда гранитная', pricePerUnit: 3500, unit: 'п.м.', image: 'https://cdn.poehali.dev/projects/d12043e2-62fe-468a-8892-3f4a88c29059/files/9ef3624a-5065-424c-ae70-c89f7ff61856.jpg', category: 'granite' },
     { id: 'forged', name: 'Ограда кованая', pricePerUnit: 2800, unit: 'п.м.', image: 'https://cdn.poehali.dev/files/5bb1ef3a-aacf-4243-b097-771a31f3ffbc.jpg', category: 'forged' },
   ],
